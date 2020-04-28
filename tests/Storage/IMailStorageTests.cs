@@ -12,56 +12,56 @@ namespace MiaPlaza.MailService.Tests.Storage {
 		private EmailMessage emailMessage = FakerFactory.EmailMessageFaker.Generate();
 
 		[Fact]
-		public async void MessageHandled() {
-			await MailStorage.SetHandledAsync(emailMessage);
-			Assert.True(await MailStorage.TryGetHandleCount(emailMessage, out var handleCount));
+		public async void MessageProcessed() {
+			await MailStorage.SetProcessedAsync(emailMessage);
+			Assert.True(await MailStorage.TryGetProcessedCount(emailMessage, out var processedCount));
 			Assert.True(await MailStorage.TryGetSent(emailMessage, out var sent));
 			Assert.True(await MailStorage.TryGetError(emailMessage, out var error));
 
-			Assert.Equal(1, handleCount);
+			Assert.Equal(1, processedCount);
 			Assert.False(sent);
 			Assert.Null(error);
 		}
 
 		[Fact]
-		public async void MessageHandleCountIncreases() {
-			await MailStorage.SetHandledAsync(emailMessage);
-			Assert.True(await MailStorage.TryGetHandleCount(emailMessage, out var handleCount1));
-			Assert.Equal(1, handleCount1);
+		public async void MessageprocessedCountIncreases() {
+			await MailStorage.SetProcessedAsync(emailMessage);
+			Assert.True(await MailStorage.TryGetProcessedCount(emailMessage, out var processedCount1));
+			Assert.Equal(1, processedCount1);
 
-			await MailStorage.SetHandledAsync(emailMessage);
-			Assert.True(await MailStorage.TryGetHandleCount(emailMessage, out var handleCount2));
-			Assert.Equal(2, handleCount2);
+			await MailStorage.SetProcessedAsync(emailMessage);
+			Assert.True(await MailStorage.TryGetProcessedCount(emailMessage, out var processedCount2));
+			Assert.Equal(2, processedCount2);
 
-			await MailStorage.SetHandledAsync(emailMessage);
-			Assert.True(await MailStorage.TryGetHandleCount(emailMessage, out var handleCount3));
-			Assert.Equal(3, handleCount3);
+			await MailStorage.SetProcessedAsync(emailMessage);
+			Assert.True(await MailStorage.TryGetProcessedCount(emailMessage, out var processedCount3));
+			Assert.Equal(3, processedCount3);
 		}
 
 		[Fact]
-		public async void MessageHandleCountDoesNotDecrease() { 
-			await MailStorage.SetHandledAsync(emailMessage);
-			await MailStorage.SetHandledAsync(emailMessage);
-			await MailStorage.SetHandledAsync(emailMessage);
-			await MailStorage.SetHandledAsync(emailMessage);
+		public async void MessageprocessedCountDoesNotDecrease() { 
+			await MailStorage.SetProcessedAsync(emailMessage);
+			await MailStorage.SetProcessedAsync(emailMessage);
+			await MailStorage.SetProcessedAsync(emailMessage);
+			await MailStorage.SetProcessedAsync(emailMessage);
 
-			Assert.True(await MailStorage.TryGetHandleCount(emailMessage, out var handleCount));
-			Assert.Equal(4, handleCount);
+			Assert.True(await MailStorage.TryGetProcessedCount(emailMessage, out var processedCount));
+			Assert.Equal(4, processedCount);
 
 			await MailStorage.SetErrorAsync(emailMessage, "error message");
-			Assert.True(await MailStorage.TryGetHandleCount(emailMessage, out var handleCount2));
-			Assert.Equal(4, handleCount2);
+			Assert.True(await MailStorage.TryGetProcessedCount(emailMessage, out var processedCount2));
+			Assert.Equal(4, processedCount2);
 
 			await MailStorage.SetSentAsync(emailMessage);
-			Assert.True(await MailStorage.TryGetHandleCount(emailMessage, out var handleCount3));
-			Assert.Equal(4, handleCount3);
+			Assert.True(await MailStorage.TryGetProcessedCount(emailMessage, out var processedCount3));
+			Assert.Equal(4, processedCount3);
 		}
 
 		[Fact]
 		public async void ErrorIsStoredAndOverwritten() {
 			var errorMessage = "error message";
 
-			await MailStorage.SetHandledAsync(emailMessage);
+			await MailStorage.SetProcessedAsync(emailMessage);
 			await MailStorage.SetErrorAsync(emailMessage, errorMessage);
 			
 			Assert.True(await MailStorage.TryGetError(emailMessage, out var error));
@@ -76,7 +76,7 @@ namespace MiaPlaza.MailService.Tests.Storage {
 
 		[Fact]
 		public async void SentIsStored() {
-			await MailStorage.SetHandledAsync(emailMessage);
+			await MailStorage.SetProcessedAsync(emailMessage);
 			await MailStorage.SetSentAsync(emailMessage);
 
 			Assert.True(await MailStorage.TryGetSent(emailMessage, out var sent));
@@ -84,26 +84,26 @@ namespace MiaPlaza.MailService.Tests.Storage {
 		}
 
 		[Fact]
-		public async void TryGetInfoOfNotHandledMessage() {
-			Assert.False(await MailStorage.TryGetHandleCount(emailMessage, out var handleCount));
+		public async void TryGetForNotProcessedMessage() {
+			Assert.False(await MailStorage.TryGetProcessedCount(emailMessage, out var processedCount));
 			Assert.False(await MailStorage.TryGetError(emailMessage, out var error));			
 			Assert.False(await MailStorage.TryGetError(emailMessage, out var sent));
 		}
 		
 		[Fact]
-		public async void SetInfoOfNotHandledMessageThrows() {
+		public async void SetForNotProcessedMessageThrows() {
 			await Assert.ThrowsAsync<EMailMessageNotFoundInStorageException>(async () => await MailStorage.SetErrorAsync(emailMessage, "error message"));
 			await Assert.ThrowsAsync<EMailMessageNotFoundInStorageException>(async () => await MailStorage.SetSentAsync(emailMessage));
 		}
 
 		[Fact]
-		public async void HandleAlreadySentMessageThrows() {
-			await MailStorage.SetHandledAsync(emailMessage);
+		public async void SetForAlreadySentMessageThrows() {
+			await MailStorage.SetProcessedAsync(emailMessage);
 			await MailStorage.SetSentAsync(emailMessage);
 
 			await Assert.ThrowsAsync<EMailMessageAlreadySentStorageException>(async () => await MailStorage.SetErrorAsync(emailMessage, "error message"));
 			await Assert.ThrowsAsync<EMailMessageAlreadySentStorageException>(async () => await MailStorage.SetSentAsync(emailMessage));
-			await Assert.ThrowsAsync<EMailMessageAlreadySentStorageException>(async () => await MailStorage.SetHandledAsync(emailMessage));
+			await Assert.ThrowsAsync<EMailMessageAlreadySentStorageException>(async () => await MailStorage.SetProcessedAsync(emailMessage));
 		}
 	}
 }

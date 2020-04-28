@@ -23,6 +23,6 @@ namespace MiaPlaza.MailService.Tests {
 				from: new MailboxAddress[] { new MailboxAddress(f.Name.FullName(), f.Internet.Email())},
 				to: new MailboxAddress[] { new MailboxAddress(f.Name.FullName(), f.Internet.Email())},
 				subject: f.Lorem.Sentence(),
-				body: new TextPart("plain") { Text = f.Lorem.Sentences()}));
+				body: new TextPart("plain") { Text = f.Lorem.Sentences(10)}));
 	}
 }

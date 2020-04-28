@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MailKit;
 using MailKit.Net.Smtp;
+using MailKit.Security;
 using MimeKit;
 
 namespace MiaPlaza.MailService.Delivery {
@@ -19,7 +20,7 @@ namespace MiaPlaza.MailService.Delivery {
 		}
 
 		private async Task connectAsync() {
-			await this.smtpClient.ConnectAsync(smtpConfig.Server, smtpConfig.Port);
+			await this.smtpClient.ConnectAsync(smtpConfig.Server, smtpConfig.Port, SecureSocketOptions.None);
 
 			// Note: since we don't have an OAuth2 token, disable
 			// the XOAUTH2 authentication mechanism.
@@ -34,6 +35,7 @@ namespace MiaPlaza.MailService.Delivery {
 					if(!smtpClient.IsConnected) {
 						await this.connectAsync();
 					}
+					//await smtpClient.NoOpAsync()
 					try {
 						await smtpClient.SendAsync(message);
 					} catch (ProtocolException e) {

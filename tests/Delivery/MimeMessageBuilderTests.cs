@@ -96,8 +96,32 @@ namespace MiaPlaza.MailService.Tests.Delivery {
 			await sendEmailAndAssertEquality(emailMessage, mimeMessage);
 		}
 
+		[Fact]
+		public void BuildSubjectNullThrows() {
+			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
+			emailMessage.Subject = null;
+			
+			Assert.ThrowsAny<Exception>(() => builder.Create(emailMessage));
+		}
+
+		[Fact]
+		public void BuildFromEmailNullThrows() {
+			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
+			emailMessage.FromEmail = null;
+			
+			Assert.ThrowsAny<Exception>(() => builder.Create(emailMessage));
+		}
+
+		[Fact]
+		public void BuildToEmailNullThrows() {
+			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
+			emailMessage.ToEmail = null;
+			
+			Assert.ThrowsAny<Exception>(() => builder.Create(emailMessage));
+		}
+
 		public void Dispose() {
-			smtpServer.Dispose();
+			smtpServer.Dispose(); 
 		}
 	}
 }

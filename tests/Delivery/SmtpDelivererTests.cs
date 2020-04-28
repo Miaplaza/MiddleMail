@@ -35,11 +35,11 @@ namespace MiaPlaza.MailService.Tests.Delivery {
 			messageSenderMock = new Mock<IMimeMessageSender>();
 			messageSenderMock
 				.Setup(s => s.SendAsync(It.Is<MimeMessage>(m => m.Subject == MESSAGE_INVALID)))
-				.Throws(new InvalidOperationException());
+				.ThrowsAsync(new InvalidOperationException());
 			
 			messageSenderMock
 				.Setup(s => s.SendAsync(It.Is<MimeMessage>(m => m.Subject == GENERAL_SMTP_ERROR)))
-				.Throws(new Exception());
+				.ThrowsAsync(new Exception());
 
 			smtpDeliverer = new SmtpDeliverer(messageBuilderMock.Object, messageSenderMock.Object);
 		}

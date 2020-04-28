@@ -13,7 +13,7 @@ namespace MiaPlaza.MailService.Storage {
 			this.storage = new ConcurrentDictionary<EmailMessage, (bool sent, int handleCount, string error)>();
 		}
 
-		public Task SetHandledAsync(EmailMessage emailMessage) {
+		public Task SetProcessedAsync(EmailMessage emailMessage) {
 			storage.AddOrUpdate(emailMessage, 
 				addValue: (false, 1, null), 
 				updateValueFactory: (EmailMessage key, (bool sent, int handleCount, string error) value) => {
@@ -60,7 +60,7 @@ namespace MiaPlaza.MailService.Storage {
 			return Task.CompletedTask;
 		}
 		
-		public Task<bool> TryGetHandleCount(EmailMessage emailMessage, out int handleCount) {
+		public Task<bool> TryGetProcessedCount(EmailMessage emailMessage, out int handleCount) {
 			var found = storage.TryGetValue(emailMessage, out var value);
 			handleCount = value.handleCount;
 			return Task.FromResult(found);

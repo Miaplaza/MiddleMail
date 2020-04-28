@@ -4,12 +4,12 @@ using MimeKit;
 namespace MiaPlaza.MailService.Delivery {
 	
 	public class MimeMessageBuilder : IMimeMessageBuilder {
-		
+
 		public MimeMessage Create(EmailMessage emailMessage) {
 			if(emailMessage.PlainText == null) {
 				throw new ArgumentException($"EmailMessage should always contains a Plaintext, but it is null.", nameof(emailMessage));
 			}
-
+			
 			var mimeMessage = new MimeMessage();
 			mimeMessage.From.Add(new MailboxAddress(emailMessage.FromName, emailMessage.FromEmail));
 			mimeMessage.To.Add(new MailboxAddress(emailMessage.ToName, emailMessage.ToEmail));
