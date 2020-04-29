@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{B8216404
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailMessageGenerator", "tools\EmailMessageGenerator\EmailMessageGenerator.csproj", "{7F1A1F92-8CBB-4319-BDB0-234892215D18}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9137F753-A60F-47A2-BA74-4D07CD404BDC}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailService.Model", "src\MailService.Model\MailService.Model.csproj", "{A77844CE-06BC-4038-AF77-432202F06EE9}"
 EndProject
 Global
