@@ -1,6 +1,7 @@
 using System;
 using MiaPlaza.MailService.Delivery;
 using MiaPlaza.MailService.Storage;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
@@ -39,7 +40,8 @@ namespace MiaPlaza.MailService.Tests {
 				.ThrowsAsync(new Exception());
 
 			var logger = new NullLogger<MessageProcessor>();
-			messageProcessor = new MessageProcessor(delivererMock.Object, storageMock.Object, logger);
+			var cache = new Mock<MemoryDistributedCache>();
+			messageProcessor = new MessageProcessor(delivererMock.Object, storageMock.Object, cache.Object, logger);
 		}
 
 		[Fact]

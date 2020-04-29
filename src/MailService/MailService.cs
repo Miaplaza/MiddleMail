@@ -1,60 +1,54 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
-using EasyNetQ;
 using MiaPlaza.MailService.Exceptions;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace MiaPlaza.MailService {
 	public class MailService : BackgroundService {
 		
-		private readonly IBus bus;
-		private ISubscriptionResult subscriptionResult;
 		private IMessageProcessor processor;
 		private readonly ILogger<MailService> logger;
-		//private readonly IConfiguration configuration;
-		private readonly IErrorBackoffStrategy backoffStrategy;
+		private readonly IMessageSource messageSource;
+		private int consumerTasksPending;
 
-		public MailService(IBus bus, IMessageProcessor processor, ILogger<MailService> logger, IErrorBackoffStrategy backoffStrategey) {
-			this.bus = bus;
+		public MailService(IMessageProcessor processor, ILogger<MailService> logger, IMessageSource messageSource) {
 			this.processor = processor;
 			this.logger = logger;
-			this.backoffStrategy = backoffStrategey;
+			this.consumerTasksPending = 0;
+			this.messageSource = messageSource;
 		}
-
 
 		protected async override Task ExecuteAsync(CancellationToken cancellationToken) {
-			setupRabbitBus();
-			
-			while (!cancellationToken.IsCancellationRequested) {
-				await Task.Delay(1000);
-				await backoffStrategy.HandleGlobalErrorState(
-					() => subscriptionResult?.Dispose(),
-					() => setupRabbitBus());
+			messageSource.Start(processAsync);
+			try {
+				await Task.Delay(Timeout.Infinite, cancellationToken);
+			} catch (TaskCanceledException) {
+				messageSource.Stop();
+
+				// wait for all consumer task to finish
+				while(consumerTasksPending != 0) {
+					logger.LogInformation($"Waiting for {consumerTasksPending} Tasks to finish.");
+					await Task.Delay(25);
+				}
 			}
-			subscriptionResult?.Dispose();
-			// also dispose the bus because it cannot be disposed by the DI framework
-			bus?.Dispose();
 		}
 
-		private async Task processAsync(EmailMessage emailMessage) {
+		private async Task processAsync(EmailMessage emailMessage ) {
+			Interlocked.Increment(ref consumerTasksPending);
+			logger.LogDebug($"Start processing email message {emailMessage.Id}");
 			try {
 				await processor.ProcessAsync(emailMessage);
-				logger.LogInformation($"Successfully processed email message {emailMessage.Id}");
+				logger.LogDebug($"Successfully processed email message {emailMessage.Id}");
 			} catch(SingleDeliveryException e) {
-				logger.LogError(e, "SimpleDeliveryError");
+				logger.LogError(e, $"Delivery error for message {emailMessage.Id}");
 				throw e;
 			} catch(GlobalDeliveryException e) {
-				backoffStrategy.NotifyGlobalError();
-				//await bus.PublishAsync(emailMessage);
-				logger.LogError(e, "Global delivery problem.");
+				logger.LogError(e, $"General delivery problem for message {emailMessage.Id}");
+				await messageSource.RetryAsync(emailMessage);
+			} finally {
+				Interlocked.Decrement(ref consumerTasksPending);
 			}
-		}
-
-		private void setupRabbitBus() {
-			subscriptionResult = bus.SubscribeAsync<EmailMessage>("mailqueue1", (emailMessage) => processAsync(emailMessage));
 		}
 	}
 }

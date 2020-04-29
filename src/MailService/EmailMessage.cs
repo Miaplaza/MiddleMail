@@ -13,6 +13,8 @@ namespace MiaPlaza.MailService {
 		public string PlainText { get; set; }
 		public string HtmlText { get; set; }
 
+		public int RetryCount { get; set; }
+
 		public EmailMessage() {}
 
 		public EmailMessage(Guid id, string fromEmail, string fromName, string toEmail, string toName, string subject, string plainText, string htmlText) {
@@ -24,6 +26,7 @@ namespace MiaPlaza.MailService {
 			Subject = subject;
 			PlainText = plainText;
 			HtmlText = htmlText;
+			RetryCount = 0;
 		}
 	}
 }

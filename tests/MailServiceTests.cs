@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EasyNetQ;
+using EasyNetQ.Management.Client;
+using EasyNetQ.Scheduling;
 using MiaPlaza.MailService.Exceptions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -18,16 +21,14 @@ namespace MiaPlaza.MailService.Tests {
 		private readonly Mock<IMessageProcessor> processorMock;
 		private readonly MailService mailService;
 		private readonly IBus bus;
-		private readonly Task mailServiceTask;
-
 		private ISubscriptionResult subscriptionResult;
 
 		private readonly Mock<ISubscriptionResult> subscriptionResultMock;
-		private readonly SimpleErrorBackoffStrategyConfiguration backoffStrategyConfiguration;
-		private readonly Mock<IErrorBackoffStrategy> backoffStrategyMock;
+		private readonly Mock<IRetryDelayStrategy> backoffStrategyMock;
 
 		public MailServiceTests() {
-			bus = EasyNetQ.RabbitHutch.CreateBus("host=localhost");
+			
+			bus = EasyNetQ.RabbitHutch.CreateBus("host=localhost;prefetchcount=10", x => x.Register<IScheduler, DelayedExchangeScheduler>());
 
 			subscriptionResultMock = new Mock<ISubscriptionResult>();
 			subscriptionResultMock
@@ -66,18 +67,28 @@ namespace MiaPlaza.MailService.Tests {
 				.AddInMemoryCollection(config)
 				.Build();
 
-			backoffStrategyConfiguration = new SimpleErrorBackoffStrategyConfiguration(configuration);
+			//var messageSource = new RabbitMQMessageSource(busMock.Object, )
+
+			//backoffStrategyConfiguration = new SimpleErrorBackoffStrategyConfiguration(configuration);
 			
-			backoffStrategyMock = new Mock<IErrorBackoffStrategy>();
+			backoffStrategyMock = new Mock<IRetryDelayStrategy>();
 			
 
-			mailService = new MailService(busMock.Object, processorMock.Object, new NullLogger<MailService>(), backoffStrategyMock.Object);
+			// mailService = new MailService(busMock.Object, processorMock.Object, new NullLogger<MailService>(), backoffStrategyMock.Object);
 			mailService.StartAsync(CancellationToken.None);
+			resetRabbitMq().Wait();
 		}
 
+		private async Task resetRabbitMq() {
+			var managementClient = new ManagementClient("http://localhost", "guest", "guest", 8080);
+			var vhost = (await managementClient.GetVhostsAsync()).First();
+			var queue = await managementClient.GetQueueAsync("MiaPlaza.MailService.EmailMessage, MailService_mailqueue1", vhost);
+			await managementClient.PurgeAsync(queue);
+		}
+		
 
 		[Fact]
-		public async void CancellationSuccessful() {		
+		public async Task CancellationSuccessful() {		
 			Assert.True(bus.IsConnected);
 			await mailService.StopAsync(CancellationToken.None);
 
@@ -112,19 +123,19 @@ namespace MiaPlaza.MailService.Tests {
 			processorMock.Verify(p => p.ProcessAsync(It.IsAny<EmailMessage>()), Times.Exactly(100));
 		}
 
-		[Fact]
-		public async void NotifyGlobalErrorIsCalled() {
-			Assert.True(bus.IsConnected);
+		// [Fact]
+		// public async void NotifyGlobalErrorIsCalled() {
+		// 	Assert.True(bus.IsConnected);
 
-			for(int i = 1; i <= 5; i++) {
-				var emailMessagFailure = FakerFactory.EmailMessageFaker.Generate();
-				emailMessagFailure.Subject = DELIVER_FAILURE_GLOBAL;	
-				await bus.PublishAsync(emailMessagFailure);
+		// 	for(int i = 1; i <= 5; i++) {
+		// 		var emailMessagFailure = FakerFactory.EmailMessageFaker.Generate();
+		// 		emailMessagFailure.Subject = DELIVER_FAILURE_GLOBAL;	
+		// 		await bus.PublishAsync(emailMessagFailure);
 
-				await Task.Delay(50);
-				backoffStrategyMock.Verify(p => p.NotifyGlobalError(), Times.Exactly(i));
-			}
-		}
+		// 		await Task.Delay(50);
+		// 		backoffStrategyMock.Verify(p => p.NotifyGlobalError(), Times.Exactly(i));
+		// 	}
+		// }
 
 		// [Fact]
 		// public async void CanProcessAfterSingleDeliveryFailure() {		

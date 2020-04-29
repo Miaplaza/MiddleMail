@@ -46,11 +46,12 @@ namespace MiaPlaza.MailService.Delivery {
 					semaphoreSlim.Release();
 				}
 			}
-
+	
 		public void Dispose(){
-			smtpClient?.Disconnect(quit: true);
-			smtpClient?.Dispose();
+			smtpClient.Disconnect(quit: true);
 			semaphoreSlim.Dispose();
+			smtpClient.Dispose();
 		}
+
 	}
 }

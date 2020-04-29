@@ -1,4 +1,5 @@
 ﻿using System;
+using EasyNetQ.Scheduling;
 using MiaPlaza.MailService.Delivery;
 using MiaPlaza.MailService.Storage;
 using Microsoft.Extensions.Configuration;
@@ -24,14 +25,21 @@ namespace MiaPlaza.MailService {
 			})
 			.ConfigureServices((hostContext, services) => {
 				services.AddSingleton<SmtpConfiguration>();
-				services.AddSingleton<EasyNetQ.IBus>(EasyNetQ.RabbitHutch.CreateBus("host=localhost"));
+				// prefetchcount = 10 so in case all messages throw an exception we can finish the prefetched messages on shutdown
+				//services.AddSingleton<EasyNetQ.IBus>(EasyNetQ.RabbitHutch.CreateBus();
+				services.RegisterEasyNetQ("host=localhost;prefetchcount=10", x => x.Register<IScheduler, DelayedExchangeScheduler>());
 				services.AddSingleton<IMailDeliverer, SmtpDeliverer>();
 				services.AddSingleton<IMailStorage, MemoryStorage>();
 				services.AddSingleton<IMimeMessageBuilder, MimeMessageBuilder>();
 				services.AddSingleton<IMimeMessageSender, SmtpMimeMessageSender>();
 				services.AddSingleton<IMessageProcessor, MessageProcessor>();
-				services.AddSingleton<IErrorBackoffStrategy, SimpleErrorBackoffStrategy>();
-				services.AddSingleton<SimpleErrorBackoffStrategyConfiguration>();
+				services.AddSingleton<IRetryDelayStrategy, ExponentialRetryDelayStrategy>();
+				services.AddSingleton<ExponentialRetryDelayConfiguration>();
+				services.AddSingleton<IMessageSource, RabbitMQMessageSource>();
+				services.AddStackExchangeRedisCache(options => {
+					options.Configuration = "localhost";
+					options.InstanceName = "SampleInstance";
+				});
 				services.AddHostedService<MailService>();
 			});
 	}

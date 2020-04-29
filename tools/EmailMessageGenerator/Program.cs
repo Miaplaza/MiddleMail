@@ -1,4 +1,5 @@
 ﻿using System;
+using EasyNetQ.Topology;
 
 namespace MiaPlaza.EmailMessageGenerator {
 	class Program {
@@ -11,7 +12,9 @@ namespace MiaPlaza.EmailMessageGenerator {
 				if(invalid) {
 					emailMessage.Subject = null;
 				}
+
 				bus.Publish(emailMessage);
+
 			}
 			bus.Dispose();
 		}
