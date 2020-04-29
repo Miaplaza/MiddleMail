@@ -27,6 +27,7 @@ namespace MiaPlaza.MailService {
 				messageSource.Stop();
 
 				// wait for all consumer task to finish
+				// this is important: a consumer task is only idempotent if does not get canceled
 				while(consumerTasksPending != 0) {
 					logger.LogInformation($"Waiting for {consumerTasksPending} Tasks to finish.");
 					await Task.Delay(25);
