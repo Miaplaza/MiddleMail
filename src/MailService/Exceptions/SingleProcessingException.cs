@@ -9,11 +9,11 @@ namespace MiaPlaza.MailService.Exceptions {
 	/// The delivery will not be retried.static The Exception bubbles up to <see cref="IMessageSource" />.
 	/// Throw a <see cref="GeneralDeliveryException" /> to indicate a general problem.
 	/// </summary>
-	public class SingleDeliveryException : Exception {
+	public class SingleProcessingException : Exception {
 
-		public SingleDeliveryException() { }
+		public SingleProcessingException() { }
 
-		public SingleDeliveryException(string message, EmailMessage emailMessage, Exception innerException)
+		public SingleProcessingException(string message, EmailMessage emailMessage, Exception innerException)
 			: base($"Exception when sending EmailMessage with Id {emailMessage.Id}: {message}", innerException) { }
 	}
 }

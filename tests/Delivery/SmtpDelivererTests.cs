@@ -48,7 +48,7 @@ namespace MiaPlaza.MailService.Tests.Delivery {
 		public async void ThrowsIfBuildFails() {
 			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
 			emailMessage.Subject = BUILDER_FAILURE;
-			await Assert.ThrowsAnyAsync<SingleDeliveryException>(async () => await smtpDeliverer.DeliverAsync(emailMessage));
+			await Assert.ThrowsAnyAsync<SingleProcessingException>(async () => await smtpDeliverer.DeliverAsync(emailMessage));
 			messageSenderMock.Verify(s => s.SendAsync(It.IsAny<MimeMessage>()), Times.Never);
 		}
 
@@ -57,7 +57,7 @@ namespace MiaPlaza.MailService.Tests.Delivery {
 			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
 			emailMessage.Subject = MESSAGE_INVALID;
 
-			await Assert.ThrowsAnyAsync<SingleDeliveryException>(async () => await smtpDeliverer.DeliverAsync(emailMessage));
+			await Assert.ThrowsAnyAsync<SingleProcessingException>(async () => await smtpDeliverer.DeliverAsync(emailMessage));
 			messageSenderMock.Verify(s => s.SendAsync(It.IsAny<MimeMessage>()), Times.Once);
 		}
 
@@ -66,7 +66,7 @@ namespace MiaPlaza.MailService.Tests.Delivery {
 			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
 			emailMessage.Subject = GENERAL_SMTP_ERROR;
 
-			await Assert.ThrowsAnyAsync<GlobalDeliveryException>(async () => await smtpDeliverer.DeliverAsync(emailMessage));
+			await Assert.ThrowsAnyAsync<GeneralProcessingException>(async () => await smtpDeliverer.DeliverAsync(emailMessage));
 			messageSenderMock.Verify(s => s.SendAsync(It.IsAny<MimeMessage>()), Times.Once);
 		}
 

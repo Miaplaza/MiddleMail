@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MiaPlaza.MailService.Exceptions;
@@ -41,10 +42,10 @@ namespace MiaPlaza.MailService {
 			try {
 				await processor.ProcessAsync(emailMessage);
 				logger.LogDebug($"Successfully processed email message {emailMessage.Id}");
-			} catch(SingleDeliveryException e) {
+			} catch(SingleProcessingException e) {
 				logger.LogError(e, $"Delivery error for message {emailMessage.Id}");
 				throw e;
-			} catch(GlobalDeliveryException e) {
+			} catch(GeneralProcessingException e) {
 				logger.LogError(e, $"General delivery problem for message {emailMessage.Id}");
 				await messageSource.RetryAsync(emailMessage);
 			} finally {

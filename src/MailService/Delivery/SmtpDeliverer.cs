@@ -26,9 +26,8 @@ namespace MiaPlaza.MailService.Delivery {
 			} catch (InvalidOperationException e) {
 				throw new MimeMessageSenderException(emailMessage, mimeMessage, e);
 			} catch (Exception e) {
-				throw new GlobalDeliveryException(emailMessage, mimeMessage, e);
+				throw new GeneralProcessingException(emailMessage, mimeMessage, e);
 			}
-			
 		}
 	}
 }
