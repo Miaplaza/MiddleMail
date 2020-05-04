@@ -36,6 +36,7 @@ namespace MiaPlaza.MailService {
 				throw e;
 			}
 			
+			// TODO test empty string
 			await cache.SetStringAsync(emailMessage.Id.ToString(), "t");
 			await tryStoreOrLogAsync(() => storage.SetSentAsync(emailMessage));
 		}

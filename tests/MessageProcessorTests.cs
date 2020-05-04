@@ -1,8 +1,11 @@
 using System;
+using System.Threading.Tasks;
 using MiaPlaza.MailService.Delivery;
 using MiaPlaza.MailService.Storage;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 
@@ -17,6 +20,8 @@ namespace MiaPlaza.MailService.Tests {
 		private readonly Mock<IMailDeliverer> delivererMock;
 		private readonly Mock<IMailStorage> storageMock;
 		private readonly MessageProcessor messageProcessor;
+
+		private readonly IDistributedCache cache;
 
 		public MessageProcessorTests() {
 			delivererMock = new Mock<IMailDeliverer>();
@@ -40,14 +45,19 @@ namespace MiaPlaza.MailService.Tests {
 				.ThrowsAsync(new Exception());
 
 			var logger = new NullLogger<MessageProcessor>();
-			var cache = new Mock<MemoryDistributedCache>();
-			messageProcessor = new MessageProcessor(delivererMock.Object, storageMock.Object, cache.Object, logger);
+			cache = new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions()));
+			messageProcessor = new MessageProcessor(delivererMock.Object, storageMock.Object, cache, logger);
+		}
+
+		private async Task<EmailMessage> processValidMessage() {
+			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
+			await messageProcessor.ProcessAsync(emailMessage);
+			return emailMessage;
 		}
 
 		[Fact]
-		public async void SuccessfullProcessingDeliversAndStores() {
-			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
-			await messageProcessor.ProcessAsync(emailMessage);
+		public async Task SuccessfullProcessingDelivers() {
+			await processValidMessage();
 			delivererMock.Verify(d => d.DeliverAsync(It.IsAny<EmailMessage>()), Times.Once);
 			storageMock.Verify(d => d.SetProcessedAsync(It.IsAny<EmailMessage>()), Times.Once);
 			storageMock.Verify(d => d.SetErrorAsync(It.IsAny<EmailMessage>(), It.IsAny<string>()), Times.Never);
@@ -55,7 +65,29 @@ namespace MiaPlaza.MailService.Tests {
 		}
 
 		[Fact]
-		public async void StorageExceptionInSetProcessedDoesNotThrow() {
+		public async Task SuccessfullProcessingStores() {
+			await processValidMessage();
+			storageMock.Verify(d => d.SetProcessedAsync(It.IsAny<EmailMessage>()), Times.Once);
+			storageMock.Verify(d => d.SetErrorAsync(It.IsAny<EmailMessage>(), It.IsAny<string>()), Times.Never);
+			storageMock.Verify(d => d.SetSentAsync(It.IsAny<EmailMessage>()), Times.Once);
+		}
+
+		[Fact]
+		public async Task SuccessfullDeliveryCaches() {
+			var emailMessage = await processValidMessage();
+			Assert.NotNull(await cache.GetStringAsync(emailMessage.Id.ToString()));
+		}
+
+		[Fact]
+		public async Task UnsuccessfulDeliveryDoesNotCache() {
+			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
+			emailMessage.Subject = DELIVER_FAILURE;
+			try { await messageProcessor.ProcessAsync(emailMessage); } catch { }
+			Assert.Null(await cache.GetStringAsync(emailMessage.Id.ToString()));
+		}
+
+		[Fact]
+		public async Task StorageExceptionInSetProcessedDoesNotThrow() {
 			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
 			emailMessage.Subject = SET_PROCESSED_FAILURE;
 			await messageProcessor.ProcessAsync(emailMessage);
@@ -63,7 +95,7 @@ namespace MiaPlaza.MailService.Tests {
 		}
 
 		[Fact]
-		public async void StorageExceptionInSetSentDoesNotThrow() {
+		public async Task StorageExceptionInSetSentDoesNotThrow() {
 			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
 			emailMessage.Subject = SET_SENT_FAILURE;
 			await messageProcessor.ProcessAsync(emailMessage);
@@ -79,7 +111,7 @@ namespace MiaPlaza.MailService.Tests {
 		}
 
 		[Fact]
-		public async void ExceptionInDeliverer() {
+		public async Task UnsuccessfulDeliveryStores() {
 			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
 			emailMessage.Subject = DELIVER_FAILURE;
 			await Assert.ThrowsAnyAsync<Exception>(async () => await messageProcessor.ProcessAsync(emailMessage));
