@@ -52,6 +52,7 @@ namespace MiaPlaza.MiddleMail.Tests.Delivery {
 				await smtpClient.ConnectAsync("localhost", SMTP_PORT);
 				await smtpClient.SendAsync(mimeMessage);
 				
+				await Task.Delay(50);
 				Assert.Single(messages);
 				
 				var parser = new MimeParser(await messages.First().GetData(), MimeFormat.Entity);
