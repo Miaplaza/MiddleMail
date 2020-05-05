@@ -1,9 +1,10 @@
 using System;
 using Bogus;
-using MiaPlaza.MailService;
+using MiaPlaza.MiddleMail;
+using MiaPlaza.MiddleMail.Model;
 using MimeKit;
 
-namespace MiaPlaza.MailService.Tests {
+namespace MiaPlaza.MiddleMail.Tests {
 
 	public static class FakerFactory {
 

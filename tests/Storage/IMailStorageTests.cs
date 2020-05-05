@@ -1,10 +1,11 @@
 using System;
-using MiaPlaza.MailService.Exceptions;
-using MiaPlaza.MailService.Storage;
+using MiaPlaza.MiddleMail.Exceptions;
+using MiaPlaza.MiddleMail.Model;
+using MiaPlaza.MiddleMail.Storage;
 using Xunit;
 
 
-namespace MiaPlaza.MailService.Tests.Storage {
+namespace MiaPlaza.MiddleMail.Tests.Storage {
 	public abstract class IMailStorageTests<T> where T : IMailStorage {
 
 		protected abstract T MailStorage { get; }

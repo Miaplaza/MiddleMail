@@ -1,6 +1,6 @@
-using MiaPlaza.MailService.Storage;
+using MiaPlaza.MiddleMail.Storage;
 
-namespace MiaPlaza.MailService.Tests.Storage {
+namespace MiaPlaza.MiddleMail.Tests.Storage {
 	public class MemoryStorageTests : IMailStorageTests<MemoryStorage> {
 		
 		private MemoryStorage memoryStorage;

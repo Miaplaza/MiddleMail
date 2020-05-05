@@ -8,7 +8,7 @@ namespace MiaPlaza.EmailMessageGenerator {
 
 			var bus = EasyNetQ.RabbitHutch.CreateBus("host=localhost");
 			for(int i = 0; i < count; i++) {
-				var emailMessage = MiaPlaza.MailService.Tests.FakerFactory.EmailMessageFaker.Generate();
+				var emailMessage = MiaPlaza.MiddleMail.Tests.FakerFactory.EmailMessageFaker.Generate();
 				if(invalid) {
 					emailMessage.Subject = null;
 				}

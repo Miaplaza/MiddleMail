@@ -2,7 +2,7 @@ using System.Threading;
 using System;
 using System.Net;
 using System.Collections.Generic;
-using MiaPlaza.MailService.Delivery;
+using MiaPlaza.MiddleMail.Delivery;
 using Microsoft.Extensions.Configuration;
 using Xunit;
 using System.Linq;
@@ -12,7 +12,7 @@ using Rnwood.SmtpServer;
 using System.Net.Sockets;
 using MailKit.Security;
 
-namespace MiaPlaza.MailService.Tests.Delivery {
+namespace MiaPlaza.MiddleMail.Tests.Delivery {
 
 	public class SmtpMimeMessageSenderTests : IDisposable {
 
