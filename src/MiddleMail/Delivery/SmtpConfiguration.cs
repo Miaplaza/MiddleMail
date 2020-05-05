@@ -1,3 +1,4 @@
+using MiaPlaza.MiddleMail.Exceptions;
 using Microsoft.Extensions.Configuration;
 
 namespace MiaPlaza.MiddleMail.Delivery {
@@ -9,9 +10,15 @@ public class SmtpConfiguration {
 
 		public SmtpConfiguration(IConfiguration configuration) {
 			configuration.GetSection("SMTP").Bind(this);
-			// if(Enabled) {
-
-			// }
+			if(string.IsNullOrEmpty(Server)) {
+				throw new ConfigurationMissingException("SMTP__Server");
+			}
+			if(string.IsNullOrEmpty(Username)) {
+				throw new ConfigurationMissingException("SMTP__Username");
+			}
+			if(string.IsNullOrEmpty(Password)) {
+				throw new ConfigurationMissingException("SMTP__Password");
+			}
 		}
 	}
 }
