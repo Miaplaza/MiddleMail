@@ -12,6 +12,8 @@ build:
 
 test:
   stage: test
+  variables:
+    RabbitMQ__HOST: "rabbitmq"
   services:
   - name: rabbitmq:3.8-management-alpine
     alias: rabbitmq
