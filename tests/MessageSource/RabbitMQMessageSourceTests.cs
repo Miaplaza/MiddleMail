@@ -46,7 +46,7 @@ namespace MiaPlaza.MiddleMail.Tests.MessageSource {
 		/// If the virtualhost is present, we delete it and recreate it before running any test
 		/// </summary>
 		private void setupVhost() {
-			var managementClient = new ManagementClient($"http://{rabbitMQHost}", "guest", "guest", 8080);
+			var managementClient = new ManagementClient($"http://{rabbitMQHost}", "guest", "guest", 15671);
 			
 			var vhost = managementClient.GetVhosts().Where(v => v.Name == VHOST_NAME).FirstOrDefault();
 			if (vhost != null) {
