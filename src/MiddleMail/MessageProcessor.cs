@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MiaPlaza.MiddleMail.Delivery;
+using MiaPlaza.MiddleMail.Exceptions;
 using MiaPlaza.MiddleMail.Model;
 using MiaPlaza.MiddleMail.Storage;
 using Microsoft.Extensions.Caching.Distributed;
@@ -23,7 +24,13 @@ namespace MiaPlaza.MiddleMail {
 			this.cache = cache;
 		}
 		public async Task ProcessAsync(EmailMessage emailMessage) {
-			var cached = await cache.GetStringAsync(emailMessage.Id.ToString());
+			string cached = null;
+			try {
+				cached = await cache.GetStringAsync(emailMessage.Id.ToString());
+			} catch(Exception e) {
+				throw new GeneralProcessingException(emailMessage, e);
+			}
+
 			if(cached != null) {
 				logger.LogInformation($"Caught duplicate email {emailMessage.Id}");
 				return;
@@ -38,6 +45,7 @@ namespace MiaPlaza.MiddleMail {
 			}
 			
 			// TODO test empty string
+			// if the cache throws an exception we do not rethrow a GeneralProcessingException here because the message has already been delivered
 			await cache.SetStringAsync(emailMessage.Id.ToString(), "t");
 			await tryStoreOrLogAsync(() => storage.SetSentAsync(emailMessage));
 		}

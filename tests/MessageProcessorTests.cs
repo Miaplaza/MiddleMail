@@ -1,3 +1,4 @@
+using System.Threading;
 using System;
 using System.Threading.Tasks;
 using MiaPlaza.MiddleMail.Delivery;
@@ -9,6 +10,8 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
+using MiaPlaza.MiddleMail.Exceptions;
+using System.Text;
 
 namespace MiaPlaza.MiddleMail.Tests {
 	public class MessageProcessorTests {
@@ -17,12 +20,16 @@ namespace MiaPlaza.MiddleMail.Tests {
 		private const string SET_PROCESSED_FAILURE = "SET_PROCESSED_FAILURE";
 		private const string SET_ERROR_FAILURE = "SET_ERROR_FAILURE";
 		private const string SET_SENT_FAILURE = "SET_SENT_FAILURE";
+		private readonly Guid CACHE_GET_EXCEPTION = Guid.NewGuid();
+
+		private readonly Guid CACHE_SET_EXCEPTION = Guid.NewGuid();
+
 
 		private readonly Mock<IMailDeliverer> delivererMock;
 		private readonly Mock<IMailStorage> storageMock;
 		private readonly MessageProcessor messageProcessor;
 
-		private readonly IDistributedCache cache;
+		private readonly Mock<IDistributedCache> cacheMock;
 
 		public MessageProcessorTests() {
 			delivererMock = new Mock<IMailDeliverer>();
@@ -45,9 +52,31 @@ namespace MiaPlaza.MiddleMail.Tests {
 				.Setup(s => s.SetSentAsync(It.Is<EmailMessage>(m => m.Subject == SET_SENT_FAILURE)))
 				.ThrowsAsync(new Exception());
 
+			cacheMock = new Mock<IDistributedCache>();
+
+			var internalCache = new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions()));
+
+			cacheMock
+				.Setup(c => c.GetAsync(It.Is<string>(m => m == CACHE_GET_EXCEPTION.ToString()), It.IsAny<CancellationToken>()))
+				.ThrowsAsync(new Exception());
+
+			cacheMock
+				.Setup(c => c.GetAsync(It.Is<string>(m => m != CACHE_GET_EXCEPTION.ToString()), It.IsAny<CancellationToken>()))
+				.Returns(async (string key, CancellationToken c) => await internalCache.GetAsync(key, c));
+
+			cacheMock
+				.Setup(c => c.SetAsync(It.Is<string>(m => m == CACHE_SET_EXCEPTION.ToString()), It.IsAny<byte[]>(), It.IsAny<DistributedCacheEntryOptions>(), It.IsAny<CancellationToken>()))
+				.ThrowsAsync(new Exception());
+
+			cacheMock
+				.Setup(c => c.SetAsync(It.Is<string>(m => m != CACHE_SET_EXCEPTION.ToString()), It.IsAny<byte[]>(), It.IsAny<DistributedCacheEntryOptions>(), It.IsAny<CancellationToken>()))
+				.Returns(async (string key, byte[] value, DistributedCacheEntryOptions o, CancellationToken c) => await internalCache.SetAsync(key, value, o, c));
+
+			
+
 			var logger = new NullLogger<MessageProcessor>();
-			cache = new MemoryDistributedCache(Options.Create<MemoryDistributedCacheOptions>(new MemoryDistributedCacheOptions()));
-			messageProcessor = new MessageProcessor(delivererMock.Object, storageMock.Object, cache, logger);
+			
+			messageProcessor = new MessageProcessor(delivererMock.Object, storageMock.Object, cacheMock.Object, logger);
 		}
 
 		private async Task<EmailMessage> processValidMessage() {
@@ -76,7 +105,7 @@ namespace MiaPlaza.MiddleMail.Tests {
 		[Fact]
 		public async Task SuccessfullDeliveryCaches() {
 			var emailMessage = await processValidMessage();
-			Assert.NotNull(await cache.GetStringAsync(emailMessage.Id.ToString()));
+			Assert.NotNull(await cacheMock.Object.GetStringAsync(emailMessage.Id.ToString()));
 		}
 
 		[Fact]
@@ -84,7 +113,7 @@ namespace MiaPlaza.MiddleMail.Tests {
 			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
 			emailMessage.Subject = DELIVER_FAILURE;
 			try { await messageProcessor.ProcessAsync(emailMessage); } catch { }
-			Assert.Null(await cache.GetStringAsync(emailMessage.Id.ToString()));
+			Assert.Null(await cacheMock.Object.GetStringAsync(emailMessage.Id.ToString()));
 		}
 
 		[Fact]
@@ -120,6 +149,20 @@ namespace MiaPlaza.MiddleMail.Tests {
 			storageMock.Verify(d => d.SetProcessedAsync(It.IsAny<EmailMessage>()), Times.Once);
 			storageMock.Verify(d => d.SetErrorAsync(It.IsAny<EmailMessage>(), It.IsAny<string>()), Times.Once);
 			storageMock.Verify(d => d.SetSentAsync(It.IsAny<EmailMessage>()), Times.Never);
+		}
+
+		[Fact]
+		public async Task ExceptionInCacheThrowsGeneralExceptionBeforeDelivery() {
+			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
+			emailMessage.Id = CACHE_GET_EXCEPTION;
+			await Assert.ThrowsAnyAsync<GeneralProcessingException>(async () => await messageProcessor.ProcessAsync(emailMessage));
+		}
+
+		[Fact]
+		public async Task ExceptionInCacheThrowsExceptionAfterDelivery() {
+			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
+			emailMessage.Id = CACHE_SET_EXCEPTION;
+			await Assert.ThrowsAsync<Exception>(async () => await messageProcessor.ProcessAsync(emailMessage));
 		}
 	}
 }
