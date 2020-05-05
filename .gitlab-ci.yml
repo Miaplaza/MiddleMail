@@ -1,5 +1,6 @@
 image: mcr.microsoft.com/dotnet/core/sdk:3.1
 
+
 stages:
   - build
   - test
@@ -11,6 +12,8 @@ build:
 
 test:
   stage: test
+  - name: rabbitmq-management:3.8-alpine
+    alias: rabbitmq
+    
   script: 
       - "dotnet test"
-

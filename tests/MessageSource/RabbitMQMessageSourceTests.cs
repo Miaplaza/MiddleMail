@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -17,10 +18,12 @@ namespace MiaPlaza.MiddleMail.Tests.MessageSource {
 		private readonly IBus bus;
 		private readonly Mock<IMessageProcessor> callbackMock;
 		private readonly RabbitMQMessageSource messageSource;
+
+		private string rabbitMQHost = Environment.GetEnvironmentVariable("RabbitMQ:HOST") ?? "localhost";
 		
 		public RabbitMQMessageSourceTests() {
 			setupVhost();
-			bus = EasyNetQ.RabbitHutch.CreateBus($"host=localhost;virtualHost={VHOST_NAME};prefetchcount=10", x => x.Register<IScheduler, DelayedExchangeScheduler>());
+			bus = EasyNetQ.RabbitHutch.CreateBus($"host={rabbitMQHost};virtualHost={VHOST_NAME};prefetchcount=10", x => x.Register<IScheduler, DelayedExchangeScheduler>());
 
 			var retryDelayMock = new Mock<IRetryDelayStrategy>();
 			retryDelayMock
@@ -43,7 +46,7 @@ namespace MiaPlaza.MiddleMail.Tests.MessageSource {
 		/// If the virtualhost is present, we delete it and recreate it before running any test
 		/// </summary>
 		private void setupVhost() {
-			var managementClient = new ManagementClient("http://localhost", "guest", "guest", 8080);
+			var managementClient = new ManagementClient($"http://{rabbitMQHost}", "guest", "guest", 8080);
 			
 			var vhost = managementClient.GetVhosts().Where(v => v.Name == VHOST_NAME).FirstOrDefault();
 			if (vhost != null) {
