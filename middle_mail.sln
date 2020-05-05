@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiddleMail.Model", "src\Mid
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiddleMail.Server", "src\MiddleMail.Server\MiddleMail.Server.csproj", "{97D7F5D9-FC57-4230-B2DC-62E1452F0B45}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiddleMail.Client.RabbitMQ", "src\MiddleMail.Client.RabbitMQ\MiddleMail.Client.RabbitMQ.csproj", "{1D1127E3-BA1A-4C51-957F-6FBC3DEF4809}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,6 +92,18 @@ Global
 		{97D7F5D9-FC57-4230-B2DC-62E1452F0B45}.Release|x64.Build.0 = Release|Any CPU
 		{97D7F5D9-FC57-4230-B2DC-62E1452F0B45}.Release|x86.ActiveCfg = Release|Any CPU
 		{97D7F5D9-FC57-4230-B2DC-62E1452F0B45}.Release|x86.Build.0 = Release|Any CPU
+		{1D1127E3-BA1A-4C51-957F-6FBC3DEF4809}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D1127E3-BA1A-4C51-957F-6FBC3DEF4809}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D1127E3-BA1A-4C51-957F-6FBC3DEF4809}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1D1127E3-BA1A-4C51-957F-6FBC3DEF4809}.Debug|x64.Build.0 = Debug|Any CPU
+		{1D1127E3-BA1A-4C51-957F-6FBC3DEF4809}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1D1127E3-BA1A-4C51-957F-6FBC3DEF4809}.Debug|x86.Build.0 = Debug|Any CPU
+		{1D1127E3-BA1A-4C51-957F-6FBC3DEF4809}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D1127E3-BA1A-4C51-957F-6FBC3DEF4809}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D1127E3-BA1A-4C51-957F-6FBC3DEF4809}.Release|x64.ActiveCfg = Release|Any CPU
+		{1D1127E3-BA1A-4C51-957F-6FBC3DEF4809}.Release|x64.Build.0 = Release|Any CPU
+		{1D1127E3-BA1A-4C51-957F-6FBC3DEF4809}.Release|x86.ActiveCfg = Release|Any CPU
+		{1D1127E3-BA1A-4C51-957F-6FBC3DEF4809}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7F1A1F92-8CBB-4319-BDB0-234892215D18} = {B8216404-3860-407B-B17C-82F56BDDF4A9}
