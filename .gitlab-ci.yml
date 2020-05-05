@@ -13,7 +13,7 @@ build:
 test:
   stage: test
   services:
-  - name: rabbitmq-management:3.8-alpine
+  - name: rabbitmq:3.8-management-alpine
     alias: rabbitmq
     
   script: 
