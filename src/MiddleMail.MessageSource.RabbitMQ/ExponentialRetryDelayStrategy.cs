@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace MiaPlaza.MiddleMail.MessageSource {
+namespace MiaPlaza.MiddleMail.MessageSource.RabbitMQ {
 
 	public class ExponentialRetryDelayStrategy : IRetryDelayStrategy {
 		

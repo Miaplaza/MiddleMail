@@ -5,6 +5,7 @@ using MimeKit;
 using Moq;
 using MiaPlaza.MiddleMail.Exceptions;
 using MiaPlaza.MiddleMail.Model;
+using MiaPlaza.MiddleMail.Delivery.Smtp;
 
 namespace MiaPlaza.MiddleMail.Tests.Delivery {
 

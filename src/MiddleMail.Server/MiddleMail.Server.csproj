@@ -12,5 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MiddleMail\MiddleMail.csproj" />
+    <ProjectReference Include="..\MiddleMail.MessageSource.RabbitMQ\MiddleMail.MessageSource.RabbitMQ.csproj" />
+    <ProjectReference Include="..\MiddleMail.Delivery.Smtp\MiddleMail.Delivery.Smtp.csproj" />
   </ItemGroup>
 </Project>

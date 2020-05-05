@@ -3,7 +3,7 @@ using MiaPlaza.MiddleMail.Model;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
 
-namespace MiaPlaza.MiddleMail.Delivery {
+namespace MiaPlaza.MiddleMail.Delivery.Smtp {
 	
 	public class MimeMessageBuilder : IMimeMessageBuilder {
 

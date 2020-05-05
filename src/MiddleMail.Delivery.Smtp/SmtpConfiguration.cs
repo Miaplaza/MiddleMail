@@ -1,7 +1,7 @@
 using MiaPlaza.MiddleMail.Exceptions;
 using Microsoft.Extensions.Configuration;
 
-namespace MiaPlaza.MiddleMail.Delivery {
+namespace MiaPlaza.MiddleMail.Delivery.Smtp {
 public class SmtpConfiguration {
 		public string Server { get; set; }
 		public int Port { get; set; }

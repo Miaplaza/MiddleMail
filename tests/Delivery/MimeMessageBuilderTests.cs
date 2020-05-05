@@ -12,6 +12,7 @@ using System.Net.Sockets;
 using MailKit.Security;
 using MimeKit.Text;
 using MiaPlaza.MiddleMail.Model;
+using MiaPlaza.MiddleMail.Delivery.Smtp;
 
 namespace MiaPlaza.MiddleMail.Tests.Delivery {
 

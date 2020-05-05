@@ -2,7 +2,7 @@ using System;
 using MiaPlaza.MiddleMail.Exceptions;
 using Microsoft.Extensions.Configuration;
 
-namespace MiaPlaza.MiddleMail.Delivery {
+namespace MiaPlaza.MiddleMail.Delivery.Smtp {
 public class MimeMessageConfiguration {
 		public string MessageIdDomainPart { get; set; }
 

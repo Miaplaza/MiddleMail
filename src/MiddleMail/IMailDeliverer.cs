@@ -5,6 +5,6 @@ namespace MiaPlaza.MiddleMail.Delivery {
 	
 	public interface IMailDeliverer {
 		
-		public Task DeliverAsync(EmailMessage emailData);
+		Task DeliverAsync(EmailMessage emailData);
 	} 
 }

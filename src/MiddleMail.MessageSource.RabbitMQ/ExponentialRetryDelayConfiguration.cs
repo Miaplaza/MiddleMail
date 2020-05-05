@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Extensions.Configuration;
 
-namespace MiaPlaza.MiddleMail.MessageSource {
+namespace MiaPlaza.MiddleMail.MessageSource.RabbitMQ {
 public class ExponentialRetryDelayConfiguration {
 		public int Multiplicator { get; set; }
 		

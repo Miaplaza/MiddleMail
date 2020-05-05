@@ -6,7 +6,7 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 
-namespace MiaPlaza.MiddleMail.Delivery {
+namespace MiaPlaza.MiddleMail.Delivery.Smtp {
 	public class SmtpMimeMessageSender : IMimeMessageSender, IDisposable {
 
 		private readonly SmtpConfiguration smtpConfig;

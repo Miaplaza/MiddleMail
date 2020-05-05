@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNameSpace>MiaPlaza.MiddleMail.Delivery.Smtp</RootNameSpace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MailKit" Version="2.6.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MiddleMail.Model\MiddleMail.Model.csproj" />
+    <ProjectReference Include="..\MiddleMail\MiddleMail.csproj" />
+  </ItemGroup>
+
+</Project>

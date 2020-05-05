@@ -1,6 +1,5 @@
 using System;
 using MiaPlaza.MiddleMail.Model;
-using MimeKit;
 
 namespace MiaPlaza.MiddleMail.Exceptions {
 
@@ -14,7 +13,7 @@ namespace MiaPlaza.MiddleMail.Exceptions {
 
 		public GeneralProcessingException() { }
 
-		public GeneralProcessingException(EmailMessage emailMessage, MimeMessage mimeMessage, Exception innerException)
+		public GeneralProcessingException(EmailMessage emailMessage, Exception innerException)
 			: base($"Exception when sending EmailMessage with Id {emailMessage.Id}", innerException) { }
 	}
 }

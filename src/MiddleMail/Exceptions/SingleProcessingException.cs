@@ -1,6 +1,5 @@
 using System;
 using MiaPlaza.MiddleMail.Model;
-using MimeKit;
 
 namespace MiaPlaza.MiddleMail.Exceptions {
 

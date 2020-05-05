@@ -1,11 +1,12 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MiaPlaza.MiddleMail.Delivery.Smtp.Exceptions;
 using MiaPlaza.MiddleMail.Exceptions;
 using MiaPlaza.MiddleMail.Model;
 using MimeKit;
 
-namespace MiaPlaza.MiddleMail.Delivery {
+namespace MiaPlaza.MiddleMail.Delivery.Smtp {
 	
 	public class SmtpDeliverer : IMailDeliverer {
 		private readonly IMimeMessageBuilder builder;
@@ -27,7 +28,7 @@ namespace MiaPlaza.MiddleMail.Delivery {
 			} catch (InvalidOperationException e) {
 				throw new MimeMessageSenderException(emailMessage, mimeMessage, e);
 			} catch (Exception e) {
-				throw new GeneralProcessingException(emailMessage, mimeMessage, e);
+				throw new GeneralProcessingException(emailMessage, e);
 			}
 		}
 	}

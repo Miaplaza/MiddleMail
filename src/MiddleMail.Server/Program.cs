@@ -1,7 +1,8 @@
 ﻿using System;
 using EasyNetQ.Scheduling;
 using MiaPlaza.MiddleMail.Delivery;
-using MiaPlaza.MiddleMail.MessageSource;
+using MiaPlaza.MiddleMail.Delivery.Smtp;
+using MiaPlaza.MiddleMail.MessageSource.RabbitMQ;
 using MiaPlaza.MiddleMail.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

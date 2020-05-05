@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using EasyNetQ;
 using EasyNetQ.Management.Client;
 using EasyNetQ.Scheduling;
-using MiaPlaza.MiddleMail.MessageSource;
+using MiaPlaza.MiddleMail.MessageSource.RabbitMQ;
 using MiaPlaza.MiddleMail.Model;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;

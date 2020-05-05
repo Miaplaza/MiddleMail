@@ -5,7 +5,7 @@ using EasyNetQ.Scheduling;
 using MiaPlaza.MiddleMail.Model;
 using Microsoft.Extensions.Logging;
 
-namespace MiaPlaza.MiddleMail.MessageSource {
+namespace MiaPlaza.MiddleMail.MessageSource.RabbitMQ {
 	public class RabbitMQMessageSource : IMessageSource {
 
 		private readonly IBus bus;

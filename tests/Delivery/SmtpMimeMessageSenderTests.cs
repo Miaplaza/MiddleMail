@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Rnwood.SmtpServer;
 using System.Net.Sockets;
 using MailKit.Security;
+using MiaPlaza.MiddleMail.Delivery.Smtp;
 
 namespace MiaPlaza.MiddleMail.Tests.Delivery {
 
