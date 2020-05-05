@@ -26,6 +26,7 @@ namespace MiaPlaza.MiddleMail {
 			})
 			.ConfigureServices((hostContext, services) => {
 				services.AddSingleton<SmtpConfiguration>();
+				services.AddSingleton<MimeMessageConfiguration>();
 				// prefetchcount = 10 so in case all messages throw an exception we can finish the prefetched messages on shutdown
 				services.RegisterEasyNetQ("host=localhost;prefetchcount=10", x => x.Register<IScheduler, DelayedExchangeScheduler>());
 				services.AddSingleton<IMailDeliverer, SmtpDeliverer>();

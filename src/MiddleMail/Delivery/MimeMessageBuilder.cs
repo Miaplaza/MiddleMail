@@ -1,10 +1,16 @@
 using System;
 using MiaPlaza.MiddleMail.Model;
+using Microsoft.Extensions.Configuration;
 using MimeKit;
 
 namespace MiaPlaza.MiddleMail.Delivery {
 	
 	public class MimeMessageBuilder : IMimeMessageBuilder {
+
+		private readonly MimeMessageConfiguration configuration;
+		public MimeMessageBuilder(MimeMessageConfiguration configuration) {
+			this.configuration = configuration;
+		}
 
 		public MimeMessage Create(EmailMessage emailMessage) {
 			if(emailMessage.PlainText == null) {
@@ -22,6 +28,7 @@ namespace MiaPlaza.MiddleMail.Delivery {
 				createBodyMultipart(emailMessage, mimeMessage);
 			}
 
+			mimeMessage.MessageId = $"{emailMessage.Id.ToString("N")}@{configuration.MessageIdDomainPart}>";
 			return mimeMessage;
 		}
 

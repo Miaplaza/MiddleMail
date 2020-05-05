@@ -25,8 +25,19 @@ namespace MiaPlaza.MiddleMail.Tests.Delivery {
 		private DefaultServer smtpServer;
 		private readonly List<IMessage> messages;
 
+		private readonly string MessageIdDomainPart = "testdomain.test";
+
 		public MimeMessageBuilderTests() {
-			builder = new MimeMessageBuilder();
+			var config = new Dictionary<string, string>{
+				{"MimeMessage:MessageIdDomainPart", MessageIdDomainPart}
+			};
+
+			var configuration = new ConfigurationBuilder()
+				.AddInMemoryCollection(config)
+				.Build();
+
+			var mimeMessageConfiguration = new MimeMessageConfiguration(configuration);
+			builder = new MimeMessageBuilder(mimeMessageConfiguration);
 			messages = new List<IMessage>();
 			smtpServer = new DefaultServer(false, SMTP_PORT);
 			smtpServer.MessageReceivedEventHandler += (o, ea) => {
@@ -119,6 +130,22 @@ namespace MiaPlaza.MiddleMail.Tests.Delivery {
 			emailMessage.ToEmail = null;
 			
 			Assert.ThrowsAny<Exception>(() => builder.Create(emailMessage));
+		}
+
+		[Fact]
+		public void MessageIdLocalPartIsEmailMessageId() {
+			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
+			var mimeMessage = builder.Create(emailMessage);
+
+			Assert.StartsWith(emailMessage.Id.ToString("N"), mimeMessage.MessageId);
+		}
+
+		[Fact]
+		public void MessageIdDomainPartIsSet() {
+			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
+			var mimeMessage = builder.Create(emailMessage);
+
+			Assert.EndsWith(MessageIdDomainPart, mimeMessage.MessageId);
 		}
 
 		public void Dispose() {
