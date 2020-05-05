@@ -35,13 +35,13 @@ namespace MiaPlaza.MiddleMail.Delivery {
 					if(!smtpClient.IsConnected) {
 						await this.connectAsync();
 					}
-					//await smtpClient.NoOpAsync()
+					
 					try {
-						await smtpClient.SendAsync(message);
-					} catch (ProtocolException e) {
+						await smtpClient.NoOpAsync();
+					} catch (ProtocolException) {
 						await this.connectAsync();
-						await smtpClient.SendAsync(message);
 					}
+					await smtpClient.SendAsync(message);
 				} finally {
 					semaphoreSlim.Release();
 				}
