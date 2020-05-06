@@ -34,18 +34,24 @@ namespace MiaPlaza.MiddleMail {
 				return;
 			}
 
-			await tryStoreOrLogAsync(() => storage.SetProcessedAsync(emailMessage));
+			if(emailMessage.Store) {
+				await tryStoreOrLogAsync(() => storage.SetProcessedAsync(emailMessage));
+			}
 			try {
 				await deliverer.DeliverAsync(emailMessage);
 			} catch (Exception e){
-				await tryStoreOrLogAsync(() => storage.SetErrorAsync(emailMessage, e.Message));
+				if(emailMessage.Store) {
+					await tryStoreOrLogAsync(() => storage.SetErrorAsync(emailMessage, e.Message));
+				}
 				throw e;
 			}
 			
 			// TODO test empty string
 			// if the cache throws an exception we do not rethrow a GeneralProcessingException here because the message has already been delivered
 			await cache.SetStringAsync(emailMessage.Id.ToString(), "t");
-			await tryStoreOrLogAsync(() => storage.SetSentAsync(emailMessage));
+			if(emailMessage.Store) {
+				await tryStoreOrLogAsync(() => storage.SetSentAsync(emailMessage));
+			}
 		}
 
 		private async Task tryStoreOrLogAsync(Func<Task> storeFunc) {

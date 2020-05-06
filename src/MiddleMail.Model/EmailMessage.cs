@@ -14,10 +14,11 @@ namespace MiaPlaza.MiddleMail.Model {
 		public string HtmlText { get; set; }
 
 		public int RetryCount { get; set; }
+		public bool Store { get; set; }
 
 		public EmailMessage() {}
 
-		public EmailMessage(Guid id, string fromEmail, string fromName, string toEmail, string toName, string subject, string plainText, string htmlText, int retryCount = 0) {
+		public EmailMessage(Guid id, string fromEmail, string fromName, string toEmail, string toName, string subject, string plainText, string htmlText, int retryCount = 0, bool store = true) {
 			Id = id;
 			FromEmail = fromEmail;
 			FromName = fromName;
@@ -27,6 +28,7 @@ namespace MiaPlaza.MiddleMail.Model {
 			PlainText = plainText;
 			HtmlText = htmlText;
 			RetryCount = retryCount;
+			Store = store;
 		}
 	}
 }

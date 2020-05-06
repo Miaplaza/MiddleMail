@@ -161,5 +161,15 @@ namespace MiaPlaza.MiddleMail.Tests {
 			emailMessage.Id = CACHE_SET_EXCEPTION;
 			await Assert.ThrowsAsync<Exception>(async () => await messageProcessor.ProcessAsync(emailMessage));
 		}
+
+		[Fact]
+		public async Task EmailMessageIsNotStoredWhenStorePropertyIsFalse() {
+			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
+			emailMessage.Store = false;
+			await messageProcessor.ProcessAsync(emailMessage);
+			storageMock.Verify(d => d.SetProcessedAsync(It.IsAny<EmailMessage>()), Times.Never);
+			storageMock.Verify(d => d.SetErrorAsync(It.IsAny<EmailMessage>(), It.IsAny<string>()), Times.Never);
+			storageMock.Verify(d => d.SetSentAsync(It.IsAny<EmailMessage>()), Times.Never);	
+		}
 	}
 }
