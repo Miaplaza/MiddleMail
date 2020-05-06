@@ -23,6 +23,8 @@
     <ProjectReference Include="..\src\MiddleMail\MiddleMail.csproj" />
     <ProjectReference Include="..\src\MiddleMail.MessageSource.RabbitMQ\MiddleMail.MessageSource.RabbitMQ.csproj" />
     <ProjectReference Include="..\src\MiddleMail.Delivery.Smtp\MiddleMail.Delivery.Smtp.csproj" />
+    <ProjectReference Include="..\src\MiddleMail.Storage.Memory\MiddleMail.Storage.Memory.csproj" />
+    <ProjectReference Include="..\src\MiddleMail.Storage.ElasticSearch\MiddleMail.Storage.ElasticSearch.csproj" />
   </ItemGroup>
 
 </Project>

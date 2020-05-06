@@ -1,10 +1,8 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using MiaPlaza.MiddleMail.Delivery;
 using MiaPlaza.MiddleMail.Exceptions;
 using MiaPlaza.MiddleMail.Model;
-using MiaPlaza.MiddleMail.Storage;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 

@@ -3,7 +3,7 @@ using EasyNetQ.Scheduling;
 using MiaPlaza.MiddleMail.Delivery;
 using MiaPlaza.MiddleMail.Delivery.Smtp;
 using MiaPlaza.MiddleMail.MessageSource.RabbitMQ;
-using MiaPlaza.MiddleMail.Storage;
+using MiaPlaza.MiddleMail.Storage.ElasticSearch;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,7 +31,7 @@ namespace MiaPlaza.MiddleMail {
 				// prefetchcount = 10 so in case all messages throw an exception we can finish the prefetched messages on shutdown
 				services.RegisterEasyNetQ("host=localhost;prefetchcount=10", x => x.Register<IScheduler, DelayedExchangeScheduler>());
 				services.AddSingleton<IMailDeliverer, SmtpDeliverer>();
-				services.AddSingleton<IMailStorage, MemoryStorage>();
+				services.AddSingleton<IMailStorage, ElasticSearchStorage>();
 				services.AddSingleton<IMimeMessageBuilder, MimeMessageBuilder>();
 				services.AddSingleton<IMimeMessageSender, SmtpMimeMessageSender>();
 				services.AddSingleton<IMessageProcessor, MessageProcessor>();

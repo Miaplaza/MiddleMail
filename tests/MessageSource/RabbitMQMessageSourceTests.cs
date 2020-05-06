@@ -19,7 +19,7 @@ namespace MiaPlaza.MiddleMail.Tests.MessageSource {
 		private readonly Mock<IMessageProcessor> callbackMock;
 		private readonly RabbitMQMessageSource messageSource;
 
-		private string rabbitMQHost = Environment.GetEnvironmentVariable("RabbitMQ__HOST") ?? "localhost";
+		private string rabbitMQHost = Environment.GetEnvironmentVariable("RabbitMQ__Host") ?? "localhost";
 		
 		public RabbitMQMessageSourceTests() {
 			setupVhost();

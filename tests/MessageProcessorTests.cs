@@ -72,10 +72,7 @@ namespace MiaPlaza.MiddleMail.Tests {
 				.Setup(c => c.SetAsync(It.Is<string>(m => m != CACHE_SET_EXCEPTION.ToString()), It.IsAny<byte[]>(), It.IsAny<DistributedCacheEntryOptions>(), It.IsAny<CancellationToken>()))
 				.Returns(async (string key, byte[] value, DistributedCacheEntryOptions o, CancellationToken c) => await internalCache.SetAsync(key, value, o, c));
 
-			
-
-			var logger = new NullLogger<MessageProcessor>();
-			
+			var logger = new NullLogger<MessageProcessor>();	
 			messageProcessor = new MessageProcessor(delivererMock.Object, storageMock.Object, cacheMock.Object, logger);
 		}
 

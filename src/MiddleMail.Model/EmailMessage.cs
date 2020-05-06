@@ -3,7 +3,7 @@ using System;
 namespace MiaPlaza.MiddleMail.Model {
 
 	public class EmailMessage {
-
+		
 		public Guid Id { get; set; }
 		public string FromEmail { get; set; }
 		public string FromName { get; set; }
@@ -17,7 +17,7 @@ namespace MiaPlaza.MiddleMail.Model {
 
 		public EmailMessage() {}
 
-		public EmailMessage(Guid id, string fromEmail, string fromName, string toEmail, string toName, string subject, string plainText, string htmlText) {
+		public EmailMessage(Guid id, string fromEmail, string fromName, string toEmail, string toName, string subject, string plainText, string htmlText, int retryCount = 0) {
 			Id = id;
 			FromEmail = fromEmail;
 			FromName = fromName;
@@ -26,7 +26,7 @@ namespace MiaPlaza.MiddleMail.Model {
 			Subject = subject;
 			PlainText = plainText;
 			HtmlText = htmlText;
-			RetryCount = 0;
+			RetryCount = retryCount;
 		}
 	}
 }

@@ -50,7 +50,7 @@ namespace MiaPlaza.MiddleMail {
 				logger.LogError(e, $"General delivery problem for message {emailMessage.Id}");
 				await messageSource.RetryAsync(emailMessage);
 			} catch(Exception e) {
-				logger.LogError(e, $"Exception while processing message {emailMessage.Id}");
+				logger.LogError(e, $"Unexpected Exception while processing message {emailMessage.Id}");
 				throw e;
 			} finally {
 				Interlocked.Decrement(ref consumerTasksPending);
