@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Bogus;
 using MiaPlaza.MiddleMail;
 using MiaPlaza.MiddleMail.Model;
@@ -17,7 +18,8 @@ namespace MiaPlaza.MiddleMail.Tests {
 				toName: f.Name.FullName(),
 				subject: f.Lorem.Sentence(),
 				plainText: f.Lorem.Sentences(),
-				htmlText: f.Lorem.Sentences()));
+				htmlText: f.Lorem.Sentences(),
+				tags: f.Lorem.Words().ToList()));
 
 		public static Faker<MimeMessage> MimeMessageFaker = new Faker<MimeMessage>()
 			.CustomInstantiator(f => new MimeMessage(

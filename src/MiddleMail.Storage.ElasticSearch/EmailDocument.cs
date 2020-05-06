@@ -15,7 +15,7 @@ namespace MiaPlaza.MiddleMail.Storage.ElasticSearch {
 		public EmailDocument(EmailMessage emailMessage, DateTime? sent = null, string error = null) 
 			: base(emailMessage.Id, emailMessage.FromEmail, emailMessage.FromName, emailMessage.ToEmail, 
 			emailMessage.ToName, emailMessage.Subject, emailMessage.PlainText, emailMessage.HtmlText, 
-			emailMessage.RetryCount) {
+			emailMessage.Tags, emailMessage.RetryCount, emailMessage.Store) {
 
 			Sent = sent;
 			Error = error;

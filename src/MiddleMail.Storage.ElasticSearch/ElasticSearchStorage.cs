@@ -15,8 +15,10 @@ namespace MiaPlaza.MiddleMail.Storage.ElasticSearch {
 			this.configuration = configuration;
 			var node = new Uri(configuration.Uri);
 			client = new ElasticClient(new ConnectionSettings(node));
-			client.Indices.Create(index, index => index.Map<EmailDocument>(m => m
-				.AutoMap()));
+			client.Indices.Create(index, index => index
+				.Map<EmailDocument>(m => m
+					.AutoMap()
+				));
 		}
 
 		public async Task SetProcessedAsync(EmailMessage emailMessage) {
@@ -52,7 +54,10 @@ namespace MiaPlaza.MiddleMail.Storage.ElasticSearch {
 			} else {
 				emailDocument = create();
 			}
-			await this.client.IndexAsync(emailDocument, i => i.Index(index));
+			var response = await this.client.IndexAsync(emailDocument, i => i.Index(index));
+			if (!response.IsValid) {
+				throw new Exception(response.ServerError.ToString());
+			}
 		}
 
 		public async Task<bool?> GetSentAsync(EmailMessage emailMessage) {

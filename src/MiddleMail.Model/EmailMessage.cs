@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace MiaPlaza.MiddleMail.Model {
 
@@ -15,10 +16,11 @@ namespace MiaPlaza.MiddleMail.Model {
 
 		public int RetryCount { get; set; }
 		public bool Store { get; set; }
+		public List<string> Tags { get; set; }
 
 		public EmailMessage() {}
 
-		public EmailMessage(Guid id, string fromEmail, string fromName, string toEmail, string toName, string subject, string plainText, string htmlText, int retryCount = 0, bool store = true) {
+		public EmailMessage(Guid id, string fromEmail, string fromName, string toEmail, string toName, string subject, string plainText, string htmlText, List<string> tags, int retryCount = 0, bool store = true) {
 			Id = id;
 			FromEmail = fromEmail;
 			FromName = fromName;
@@ -29,6 +31,7 @@ namespace MiaPlaza.MiddleMail.Model {
 			HtmlText = htmlText;
 			RetryCount = retryCount;
 			Store = store;
+			Tags = tags;
 		}
 	}
 }
