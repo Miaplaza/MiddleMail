@@ -14,7 +14,7 @@ test:
   variables:
     RabbitMQ__Host: "rabbitmq"
     ElasticSearch__Host: "elasticsearch"
-    discovery.type: "single-node"
+    #discovery.type: "single-node"
   services:
   - name: ${CI_REGISTRY}/infrastructure/rabbitmq:3.8-management-alpine-delayed-latest
     alias: rabbitmq
