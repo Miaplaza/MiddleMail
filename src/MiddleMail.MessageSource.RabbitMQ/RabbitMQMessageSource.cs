@@ -6,21 +6,24 @@ using MiaPlaza.MiddleMail.Model;
 using Microsoft.Extensions.Logging;
 
 namespace MiaPlaza.MiddleMail.MessageSource.RabbitMQ {
-	public class RabbitMQMessageSource : IMessageSource {
+	public class RabbitMQMessageSource : IMessageSource, IDisposable {
 
 		private readonly IBus bus;
 		private ISubscriptionResult subscriptionResult;
 		private readonly IRetryDelayStrategy retryDelayStrategy;
 		private readonly ILogger<RabbitMQMessageSource> logger;
 
-		public RabbitMQMessageSource(IBus bus, IRetryDelayStrategy retryDelayStrategy, ILogger<RabbitMQMessageSource> logger) {
-			this.bus = bus;
+		private readonly RabbitMQMessageSourceConfiguration configuration;
+
+		public RabbitMQMessageSource(RabbitMQMessageSourceConfiguration configuration, IRetryDelayStrategy retryDelayStrategy, ILogger<RabbitMQMessageSource> logger) {
+			this.configuration = configuration;
+			this.bus = RabbitHutch.CreateBus(configuration.ConnectionString, x => x.Register<IScheduler, DelayedExchangeScheduler>());
 			this.retryDelayStrategy = retryDelayStrategy;
 			this.logger = logger;
 		}
 
 		public void Start(Func<EmailMessage, Task> callback) {
-			subscriptionResult = bus.SubscribeAsync<EmailMessage>("send", callback);
+			subscriptionResult = bus.SubscribeAsync<EmailMessage>(configuration.SubscriptionId, callback);
 		}
 
 		public void Stop() {
@@ -33,6 +36,10 @@ namespace MiaPlaza.MiddleMail.MessageSource.RabbitMQ {
 			var delay = retryDelayStrategy.GetDelay(emailMessage.RetryCount);
 			await bus.FuturePublishAsync(DateTime.UtcNow.AddSeconds(delay), emailMessage);
 			logger.LogError($"Delaying {emailMessage.Id} for {new TimeSpan(0, 0, delay)}");
+		}
+
+		public void Dispose() {
+			bus?.Dispose();
 		}
 	}
 }

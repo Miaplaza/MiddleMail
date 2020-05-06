@@ -16,30 +16,31 @@ namespace MiaPlaza.MiddleMail {
 		}
 
 		public static IHostBuilder CreateHostBuilder(string[] args) =>
-		Host.CreateDefaultBuilder(args)
-			.ConfigureLogging(logging => {
-				logging.ClearProviders();
-				logging.AddConsole();
-			})
-			.ConfigureServices((hostContext, services) => {
-				services.AddSingleton<SmtpConfiguration>();
-				services.AddSingleton<MimeMessageConfiguration>();
-				services.AddSingleton<ElasticSearchStorageConfiguration>();
-				// prefetchcount = 10 so in case all messages throw an exception we can finish the prefetched messages on shutdown
-				services.RegisterEasyNetQ("host=localhost;prefetchcount=10", x => x.Register<IScheduler, DelayedExchangeScheduler>());
-				services.AddSingleton<IMailDeliverer, SmtpDeliverer>();
-				services.AddSingleton<IMailStorage, ElasticSearchStorage>();
-				services.AddSingleton<IMimeMessageBuilder, MimeMessageBuilder>();
-				services.AddSingleton<IMimeMessageSender, SmtpMimeMessageSender>();
-				services.AddSingleton<IMessageProcessor, MessageProcessor>();
-				services.AddSingleton<IRetryDelayStrategy, ExponentialRetryDelayStrategy>();
-				services.AddSingleton<ExponentialRetryDelayConfiguration>();
-				services.AddSingleton<IMessageSource, RabbitMQMessageSource>();
-				services.AddStackExchangeRedisCache(options => {
-					options.Configuration = "localhost";
-					options.InstanceName = "SampleInstance";
+			Host.CreateDefaultBuilder(args)
+				.ConfigureLogging(logging => {
+					logging.ClearProviders();
+					logging.AddConsole();
+				})
+				.ConfigureServices((hostContext, services) => {
+					services.AddSingleton<SmtpConfiguration>();
+					services.AddSingleton<MimeMessageConfiguration>();
+					services.AddSingleton<ElasticSearchStorageConfiguration>();
+					services.AddSingleton<ExponentialRetryDelayConfiguration>();
+
+					services.AddSingleton<IMailDeliverer, SmtpDeliverer>();
+					services.AddSingleton<IMimeMessageBuilder, MimeMessageBuilder>();
+					services.AddSingleton<IMimeMessageSender, SmtpMimeMessageSender>();
+
+					services.AddSingleton<IMailStorage, ElasticSearchStorage>();
+					services.AddSingleton<IMessageProcessor, MessageProcessor>();
+					services.AddSingleton<IRetryDelayStrategy, ExponentialRetryDelayStrategy>();
+					
+					services.AddSingleton<IMessageSource, RabbitMQMessageSource>();
+					services.AddStackExchangeRedisCache(options => {
+						options.Configuration = "localhost";
+						options.InstanceName = "SampleInstance";
+					});
+					services.AddHostedService<MailService>();
 				});
-				services.AddHostedService<MailService>();
-			});
 	}
 }

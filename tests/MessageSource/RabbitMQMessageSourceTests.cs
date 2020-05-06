@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using EasyNetQ.Management.Client;
 using EasyNetQ.Scheduling;
 using MiaPlaza.MiddleMail.MessageSource.RabbitMQ;
 using MiaPlaza.MiddleMail.Model;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
@@ -25,6 +27,17 @@ namespace MiaPlaza.MiddleMail.Tests.MessageSource {
 			setupVhost();
 			bus = EasyNetQ.RabbitHutch.CreateBus($"host={rabbitMQHost};virtualHost={VHOST_NAME};prefetchcount=10", x => x.Register<IScheduler, DelayedExchangeScheduler>());
 
+			var config = new Dictionary<string, string>{
+				{"RabbitMQMessageSource:ConnectionString", $"host={rabbitMQHost};virtualHost={VHOST_NAME};prefetchcount=10"},
+				{"RabbitMQMessageSource:SubscriptionId", "middlemail.send"},
+			};
+
+			var configuration = new ConfigurationBuilder()
+				.AddInMemoryCollection(config)
+				.Build();
+
+			var rabbitMqConfiguraiton = new RabbitMQMessageSourceConfiguration(configuration);
+
 			var retryDelayMock = new Mock<IRetryDelayStrategy>();
 			retryDelayMock
 				.Setup(m => m.GetDelay(It.IsAny<int>()))
@@ -36,7 +49,7 @@ namespace MiaPlaza.MiddleMail.Tests.MessageSource {
 				.Setup(m => m.ProcessAsync(It.IsAny<EmailMessage>()));
 
 			var logger = new NullLogger<RabbitMQMessageSource>();
-			messageSource = new RabbitMQMessageSource(bus, retryDelayMock.Object, logger);
+			messageSource = new RabbitMQMessageSource(rabbitMqConfiguraiton, retryDelayMock.Object, logger);
 
 			messageSource.Start(callbackMock.Object.ProcessAsync);
 		}

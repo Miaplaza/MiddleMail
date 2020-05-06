@@ -16,8 +16,8 @@ namespace MiaPlaza.MiddleMail.Tests.Storage {
 
 		public ElasticSearchStorageTests() {
 			var config = new Dictionary<string, string>{
-				{"Uri", $"http://{host}:9200"},
-				{"Index", "middlemail-test"}
+				{"ElasticSearchStorage:Uri", $"http://{host}:9200"},
+				{"ElasticSearchStorage:Index", "middlemail-test"}
 			};
 
 			var configuration = new ConfigurationBuilder()
