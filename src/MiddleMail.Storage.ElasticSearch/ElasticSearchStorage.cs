@@ -20,55 +20,44 @@ namespace MiaPlaza.MiddleMail.Storage.ElasticSearch {
 		}
 
 		public async Task SetProcessedAsync(EmailMessage emailMessage) {
-			var existingDocument = await searchDocument(emailMessage.Id);
-
-			string error = null;
-
-			if(existingDocument != null) {
-				if(existingDocument.Sent) {
-					throw new EMailMessageAlreadySentStorageException(emailMessage);
-				}
-				error = existingDocument.Error;
-			}
-
-			var emailDocument = new EmailDocument(emailMessage, sent: false, error: error);
-
-			await this.client.IndexAsync(emailDocument, i => i.Index(index));
+			await updateOrCreateAsync(emailMessage, 
+				update: (EmailDocument emailDocument) => { },
+				create: () => new EmailDocument(emailMessage));
 		}
 
 		public async Task SetSentAsync(EmailMessage emailMessage) {
-			var emailDocument = await searchDocument(emailMessage.Id);
-
-			if(emailDocument != null) {
-				if (emailDocument.Sent) {
-					throw new EMailMessageAlreadySentStorageException(emailMessage);
-				}
-				emailDocument.Sent = true;
-			} else {
-				emailDocument = new EmailDocument(emailMessage, sent: true, error: null);
-			}
-			
-			await this.client.UpdateAsync<EmailDocument>(emailDocument.Id, u => u.Index(index).Doc(emailDocument));
+			await updateOrCreateAsync(emailMessage, 
+				update: (EmailDocument emailDocument) => {
+					emailDocument.Sent = DateTime.UtcNow;
+				},
+				create: () => new EmailDocument(emailMessage, sent: DateTime.UtcNow));
 		}
 
 		public async Task SetErrorAsync(EmailMessage emailMessage, string errorMessage) {
-			var emailDocument = await searchDocument(emailMessage.Id);
+			await updateOrCreateAsync(emailMessage, 
+				update: (EmailDocument emailDocument) => {
+					emailDocument.Error = errorMessage;
+				},
+				create: () => new EmailDocument(emailMessage, error: errorMessage));
+		}
 
+		private async Task updateOrCreateAsync(EmailMessage emailMessage, Action<EmailDocument> update, Func<EmailDocument> create) {
+			var emailDocument = await searchDocument(emailMessage.Id);
 			if(emailDocument != null) {
-				if (emailDocument.Sent) {
+				if (emailDocument.Sent != null) {
 					throw new EMailMessageAlreadySentStorageException(emailMessage);
 				}
-				emailDocument.Error = errorMessage;
+				update(emailDocument);
+				emailDocument.LastProcessed = DateTime.UtcNow;
 			} else {
-				emailDocument = new EmailDocument(emailMessage, sent: false,  error: errorMessage);
+				emailDocument = create();
 			}
-
-			await this.client.UpdateAsync<EmailDocument>(emailDocument.Id, u => u.Index(index).Doc(emailDocument));
+			await this.client.IndexAsync(emailDocument, i => i.Index(index));
 		}
 
 		public async Task<bool?> GetSentAsync(EmailMessage emailMessage) {
 			var existingDocument = await searchDocument(emailMessage.Id);
-			return existingDocument?.Sent;
+			return existingDocument?.Sent != null;
 		}
 		
 		public async Task<string> GetErrorAsync(EmailMessage emailMessage) {
