@@ -26,6 +26,7 @@ namespace MiaPlaza.MiddleMail {
 					services.AddSingleton<MimeMessageConfiguration>();
 					services.AddSingleton<ElasticSearchStorageConfiguration>();
 					services.AddSingleton<ExponentialRetryDelayConfiguration>();
+					services.AddSingleton<RabbitMQMessageSourceConfiguration>();
 
 					services.AddSingleton<IMailDeliverer, SmtpDeliverer>();
 					services.AddSingleton<IMimeMessageBuilder, MimeMessageBuilder>();
