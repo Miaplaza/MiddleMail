@@ -17,17 +17,14 @@ namespace MiaPlaza.MiddleMail {
 
 		public static IHostBuilder CreateHostBuilder(string[] args) =>
 		Host.CreateDefaultBuilder(args)
-		 .ConfigureLogging(logging => {
+			.ConfigureLogging(logging => {
 				logging.ClearProviders();
 				logging.AddConsole();
-			})
-			.ConfigureAppConfiguration((hostingContext, config) => {
-				config.AddEnvironmentVariables(prefix: "SMTP__");
-				config.AddEnvironmentVariables(prefix: "SimpleBackoffStrategy__");
 			})
 			.ConfigureServices((hostContext, services) => {
 				services.AddSingleton<SmtpConfiguration>();
 				services.AddSingleton<MimeMessageConfiguration>();
+				services.AddSingleton<ElasticSearchStorageConfiguration>();
 				// prefetchcount = 10 so in case all messages throw an exception we can finish the prefetched messages on shutdown
 				services.RegisterEasyNetQ("host=localhost;prefetchcount=10", x => x.Register<IScheduler, DelayedExchangeScheduler>());
 				services.AddSingleton<IMailDeliverer, SmtpDeliverer>();

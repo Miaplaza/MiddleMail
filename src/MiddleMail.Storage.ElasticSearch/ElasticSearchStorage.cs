@@ -10,10 +10,10 @@ namespace MiaPlaza.MiddleMail.Storage.ElasticSearch {
 	public class ElasticSearchStorage : IMailStorage {
 		
 		private readonly ElasticClient client;
-		private readonly IConfiguration configuration;
-		public ElasticSearchStorage(IConfiguration configuration) {
+		private readonly ElasticSearchStorageConfiguration configuration;
+		public ElasticSearchStorage(ElasticSearchStorageConfiguration configuration) {
 			this.configuration = configuration;
-			var node = new Uri(configuration.GetValue<string>("Uri"));
+			var node = new Uri(configuration.Uri);
 			client = new ElasticClient(new ConnectionSettings(node));
 			client.Indices.Create(index, index => index.Map<EmailDocument>(m => m
 				.AutoMap()));
@@ -76,7 +76,7 @@ namespace MiaPlaza.MiddleMail.Storage.ElasticSearch {
 			return existingDocument?.Error;		
 		}
 
-		private string index => configuration.GetValue<string>("Index");
+		private string index => configuration.Index;
 		
 		private async Task<EmailDocument> searchDocument(Guid id) {
 			var response = await client.SearchAsync<EmailDocument>(s => s

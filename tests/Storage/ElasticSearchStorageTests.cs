@@ -27,7 +27,7 @@ namespace MiaPlaza.MiddleMail.Tests.Storage {
 			// after writes to elasticsearch it takes some time that they are reflected in search results
 			// we simply wait 1 second after each write operation and before each read.
 			// The IMailStorage implementation should however always be robust enough to not rely on the underlying storage to serve up-to-date data.
-			this.elasticSearchStorage = new ElasticSearchStorage(configuration);
+			this.elasticSearchStorage = new ElasticSearchStorage(new ElasticSearchStorageConfiguration(configuration));
 			elasticSearchStorageWithDelay = new Mock<IMailStorage>();
 
 			elasticSearchStorageWithDelay
