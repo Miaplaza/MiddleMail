@@ -41,7 +41,7 @@ namespace MiaPlaza.MiddleMail {
 				await deliverer.DeliverAsync(emailMessage);
 			} catch (Exception e){
 				if(emailMessage.Store) {
-					await tryStoreOrLogAsync(() => storage.SetErrorAsync(emailMessage, e.Message));
+					await tryStoreOrLogAsync(() => storage.SetErrorAsync(emailMessage, e.ToString()));
 				}
 				throw e;
 			}
