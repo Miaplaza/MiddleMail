@@ -7,7 +7,7 @@ using MiaPlaza.MiddleMail.Model;
 namespace MiaPlaza.MiddleMail.Client.RabbitMQ {
 
 	/// <summary>
-	/// A client for MiddleMail that send emails via RabbitMQ. This needs a RabbitMQ Message Source on the service side.
+	/// A client for MiddleMail that sends emails via RabbitMQ. This needs a RabbitMQ Message Source on the service side.
 	/// </summary>
 	public class MiddleMailClient : IDisposable {
 

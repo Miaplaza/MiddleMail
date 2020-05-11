@@ -7,8 +7,12 @@ using MailKit.Security;
 using MimeKit;
 
 namespace MiaPlaza.MiddleMail.Delivery.Smtp {
-	public class SmtpMimeMessageSender : IMimeMessageSender, IDisposable {
 
+	/// <summary>
+	/// Sending of an <see cref="MimeKit.MimeMessage" /> via SMTP using one <see cref="MailKit.Net.Smtp.SmtpClient" />.async
+	/// Since that is not thread safe, we synchronize access by using a semaphoreSlim.
+	/// </summary>
+	public class SmtpMimeMessageSender : IMimeMessageSender, IDisposable {
 		private readonly SmtpConfiguration smtpConfig;
 		private readonly SmtpClient smtpClient;
 		private readonly SemaphoreSlim semaphoreSlim;
@@ -30,28 +34,29 @@ namespace MiaPlaza.MiddleMail.Delivery.Smtp {
 		}
 
 		public async Task SendAsync(MimeMessage message) {
-				await semaphoreSlim.WaitAsync();
-				try {
-					if(!smtpClient.IsConnected) {
-						await this.connectAsync();
-					}
-					
-					try {
-						await smtpClient.NoOpAsync();
-					} catch (ProtocolException) {
-						await this.connectAsync();
-					}
-					await smtpClient.SendAsync(message);
-				} finally {
-					semaphoreSlim.Release();
+			await semaphoreSlim.WaitAsync();
+			try {
+				// initial connection
+				if(!smtpClient.IsConnected) {
+					await this.connectAsync();
 				}
+				
+				// reconnect if we are not connected anymore
+				try {
+					await smtpClient.NoOpAsync();
+				} catch (ProtocolException) {
+					await this.connectAsync();
+				}
+				await smtpClient.SendAsync(message);
+			} finally {
+				semaphoreSlim.Release();
 			}
+		}
 	
 		public void Dispose(){
 			smtpClient.Disconnect(quit: true);
 			semaphoreSlim.Dispose();
 			smtpClient.Dispose();
 		}
-
 	}
 }

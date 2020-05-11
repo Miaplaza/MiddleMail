@@ -42,7 +42,7 @@ namespace MiaPlaza.MiddleMail {
 						options.InstanceName = Environment.GetEnvironmentVariable("Redis__InstanceName");
 
 					});
-					services.AddHostedService<MailService>();
+					services.AddHostedService<MiddleMailService>();
 				});
 	}
 }

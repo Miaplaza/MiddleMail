@@ -7,6 +7,11 @@ using MiaPlaza.MiddleMail.Exceptions;
 using Microsoft.Extensions.Configuration;
 
 namespace MiaPlaza.MiddleMail.Storage.ElasticSearch {
+
+	/// <summary>
+	/// A mail activity storage backed by ElasticSearch.
+	/// Use <see cref="ElasticSearchStorageConfiguration" /> to configure the connection and index.
+	/// </summary>
 	public class ElasticSearchStorage : IMailStorage {
 		
 		private readonly ElasticClient client;

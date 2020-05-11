@@ -7,7 +7,10 @@ using MiaPlaza.MiddleMail.Model;
 using MimeKit;
 
 namespace MiaPlaza.MiddleMail.Delivery.Smtp {
-	
+
+	/// <summary>
+	/// A delivery by SMTP
+	/// </summary>
 	public class SmtpDeliverer : IMailDeliverer {
 		private readonly IMimeMessageBuilder builder;
 		private readonly IMimeMessageSender sender;

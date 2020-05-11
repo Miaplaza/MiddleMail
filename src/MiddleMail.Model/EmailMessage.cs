@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace MiaPlaza.MiddleMail.Model {
 
+	/// <summary>
+	/// A data object for email data.
+	/// </summary>
 	public class EmailMessage {
 		
 		public Guid Id { get; set; }
@@ -15,7 +18,15 @@ namespace MiaPlaza.MiddleMail.Model {
 		public string HtmlText { get; set; }
 
 		public int RetryCount { get; set; }
+
+		/// <summary>
+		/// If this message should be stored.
+		/// </summary>
 		public bool Store { get; set; }
+
+		/// <summary>
+		/// Additional meta data tags. Should ne be included when sending this email.
+		/// </summary>
 		public List<string> Tags { get; set; }
 
 		public EmailMessage() {}

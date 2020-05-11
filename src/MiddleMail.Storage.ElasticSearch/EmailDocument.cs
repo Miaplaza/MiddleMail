@@ -5,6 +5,9 @@ using Nest;
 namespace MiaPlaza.MiddleMail.Storage.ElasticSearch {
 
 	[ElasticsearchType]
+	/// <summary>
+	/// Data for an ElasticSearch document to persist email data.
+	/// </summary>
 	public class EmailDocument : EmailMessage {
 		
 		public DateTime? Sent { get; set;  }

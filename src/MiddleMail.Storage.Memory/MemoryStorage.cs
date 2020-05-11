@@ -8,7 +8,7 @@ using MiaPlaza.MiddleMail.Model;
 namespace MiaPlaza.MiddleMail.Storage.Memory {
 
 	/// <summary>
-	/// A reference implementation for 
+	/// A reference implementation for <see cref="IMailStorage" /> by using an inmemory dictionary structure.
 	/// </summary>
 	public class MemoryStorage : IMailStorage {
 			

@@ -7,14 +7,20 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace MiaPlaza.MiddleMail {
-	public class MailService : BackgroundService {
+
+	/// <summary>
+	/// A BackgroundService that consumes message from an <see cref="IMessageSource" /> and dispatches them to an
+	/// <see cref="IMessageProcess" />. 
+	/// Implements a graceful shutdown by waiting for all processing tasks to finish work.
+	/// </summary>
+	public class MiddleMailService : BackgroundService {
 		
 		private IMessageProcessor processor;
-		private readonly ILogger<MailService> logger;
+		private readonly ILogger<MiddleMailService> logger;
 		private readonly IMessageSource messageSource;
 		private int consumerTasksPending;
 
-		public MailService(IMessageProcessor processor, ILogger<MailService> logger, IMessageSource messageSource) {
+		public MiddleMailService(IMessageProcessor processor, ILogger<MiddleMailService> logger, IMessageSource messageSource) {
 			this.processor = processor;
 			this.logger = logger;
 			this.consumerTasksPending = 0;

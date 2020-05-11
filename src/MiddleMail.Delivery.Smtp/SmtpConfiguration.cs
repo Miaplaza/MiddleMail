@@ -2,7 +2,11 @@ using MiaPlaza.MiddleMail.Exceptions;
 using Microsoft.Extensions.Configuration;
 
 namespace MiaPlaza.MiddleMail.Delivery.Smtp {
-public class SmtpConfiguration {
+	
+	/// <summary>
+	/// Configuration for <see cref="SmtpMimeMessageSender" />
+	/// </summary>
+	public class SmtpConfiguration {
 		public string Server { get; set; }
 		public int Port { get; set; }
 		public string Username { get; set; }

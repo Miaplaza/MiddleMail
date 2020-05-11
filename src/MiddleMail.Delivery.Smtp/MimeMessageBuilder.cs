@@ -5,6 +5,10 @@ using MimeKit;
 
 namespace MiaPlaza.MiddleMail.Delivery.Smtp {
 	
+	/// <summary>
+	/// A MimeMessageBuilder that does not allow empty plaintext and sets the MessageId to
+	/// guid@[configuration.MessageIdDomainPart]
+	/// </summary>
 	public class MimeMessageBuilder : IMimeMessageBuilder {
 
 		private readonly MimeMessageConfiguration configuration;

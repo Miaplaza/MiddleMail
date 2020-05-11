@@ -8,6 +8,10 @@ using Microsoft.Extensions.Logging;
 
 namespace MiaPlaza.MiddleMail {
 
+	/// <summary>
+	/// A message processor that is idempotent by detecting duplicates using an <see cref="IDistributedCache" />.
+	/// Activity is stored to an <see cref="IMailStorage" />
+	/// </summary>
 	public class MessageProcessor : IMessageProcessor {
 
 		private readonly IMailDeliverer deliverer;

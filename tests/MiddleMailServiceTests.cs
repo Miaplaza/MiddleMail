@@ -15,16 +15,16 @@ using Xunit;
 
 namespace MiaPlaza.MiddleMail.Tests {
 
-	public class MailServiceTests : IDisposable {
+	public class MiddleMailServiceTests : IDisposable {
 
 		private const string SINGLE_PROCESSING_EXCEPTION = "SINGLE_PROCESSING_EXCEPTION";
 		private const string GENERAL_PROCESSING_EXCEPTION = "GENERAL_PROCESSING_EXCEPTION";
 		private readonly Mock<IMessageProcessor> processorMock;
 		private readonly Mock<IMessageSource> messageSourceMock;
-		private readonly MailService mailService;
+		private readonly MiddleMailService mailService;
 		private Func<EmailMessage, Task> callback;
 
-		public MailServiceTests() {
+		public MiddleMailServiceTests() {
 			processorMock = new Mock<IMessageProcessor>();
 			processorMock
 				.Setup(m => m.ProcessAsync(It.Is<EmailMessage>(m => m.Subject != GENERAL_PROCESSING_EXCEPTION || m.Subject != SINGLE_PROCESSING_EXCEPTION)))
@@ -53,9 +53,9 @@ namespace MiaPlaza.MiddleMail.Tests {
 			messageSourceMock
 				.Setup(m => m.Stop());
 
-			var logger = new NullLogger<MailService>();
+			var logger = new NullLogger<MiddleMailService>();
 
-			mailService = new MailService(processorMock.Object, logger, messageSourceMock.Object);
+			mailService = new MiddleMailService(processorMock.Object, logger, messageSourceMock.Object);
 			mailService.StartAsync(CancellationToken.None).Wait();
 		}		
 

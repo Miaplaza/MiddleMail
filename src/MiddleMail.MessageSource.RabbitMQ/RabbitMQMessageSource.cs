@@ -6,6 +6,13 @@ using MiaPlaza.MiddleMail.Model;
 using Microsoft.Extensions.Logging;
 
 namespace MiaPlaza.MiddleMail.MessageSource.RabbitMQ {
+
+	/// <summary>
+	/// A message source that consumes message from RabbitMQ.
+	/// </summary>
+	/// <remarks>
+	/// Requires the delayed message plugin to be installed in RabbitMQ: https://github.com/rabbitmq/rabbitmq-delayed-message-exchange 
+	/// </remarks>
 	public class RabbitMQMessageSource : IMessageSource, IDisposable {
 
 		private readonly IBus bus;
