@@ -38,8 +38,9 @@ namespace MiaPlaza.MiddleMail {
 					
 					services.AddSingleton<IMessageSource, RabbitMQMessageSource>();
 					services.AddStackExchangeRedisCache(options => {
-						options.Configuration = "localhost";
-						options.InstanceName = "SampleInstance";
+						options.Configuration = Environment.GetEnvironmentVariable("Redis__Configuration");
+						options.InstanceName = Environment.GetEnvironmentVariable("Redis__InstanceName");
+
 					});
 					services.AddHostedService<MailService>();
 				});
