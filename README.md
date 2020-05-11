@@ -1,6 +1,6 @@
 # MiddleMail
 
-An API for transaction email
+An API for transactional email: TODO
 
 ## Projects
 
