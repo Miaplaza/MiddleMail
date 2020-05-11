@@ -49,6 +49,11 @@ Replace `:` with `__` on bash, etc.
 
 `RabbitMQMessageSource:SubscriptionId`: Uniqq subscription id per middle mail instance
 
+### `MiddleMail.Server` configuration
+
+`REDIS_CONFIGURATION`: Configuration used to connect to Redis
+`REDIS_INSTANCE_NAME`: The Redis instance name
+`DISABLE_SMTP`: Do not actually send anyting via SMTP.
 
 ## Tools
 
