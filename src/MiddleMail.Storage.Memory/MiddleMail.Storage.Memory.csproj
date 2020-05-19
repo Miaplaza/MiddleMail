@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\MiddleMail\MiddleMail.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>MiaPlaza.MiddleMail.Storage.Memory</RootNamespace>
+  </PropertyGroup>
+
+</Project>

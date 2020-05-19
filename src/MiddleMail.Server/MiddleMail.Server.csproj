@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>MiaPlaza.MiddleMail.Server</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="EasyNetQ.DI.Microsoft" Version="5.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MiddleMail\MiddleMail.csproj" />
+    <ProjectReference Include="..\MiddleMail.MessageSource.RabbitMQ\MiddleMail.MessageSource.RabbitMQ.csproj" />
+    <ProjectReference Include="..\MiddleMail.Delivery.Smtp\MiddleMail.Delivery.Smtp.csproj" />
+    <ProjectReference Include="..\MiddleMail.Storage.ElasticSearch\MiddleMail.Storage.ElasticSearch.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EasyNetQ" Version="5.0.5" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20214.1" />
+    <PackageReference Include="System.CommandLine.DragonFruit" Version="0.3.0-alpha.20214.1" />
+    <PackageReference Include="System.CommandLine.Rendering" Version="0.3.0-alpha.20214.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\tests\MiddleMail.Tests.csproj" />
+    <ProjectReference Include="..\..\src\MiddleMail.Client.RabbitMQ\MiddleMail.Client.RabbitMQ.csproj" />
+  </ItemGroup>
+
+</Project>
