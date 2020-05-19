@@ -6,8 +6,7 @@ using MimeKit;
 namespace MiaPlaza.MiddleMail.Delivery.Smtp {
 	
 	/// <summary>
-	/// A MimeMessageBuilder that does not allow empty plaintext and sets the MessageId to
-	/// guid@[configuration.MessageIdDomainPart]
+	/// Builds MIME messages from an <see cref="EMailMessage" />.
 	/// </summary>
 	public class MimeMessageBuilder : IMimeMessageBuilder {
 
@@ -16,6 +15,10 @@ namespace MiaPlaza.MiddleMail.Delivery.Smtp {
 			this.configuration = configuration;
 		}
 
+		/// <summary>
+		/// Build a multipart or plaintext MIME message from <paramref name="emailMessage"/>.
+		/// Note that <paramref name="emailMessage" /> must specify at least a plaintext version.
+		/// </summary>
 		public MimeMessage Create(EmailMessage emailMessage) {
 			if(emailMessage.PlainText == null) {
 				throw new ArgumentException($"EmailMessage should always contains a Plaintext, but it is null.", nameof(emailMessage));

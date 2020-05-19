@@ -9,12 +9,14 @@ using MimeKit;
 namespace MiaPlaza.MiddleMail.Delivery.Smtp {
 
 	/// <summary>
-	/// Sending of an <see cref="MimeKit.MimeMessage" /> via SMTP using one <see cref="MailKit.Net.Smtp.SmtpClient" />.async
-	/// Since that is not thread safe, we synchronize access by using a semaphoreSlim.
+	/// Sends <see cref="MimeKit.MimeMessage" /> via SMTP.
+	/// This class is thread safe. 
 	/// </summary>
 	public class SmtpMimeMessageSender : IMimeMessageSender, IDisposable {
 		private readonly SmtpConfiguration smtpConfig;
 		private readonly SmtpClient smtpClient;
+
+		/// Since <see cref="MailKit.Net.Smtp.SmtpClient" /> is not thread safe, we synchronize access to it by a semaphoreSlim.
 		private readonly SemaphoreSlim semaphoreSlim;
 
 		public SmtpMimeMessageSender(SmtpConfiguration smtpConfig) {

@@ -21,7 +21,9 @@ Replace `:` with `__` on bash, etc.
 
 ### SMTP
 
-`SMTP:Server`: The SMTP server
+Configuration for `MiddleMail.Delivery.Smtp` used to connect and deliver mails to an SMTP server.
+
+`SMTP:Server`: Hostname of the upstream SMTP server
 
 `SMTP:Port`: Port of the SMTP server
 
@@ -31,32 +33,38 @@ Replace `:` with `__` on bash, etc.
 
 ### MimeMessage
 
-`MimeMessage:MessageIdDomainPart`: Domain part of the message id as in `<foo@domain.part>`
+Configuration for `MiddleMail.Delivery.Smtp` used to construct the message id of a mime message.
 
-### ExponentialRetryDelay
+`MimeMessage:MessageIdDomainPart`: Domain part of the message id as in `<random-message-id@domain.part>`
 
-`ExponentialRetryDelay:Multiplicator`: `f(x) = 2^x * multiplicator`
+### ExponentialBackoff
+
+Configuration for `MiddleMail.MessageSource.RabbitMQ` used to calculate delay after processing failure.
+
+`ExponentialBackoff:Multiplicator`: `delay = 2^iteration * multiplicator` seconds
 
 ### ElasticSearchStorage
 
-`ElasticSearchStorage:Uri`: ElasticSearch URI
+Configuration for `MiddleMail.Storage.ElasticSearch` 
 
-`ElasticSearchStorage:Index`: Index name
+`ElasticSearchStorage:Uri`: URI of the Elasticsearch instance
+
+`ElasticSearchStorage:Index`: name of the Elasticsearch index we write messages to
 
 ### RabbitMQMessageSource
 
-`RabbitMQMessageSource:ConnectionString`: Connectionstring to rabbitmq
+`RabbitMQMessageSource:ConnectionString`: Connectionstring to rabbitmq, as defined at https://github.com/EasyNetQ/EasyNetQ/wiki/Connecting-to-RabbitMQ. E.g. `host=localhost;prefetchcount=10`
 
-`RabbitMQMessageSource:SubscriptionId`: Uniqq subscription id per middle mail instance
+`RabbitMQMessageSource:SubscriptionId`: Unique subscription id for this instance of middle mail
 
 ### `MiddleMail.Server` configuration
 
-`REDIS_CONFIGURATION`: Configuration used to connect to Redis
+`REDIS_CONFIGURATION`: Configuration used to connect to Redis, as defined at https://stackexchange.github.io/StackExchange.Redis/Configuration
 `REDIS_INSTANCE_NAME`: The Redis instance name
 `DISABLE_SMTP`: Do not actually send anyting via SMTP.
 
 ## Tools
 
-| Project               | Description                   |
-| --------------------- | ----------------------------- |
-| EmailMessageGenerator | Generate test email messages  |
+| Project               | Description                    |
+| --------------------- | ------------------------------ |
+| EmailMessageGenerator | Generates test email messages  |

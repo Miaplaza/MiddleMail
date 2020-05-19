@@ -38,10 +38,10 @@ namespace MiaPlaza.MiddleMail.Tests.MessageSource {
 
 			var rabbitMqConfiguraiton = new RabbitMQMessageSourceConfiguration(configuration);
 
-			var retryDelayMock = new Mock<IRetryDelayStrategy>();
-			retryDelayMock
+			var backoffMock = new Mock<IBackoffStrategy>();
+			backoffMock
 				.Setup(m => m.GetDelay(It.IsAny<int>()))
-				.Returns(1);
+				.Returns(new TimeSpan(0, 0, 1));
 
 			// We do not need an IMessageProcessor here, but we use it to mock a callback function
 			callbackMock = new Mock<IMessageProcessor>();
@@ -49,7 +49,7 @@ namespace MiaPlaza.MiddleMail.Tests.MessageSource {
 				.Setup(m => m.ProcessAsync(It.IsAny<EmailMessage>()));
 
 			var logger = new NullLogger<RabbitMQMessageSource>();
-			messageSource = new RabbitMQMessageSource(rabbitMqConfiguraiton, retryDelayMock.Object, logger);
+			messageSource = new RabbitMQMessageSource(rabbitMqConfiguraiton, backoffMock.Object, logger);
 
 			messageSource.Start(callbackMock.Object.ProcessAsync);
 		}

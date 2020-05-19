@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using MiaPlaza.MiddleMail.Delivery;
 using MiaPlaza.MiddleMail.Exceptions;
 using MiaPlaza.MiddleMail.Model;
 using Microsoft.Extensions.Caching.Distributed;
@@ -12,6 +11,13 @@ namespace MiaPlaza.MiddleMail {
 	/// A message processor that is idempotent by detecting duplicates using an <see cref="IDistributedCache" />.
 	/// Activity is stored to an <see cref="IMailStorage" />
 	/// </summary>
+	/// <remarks>
+	/// Many distributed system do not guarantee exactly-once delivery (such as RabbitMQ). We therefore only require 
+	/// at-least-once delivery for an <see cref="IMessageSource" />. That means that a duplicate message could end up here.
+	/// As it is rather critical that emails are delivered exactly-once we must detect duplicates. This is done by caching 
+	/// successfully sent emais by their id and checking the cache before we even start processing. This requires that pro-
+	/// cessing tasks always run until completion and are not interrupted.
+	/// </remarks>
 	public class MessageProcessor : IMessageProcessor {
 
 		private readonly IMailDeliverer deliverer;
@@ -50,7 +56,6 @@ namespace MiaPlaza.MiddleMail {
 				throw e;
 			}
 			
-			// TODO test empty string
 			// if the cache throws an exception we do not rethrow a GeneralProcessingException here because the message has already been delivered
 			await cache.SetStringAsync(emailMessage.Id.ToString(), "t");
 			if(emailMessage.Store) {

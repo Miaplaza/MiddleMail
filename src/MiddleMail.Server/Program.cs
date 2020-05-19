@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace MiaPlaza.MiddleMail {
+namespace MiaPlaza.MiddleMail.Server {
 	class Program {
 		public static void Main(string[] args) {
 			CreateHostBuilder(args).Build().Run();
@@ -25,7 +25,7 @@ namespace MiaPlaza.MiddleMail {
 					services.AddSingleton<SmtpConfiguration>();
 					services.AddSingleton<MimeMessageConfiguration>();
 					services.AddSingleton<ElasticSearchStorageConfiguration>();
-					services.AddSingleton<ExponentialRetryDelayConfiguration>();
+					services.AddSingleton<ExponentialBackoffConfiguration>();
 					services.AddSingleton<RabbitMQMessageSourceConfiguration>();
 
 					services.AddSingleton<IMailDeliverer, SmtpDeliverer>();
@@ -37,7 +37,7 @@ namespace MiaPlaza.MiddleMail {
 					}
 					services.AddSingleton<IMailStorage, ElasticSearchStorage>();
 					services.AddSingleton<IMessageProcessor, MessageProcessor>();
-					services.AddSingleton<IRetryDelayStrategy, ExponentialRetryDelayStrategy>();
+					services.AddSingleton<IBackoffStrategy, ExponentialBackoffStrategy>();
 					
 					services.AddSingleton<IMessageSource, RabbitMQMessageSource>();
 					services.AddStackExchangeRedisCache(options => {

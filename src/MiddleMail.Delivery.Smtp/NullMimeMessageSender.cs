@@ -9,7 +9,7 @@ using MimeKit;
 namespace MiaPlaza.MiddleMail.Delivery.Smtp {
 
 	/// <summary>
-	/// A stub that does not do anything but acts as an always successfull <see cref="IMimeMessageSender" />
+	/// A stub that does not actually send anything but acts as an always successful <see cref="IMimeMessageSender" />
 	/// </summary>
 	public class NullMimeMessageSender : IMimeMessageSender {
 

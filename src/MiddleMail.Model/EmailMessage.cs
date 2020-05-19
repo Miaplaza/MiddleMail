@@ -4,7 +4,8 @@ using System.Collections.Generic;
 namespace MiaPlaza.MiddleMail.Model {
 
 	/// <summary>
-	/// A data object for email data.
+	/// A data object describing an email to be sent.
+	/// Clients will typically commit this type of object to MiddleMail that is then generating and sending out the corresponding email.
 	/// </summary>
 	public class EmailMessage {
 		
@@ -20,12 +21,12 @@ namespace MiaPlaza.MiddleMail.Model {
 		public int RetryCount { get; set; }
 
 		/// <summary>
-		/// If this message should be stored.
+		/// Whether this message should be stored by a MiddleMail.IMailStorage
 		/// </summary>
 		public bool Store { get; set; }
 
 		/// <summary>
-		/// Additional meta data tags. Should ne be included when sending this email.
+		/// Additional meta data tags. These tags are relevant to logging but should not be included into the email that is eventually sent out.
 		/// </summary>
 		public List<string> Tags { get; set; }
 

@@ -10,8 +10,8 @@ namespace MiaPlaza.MiddleMail {
 
 	/// <summary>
 	/// A BackgroundService that consumes message from an <see cref="IMessageSource" /> and dispatches them to an
-	/// <see cref="IMessageProcess" />. 
-	/// Implements a graceful shutdown by waiting for all processing tasks to finish work.
+	/// <see cref="IMessageProcess" />.
+	/// Implements a graceful shutdown by waiting for all processing tasks to finish work if cancellation is requested.
 	/// </summary>
 	public class MiddleMailService : BackgroundService {
 		
@@ -34,7 +34,7 @@ namespace MiaPlaza.MiddleMail {
 			} catch (TaskCanceledException) {
 				messageSource.Stop();
 
-				// wait for all consumer task to finish
+				// wait for all consumer tasks to finish
 				// this is important: a consumer task is only idempotent if does not get canceled
 				while(consumerTasksPending != 0) {
 					logger.LogInformation($"Waiting for {consumerTasksPending} Tasks to finish.");
@@ -44,8 +44,8 @@ namespace MiaPlaza.MiddleMail {
 		}
 
 		private async Task processAsync(EmailMessage emailMessage ) {
-			Interlocked.Increment(ref consumerTasksPending);
 			logger.LogDebug($"Start processing email message {emailMessage.Id}");
+			Interlocked.Increment(ref consumerTasksPending);
 			try {
 				await processor.ProcessAsync(emailMessage);
 				logger.LogDebug($"Successfully processed email message {emailMessage.Id}");

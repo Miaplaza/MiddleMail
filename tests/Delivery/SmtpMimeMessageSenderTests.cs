@@ -111,7 +111,7 @@ namespace MiaPlaza.MiddleMail.Tests.Delivery {
 			await sendRandomEmail();
 			Assert.Single(messages);
 
-			// restart the server, this forces the connection to disconnect
+			// restart the server, this forces the connection to reconnect
 			smtpServer.Stop();
 			startServer();
 

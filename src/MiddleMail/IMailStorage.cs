@@ -4,7 +4,7 @@ using MiaPlaza.MiddleMail.Model;
 namespace MiaPlaza.MiddleMail {
 	
 	/// <summary>
-	/// A storage to persist email activity. When calling any of the methods that set data the order must be kept.
+	/// A storage to persist email activity. When calling any of the methods that set data, the order must be kept.
 	/// Writing data does not need to be instantly and might not be reflected when reading it directly back.
 	/// </summary>
 	public interface IMailStorage {
@@ -27,13 +27,13 @@ namespace MiaPlaza.MiddleMail {
 
 		/// <summary>
 		/// Get the stored value for sent for an <see cref="EmailMessage" />
-		/// Returns null if the <see cref="EmailMessage" /> could not be found in the storage.
+		/// Return null if the <see cref="EmailMessage" /> could not be found in the storage.
 		/// </summary>
 		Task<bool?> GetSentAsync(EmailMessage emailMessage);
 
 		/// <summary>
 		/// Get the stored error for an <see cref="EmailMessage" />.
-		/// Returns null if the <see cref="EmailMessage" /> could not be found in the storage.
+		/// Return null if the <see cref="EmailMessage" /> could not be found in the storage.
 		/// </summary>
 		Task<string> GetErrorAsync(EmailMessage emailMessag);
 	}

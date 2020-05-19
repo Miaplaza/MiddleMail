@@ -11,18 +11,19 @@ namespace MiaPlaza.MiddleMail.MessageSource.RabbitMQ {
 	/// A message source that consumes message from RabbitMQ.
 	/// </summary>
 	/// <remarks>
-	/// Requires the delayed message plugin to be installed in RabbitMQ: https://github.com/rabbitmq/rabbitmq-delayed-message-exchange 
+	/// Requires the delayed message plugin to be installed in RabbitMQ: https://github.com/rabbitmq/rabbitmq-delayed-message-exchange
+	/// which is used for retrying messages.
 	/// </remarks>
 	public class RabbitMQMessageSource : IMessageSource, IDisposable {
 
 		private readonly IBus bus;
 		private ISubscriptionResult subscriptionResult;
-		private readonly IRetryDelayStrategy retryDelayStrategy;
+		private readonly IBackoffStrategy retryDelayStrategy;
 		private readonly ILogger<RabbitMQMessageSource> logger;
 
 		private readonly RabbitMQMessageSourceConfiguration configuration;
 
-		public RabbitMQMessageSource(RabbitMQMessageSourceConfiguration configuration, IRetryDelayStrategy retryDelayStrategy, ILogger<RabbitMQMessageSource> logger) {
+		public RabbitMQMessageSource(RabbitMQMessageSourceConfiguration configuration, IBackoffStrategy retryDelayStrategy, ILogger<RabbitMQMessageSource> logger) {
 			this.configuration = configuration;
 			this.bus = RabbitHutch.CreateBus(configuration.ConnectionString, x => x.Register<IScheduler, DelayedExchangeScheduler>());
 			this.retryDelayStrategy = retryDelayStrategy;
@@ -41,8 +42,11 @@ namespace MiaPlaza.MiddleMail.MessageSource.RabbitMQ {
 		public async Task RetryAsync(EmailMessage emailMessage) {
 			emailMessage.RetryCount++;
 			var delay = retryDelayStrategy.GetDelay(emailMessage.RetryCount);
-			await bus.FuturePublishAsync(DateTime.UtcNow.AddSeconds(delay), emailMessage);
-			logger.LogError($"Delaying {emailMessage.Id} for {new TimeSpan(0, 0, delay)}");
+
+			// see https://github.com/EasyNetQ/EasyNetQ/wiki/Support-for-Delayed-Messages-Plugin
+			await bus.FuturePublishAsync(DateTime.UtcNow.Add(delay), emailMessage);
+
+			logger.LogError($"Delaying {emailMessage.Id} for {delay}");
 		}
 
 		public void Dispose() {
