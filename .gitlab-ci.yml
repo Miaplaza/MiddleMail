@@ -3,6 +3,7 @@ image: mcr.microsoft.com/dotnet/core/sdk:3.1
 stages:
   - build
   - test
+  - push
 
 build:
   stage: build
@@ -24,3 +25,12 @@ test:
     
   script: 
       - "dotnet test"
+
+push-docker-image:
+  stage: push
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:middlemail-$CI_COMMIT_REF_SLUG
+
+  script:
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
