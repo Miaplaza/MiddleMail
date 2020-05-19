@@ -33,6 +33,8 @@ push-docker-image:
     - docker:18.09.8-dind
   variables:
     IMAGE_TAG: $CI_REGISTRY_IMAGE:middlemail-$CI_COMMIT_REF_SLUG
+  before_script:
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
