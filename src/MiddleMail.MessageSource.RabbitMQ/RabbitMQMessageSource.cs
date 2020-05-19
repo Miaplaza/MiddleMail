@@ -18,15 +18,15 @@ namespace MiaPlaza.MiddleMail.MessageSource.RabbitMQ {
 
 		private readonly IBus bus;
 		private ISubscriptionResult subscriptionResult;
-		private readonly IBackoffStrategy retryDelayStrategy;
+		private readonly IBackoffStrategy backoffStrategy;
 		private readonly ILogger<RabbitMQMessageSource> logger;
 
 		private readonly RabbitMQMessageSourceConfiguration configuration;
 
-		public RabbitMQMessageSource(RabbitMQMessageSourceConfiguration configuration, IBackoffStrategy retryDelayStrategy, ILogger<RabbitMQMessageSource> logger) {
+		public RabbitMQMessageSource(RabbitMQMessageSourceConfiguration configuration, IBackoffStrategy backoffStrategy, ILogger<RabbitMQMessageSource> logger) {
 			this.configuration = configuration;
 			this.bus = RabbitHutch.CreateBus(configuration.ConnectionString, x => x.Register<IScheduler, DelayedExchangeScheduler>());
-			this.retryDelayStrategy = retryDelayStrategy;
+			this.backoffStrategy = backoffStrategy;
 			this.logger = logger;
 		}
 
@@ -41,7 +41,7 @@ namespace MiaPlaza.MiddleMail.MessageSource.RabbitMQ {
 
 		public async Task RetryAsync(EmailMessage emailMessage) {
 			emailMessage.RetryCount++;
-			var delay = retryDelayStrategy.GetDelay(emailMessage.RetryCount);
+			var delay = backoffStrategy.GetDelay(emailMessage.RetryCount);
 
 			// see https://github.com/EasyNetQ/EasyNetQ/wiki/Support-for-Delayed-Messages-Plugin
 			await bus.FuturePublishAsync(DateTime.UtcNow.Add(delay), emailMessage);
