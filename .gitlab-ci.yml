@@ -28,9 +28,11 @@ test:
 
 push-docker-image:
   stage: push
+  image: docker:git
+  services:
+    - docker:18.09.8-dind
   variables:
     IMAGE_TAG: $CI_REGISTRY_IMAGE:middlemail-$CI_COMMIT_REF_SLUG
-
   script:
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
