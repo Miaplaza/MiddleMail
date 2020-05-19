@@ -1,0 +1,9 @@
+.git
+.gitignore
+.vscode
+LICENSE
+VERSION
+README.md
+
+**/[Bb]in/
+**/[Oo]bj/
