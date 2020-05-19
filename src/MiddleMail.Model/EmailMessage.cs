@@ -33,6 +33,15 @@ namespace MiaPlaza.MiddleMail.Model {
 		public EmailMessage() {}
 
 		public EmailMessage(Guid id, string fromEmail, string fromName, string toEmail, string toName, string subject, string plainText, string htmlText, List<string> tags, int retryCount = 0, bool store = true) {
+			if (String.IsNullOrEmpty(fromEmail)) {
+				throw new ArgumentException("Must specify a from email address.", nameof(fromEmail));
+			}
+			if (String.IsNullOrEmpty(toEmail)) {
+				throw new ArgumentException("Must specify a to email address.", nameof(toEmail));
+			}
+			if (String.IsNullOrEmpty(subject)) {
+				throw new ArgumentException("Must specify a subject.", nameof(subject));
+			}
 			Id = id;
 			FromEmail = fromEmail;
 			FromName = fromName;
@@ -43,7 +52,7 @@ namespace MiaPlaza.MiddleMail.Model {
 			HtmlText = htmlText;
 			RetryCount = retryCount;
 			Store = store;
-			Tags = tags;
+			Tags = tags ?? new List<string>();
 		}
 	}
 }
