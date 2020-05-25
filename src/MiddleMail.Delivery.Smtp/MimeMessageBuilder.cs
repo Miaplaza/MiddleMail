@@ -25,8 +25,12 @@ namespace MiaPlaza.MiddleMail.Delivery.Smtp {
 			}
 			
 			var mimeMessage = new MimeMessage();
-			mimeMessage.From.Add(new MailboxAddress(emailMessage.FromName, emailMessage.FromEmail));
-			mimeMessage.To.Add(new MailboxAddress(emailMessage.ToName, emailMessage.ToEmail));
+			mimeMessage.From.Add(new MailboxAddress(emailMessage.From.name, emailMessage.From.address));
+			mimeMessage.To.Add(new MailboxAddress(emailMessage.To.name, emailMessage.To.address));
+
+			if(emailMessage.ReplyTo.HasValue) {
+				mimeMessage.ReplyTo.Add(new MailboxAddress(emailMessage.ReplyTo.Value.name, emailMessage.ReplyTo.Value.address));
+			}
 			mimeMessage.Subject = emailMessage.Subject;
 
 			if(emailMessage.HtmlText == null) {
