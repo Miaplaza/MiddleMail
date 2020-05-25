@@ -3,6 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>MiaPlaza.MiddleMail.Model</RootNamespace>
+    <PackageId>MiddleMail.Model</PackageId>
+    <Version>0.1.0-alpha</Version>
+    <Authors>Miaplaza Inc.</Authors>
+    <Company>MiaPlaza</Company>
+    <Copyright>Copyright ©2020 Miaplaza Inc.</Copyright>
   </PropertyGroup>
 
 </Project>

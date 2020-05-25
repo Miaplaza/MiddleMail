@@ -2,6 +2,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>MiaPlaza.MiddleMail.Client.RabbitMQ</RootNamespace>
+    <PackageId>MiddleMail.Client.RabbitMQ</PackageId>
+    <Version>0.1.0-alpha</Version>
+    <Authors>Miaplaza Inc.</Authors>
+    <Company>MiaPlaza</Company>
+    <Copyright>Copyright ©2020 Miaplaza Inc.</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
