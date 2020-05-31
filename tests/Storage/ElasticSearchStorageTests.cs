@@ -14,6 +14,8 @@ namespace MiaPlaza.MiddleMail.Tests.Storage {
 
 		private string host = Environment.GetEnvironmentVariable("ElasticSearch__Host") ?? "localhost";
 
+		private const int DELAY = 1500;
+
 		public ElasticSearchStorageTests() {
 			var config = new Dictionary<string, string>{
 				{"ElasticSearchStorage:Uri", $"http://{host}:9200"},
@@ -34,27 +36,27 @@ namespace MiaPlaza.MiddleMail.Tests.Storage {
 				.Setup(s => s.SetProcessedAsync(It.IsAny<EmailMessage>()))
 				.Returns(async (EmailMessage emailMessage) => {
 					await elasticSearchStorage.SetProcessedAsync(emailMessage);
-					await Task.Delay(1000);
+					await Task.Delay(DELAY);
 				});
 
 			elasticSearchStorageWithDelay
 				.Setup(s => s.SetErrorAsync(It.IsAny<EmailMessage>(), It.IsAny<string>()))
 				.Returns(async (EmailMessage emailMessage, string error) => {
 					await elasticSearchStorage.SetErrorAsync(emailMessage, error);
-					await Task.Delay(1000);
+					await Task.Delay(DELAY);
 				});
 
 			elasticSearchStorageWithDelay
 				.Setup(s => s.SetSentAsync(It.IsAny<EmailMessage>()))
 				.Returns(async (EmailMessage emailMessage) => {
 					await elasticSearchStorage.SetSentAsync(emailMessage);
-					await Task.Delay(1000);
+					await Task.Delay(DELAY);
 				});
 
 			elasticSearchStorageWithDelay
 				.Setup(s => s.GetErrorAsync(It.IsAny<EmailMessage>()))
 				.Returns(async (EmailMessage emailMessage) => {
-					await Task.Delay(1000);
+					await Task.Delay(DELAY);
 					var error = await elasticSearchStorage.GetErrorAsync(emailMessage);
 					return error;
 				});
@@ -62,7 +64,7 @@ namespace MiaPlaza.MiddleMail.Tests.Storage {
 			elasticSearchStorageWithDelay
 				.Setup(s => s.GetSentAsync(It.IsAny<EmailMessage>()))
 				.Returns(async (EmailMessage emailMessage) => {
-					await Task.Delay(1000);
+					await Task.Delay(DELAY);
 					var sent = await elasticSearchStorage.GetSentAsync(emailMessage);
 					return sent;
 				});
