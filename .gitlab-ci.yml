@@ -3,7 +3,7 @@ image: mcr.microsoft.com/dotnet/core/sdk:3.1
 stages:
   - build
   - test
-  - push
+  - publish
 
 build:
   stage: build
@@ -26,8 +26,8 @@ test:
   script: 
       - "dotnet test"
 
-push-docker-image:
-  stage: push
+publish-docker-image:
+  stage: publish
   image: docker:git
   services:
     - docker:18.09.8-dind
