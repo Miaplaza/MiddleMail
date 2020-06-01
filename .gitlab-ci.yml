@@ -36,5 +36,5 @@ publish-docker-image:
   before_script:
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
-    - docker -t $IMAGE_TAG .
+    - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
