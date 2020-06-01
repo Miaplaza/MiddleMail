@@ -181,6 +181,19 @@ namespace MiaPlaza.MiddleMail.Tests.Delivery {
 			await sendEmailAndAssertEquality(emailMessage, mimeMessage);
 		}
 
+		[Fact]
+		public async Task HeadersAreRendered() {
+			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
+			emailMessage.Headers.Add("X-MiddleMail", "test");
+			emailMessage.Headers.Add("Precedence", "bulk");
+			
+			var mimeMessage = builder.Create(emailMessage);
+			Assert.Equal("test", mimeMessage.Headers["X-MiddleMail"]);
+			Assert.Equal("bulk", mimeMessage.Headers["Precedence"]);
+
+			await sendEmailAndAssertEquality(emailMessage, mimeMessage);
+		}
+
 		public void Dispose() {
 			smtpServer.Dispose(); 
 		}

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using MiaPlaza.MiddleMail.Model;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
@@ -39,7 +40,9 @@ namespace MiaPlaza.MiddleMail.Delivery.Smtp {
 				createBodyMultipart(emailMessage, mimeMessage);
 			}
 
-			mimeMessage.MessageId = $"{emailMessage.Id.ToString("N")}@{configuration.MessageIdDomainPart}>";
+			mimeMessage.MessageId = $"{emailMessage.Id:N}@{configuration.MessageIdDomainPart}>";
+
+			setHeaders(emailMessage, mimeMessage);
 			return mimeMessage;
 		}
 
@@ -55,6 +58,16 @@ namespace MiaPlaza.MiddleMail.Delivery.Smtp {
 			bodyBuilder.TextBody =  emailMessage.PlainText;
 
 			message.Body = bodyBuilder.ToMessageBody();
+		}
+
+		private void setHeaders(EmailMessage emailMessage, MimeMessage message) {
+			foreach (var item in emailMessage.Headers) {
+				// do not override any headers
+				var header = message.Headers.FirstOrDefault(h => h.Field == item.Key);	
+				if (header == null) {
+					message.Headers.Add(item.Key, item.Value);
+				}
+			}
 		}
 	}
 }

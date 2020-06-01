@@ -18,6 +18,7 @@ namespace MiaPlaza.MiddleMail.Tests {
 				subject: f.Lorem.Sentence(),
 				plainText: f.Lorem.Sentences(),
 				htmlText: f.Lorem.Sentences(),
+				headers: null,
 				tags: f.Lorem.Words().ToList()));
 
 		public static Faker<MimeMessage> MimeMessageFaker = new Faker<MimeMessage>()
