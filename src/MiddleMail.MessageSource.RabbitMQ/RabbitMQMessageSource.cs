@@ -2,10 +2,10 @@ using System;
 using System.Threading.Tasks;
 using EasyNetQ;
 using EasyNetQ.Scheduling;
-using MiaPlaza.MiddleMail.Model;
+using MiddleMail.Model;
 using Microsoft.Extensions.Logging;
 
-namespace MiaPlaza.MiddleMail.MessageSource.RabbitMQ {
+namespace MiddleMail.MessageSource.RabbitMQ {
 
 	/// <summary>
 	/// A message source that consumes message from RabbitMQ.

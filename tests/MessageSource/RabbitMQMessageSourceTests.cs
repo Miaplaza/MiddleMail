@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using EasyNetQ;
 using EasyNetQ.Management.Client;
 using EasyNetQ.Scheduling;
-using MiaPlaza.MiddleMail.MessageSource.RabbitMQ;
-using MiaPlaza.MiddleMail.Model;
+using MiddleMail.MessageSource.RabbitMQ;
+using MiddleMail.Model;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
 
-namespace MiaPlaza.MiddleMail.Tests.MessageSource {
+namespace MiddleMail.Tests.MessageSource {
 
 	public class RabbitMQMessageSourceTests {
 		private const string VHOST_NAME = "test";

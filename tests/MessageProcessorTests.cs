@@ -1,19 +1,19 @@
 using System.Threading;
 using System;
 using System.Threading.Tasks;
-using MiaPlaza.MiddleMail.Delivery;
-using MiaPlaza.MiddleMail.Model;
-using MiaPlaza.MiddleMail.Storage;
+using MiddleMail.Delivery;
+using MiddleMail.Model;
+using MiddleMail.Storage;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
-using MiaPlaza.MiddleMail.Exceptions;
+using MiddleMail.Exceptions;
 using System.Text;
 
-namespace MiaPlaza.MiddleMail.Tests {
+namespace MiddleMail.Tests {
 	public class MessageProcessorTests {
 
 		private const string DELIVER_FAILURE = "DELIVER_FAILURE";

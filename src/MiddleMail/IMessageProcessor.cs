@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
-using MiaPlaza.MiddleMail.Model;
+using MiddleMail.Model;
 
-namespace MiaPlaza.MiddleMail {
+namespace MiddleMail {
 		
 		/// <summary>
 		/// Processes an <see cref="EmailMessage" />.

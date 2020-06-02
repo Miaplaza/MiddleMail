@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Extensions.Logging;
 
-namespace MiaPlaza.MiddleMail {
+namespace MiddleMail {
 
 	/// <summary>
 	/// An exponential backoff strategy.

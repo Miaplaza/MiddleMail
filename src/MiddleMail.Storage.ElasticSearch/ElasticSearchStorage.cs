@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 using System;
 using System.Threading.Tasks;
-using MiaPlaza.MiddleMail.Model;
+using MiddleMail.Model;
 using Nest;
-using MiaPlaza.MiddleMail.Exceptions;
+using MiddleMail.Exceptions;
 using Microsoft.Extensions.Configuration;
 
-namespace MiaPlaza.MiddleMail.Storage.ElasticSearch {
+namespace MiddleMail.Storage.ElasticSearch {
 
 	/// <summary>
 	/// A mail activity storage backed by ElasticSearch.

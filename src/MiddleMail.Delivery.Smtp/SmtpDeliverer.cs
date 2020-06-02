@@ -1,12 +1,12 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MiaPlaza.MiddleMail.Delivery.Smtp.Exceptions;
-using MiaPlaza.MiddleMail.Exceptions;
-using MiaPlaza.MiddleMail.Model;
+using MiddleMail.Delivery.Smtp.Exceptions;
+using MiddleMail.Exceptions;
+using MiddleMail.Model;
 using MimeKit;
 
-namespace MiaPlaza.MiddleMail.Delivery.Smtp {
+namespace MiddleMail.Delivery.Smtp {
 
 	/// <summary>
 	/// A delivery by SMTP

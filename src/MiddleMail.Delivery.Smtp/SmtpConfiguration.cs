@@ -1,7 +1,7 @@
-using MiaPlaza.MiddleMail.Exceptions;
+using MiddleMail.Exceptions;
 using Microsoft.Extensions.Configuration;
 
-namespace MiaPlaza.MiddleMail.Delivery.Smtp {
+namespace MiddleMail.Delivery.Smtp {
 	
 	/// <summary>
 	/// Configuration for <see cref="SmtpMimeMessageSender" />

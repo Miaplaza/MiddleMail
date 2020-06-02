@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MiaPlaza.MiddleMail.Model;
-using MiaPlaza.MiddleMail.Storage.ElasticSearch;
+using MiddleMail.Model;
+using MiddleMail.Storage.ElasticSearch;
 using Microsoft.Extensions.Configuration;
 using Moq;
 
-namespace MiaPlaza.MiddleMail.Tests.Storage {
+namespace MiddleMail.Tests.Storage {
 	public class ElasticSearchStorageTests : IMailStorageTests {
 		
 		private readonly ElasticSearchStorage elasticSearchStorage;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
-using MiaPlaza.MiddleMail.Client.RabbitMQ;
+using MiddleMail.Client.RabbitMQ;
 
 namespace MiaPlaza.EmailMessageGenerator {
 	class Program {
@@ -14,7 +14,7 @@ namespace MiaPlaza.EmailMessageGenerator {
 
 			using var client = new MiddleMailClient(configuration);
 			for(int i = 0; i < count; i++) {
-				var emailMessage = MiaPlaza.MiddleMail.Tests.FakerFactory.EmailMessageFaker.Generate();
+				var emailMessage = MiddleMail.Tests.FakerFactory.EmailMessageFaker.Generate();
 				if(invalid) {
 					emailMessage.Subject = null;
 				}

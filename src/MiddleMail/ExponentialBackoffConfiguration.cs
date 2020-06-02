@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Extensions.Configuration;
 
-namespace MiaPlaza.MiddleMail {
+namespace MiddleMail {
 public class ExponentialBackoffConfiguration {
 		public int Multiplicator { get; set; }
 		

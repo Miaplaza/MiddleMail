@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
-using MiaPlaza.MiddleMail.Model;
+using MiddleMail.Model;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
 
-namespace MiaPlaza.MiddleMail.Delivery.Smtp {
+namespace MiddleMail.Delivery.Smtp {
 	
 	/// <summary>
 	/// Builds MIME messages from an <see cref="EMailMessage" />.

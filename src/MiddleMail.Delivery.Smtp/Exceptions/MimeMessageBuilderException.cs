@@ -1,8 +1,8 @@
 using System;
-using MiaPlaza.MiddleMail.Exceptions;
-using MiaPlaza.MiddleMail.Model;
+using MiddleMail.Exceptions;
+using MiddleMail.Model;
 
-namespace MiaPlaza.MiddleMail.Delivery.Smtp.Exceptions {
+namespace MiddleMail.Delivery.Smtp.Exceptions {
 	public class MimeMessageBuilderException : SingleProcessingException {
 
 		public MimeMessageBuilderException(EmailMessage emailMessage, Exception innerException)

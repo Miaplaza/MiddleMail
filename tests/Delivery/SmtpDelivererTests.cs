@@ -1,13 +1,13 @@
 using System;
-using MiaPlaza.MiddleMail.Delivery;
+using MiddleMail.Delivery;
 using Xunit;
 using MimeKit;
 using Moq;
-using MiaPlaza.MiddleMail.Exceptions;
-using MiaPlaza.MiddleMail.Model;
-using MiaPlaza.MiddleMail.Delivery.Smtp;
+using MiddleMail.Exceptions;
+using MiddleMail.Model;
+using MiddleMail.Delivery.Smtp;
 
-namespace MiaPlaza.MiddleMail.Tests.Delivery {
+namespace MiddleMail.Tests.Delivery {
 
 	public class SmtpDelivererTests  {
 

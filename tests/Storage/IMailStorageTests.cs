@@ -1,12 +1,12 @@
 using System.Threading.Tasks;
 using System;
-using MiaPlaza.MiddleMail.Exceptions;
-using MiaPlaza.MiddleMail.Model;
-using MiaPlaza.MiddleMail.Storage;
+using MiddleMail.Exceptions;
+using MiddleMail.Model;
+using MiddleMail.Storage;
 using Xunit;
 
 
-namespace MiaPlaza.MiddleMail.Tests.Storage {
+namespace MiddleMail.Tests.Storage {
 	public abstract class IMailStorageTests  {
 
 		protected abstract IMailStorage MailStorage { get; }

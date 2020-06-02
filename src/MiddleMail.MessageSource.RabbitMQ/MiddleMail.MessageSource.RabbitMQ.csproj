@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>MiaPlaza.MiddleMail.MessageSource.RabbitMQ</RootNamespace>
+    <RootNamespace>MiddleMail.MessageSource.RabbitMQ</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MiaPlaza.MiddleMail.Model {
+namespace MiddleMail.Model {
 
 	/// <summary>
 	/// A data object describing an email to be sent.

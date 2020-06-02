@@ -1,7 +1,7 @@
 using System;
-using MiaPlaza.MiddleMail.Model;
+using MiddleMail.Model;
 
-namespace MiaPlaza.MiddleMail.Exceptions {
+namespace MiddleMail.Exceptions {
 
 	/// <summary>
 	/// The exception that is thrown when an <see cref="EmailMessage" /> could not be processed
