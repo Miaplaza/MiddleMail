@@ -17,6 +17,11 @@ namespace MiaPlaza.MiddleMail.Model {
 		public string PlainText { get; set; }
 		public string HtmlText { get; set; }
 
+		/// <summary>
+		/// A list of additional headers for the email
+		/// </summary>
+		public Dictionary<string, string> Headers { get; set; }
+
 		public int RetryCount { get; set; }
 
 		/// <summary>
@@ -31,7 +36,10 @@ namespace MiaPlaza.MiddleMail.Model {
 
 		public EmailMessage() {}
 
-		public EmailMessage(Guid id, (string name, string address) from, (string name, string address) to, (string name, string address)? replyTo, string subject, string plainText, string htmlText, List<string> tags, int retryCount = 0, bool store = true) {
+		public EmailMessage(Guid id, (string name, string address) from, (string name, string address) to, 
+			(string name, string address)? replyTo, string subject, string plainText, string htmlText, 
+			List<string> tags, Dictionary<string, string> headers, int retryCount = 0, bool store = true) {
+
 			if (String.IsNullOrEmpty(from.address)) {
 				throw new ArgumentException("Must specify a from email address.", nameof(from));
 			}
@@ -48,6 +56,7 @@ namespace MiaPlaza.MiddleMail.Model {
 			Subject = subject;
 			PlainText = plainText;
 			HtmlText = htmlText;
+			Headers = headers ?? new Dictionary<string, string>();
 			RetryCount = retryCount;
 			Store = store;
 			Tags = tags ?? new List<string>();

@@ -55,6 +55,7 @@ namespace MiaPlaza.MiddleMail.Storage.ElasticSearch {
 					throw new EMailMessageAlreadySentStorageException(emailMessage);
 				}
 				update(emailDocument);
+				emailDocument.RetryCount = emailMessage.RetryCount;
 				emailDocument.LastProcessed = DateTime.UtcNow;
 			} else {
 				emailDocument = create();
