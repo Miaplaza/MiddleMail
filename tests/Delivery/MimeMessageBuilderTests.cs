@@ -60,10 +60,20 @@ namespace MiaPlaza.MiddleMail.Tests.Delivery {
 				var parsedMessage = parser.ParseMessage();
 
 				Assert.Equal(emailMessage.Subject, parsedMessage.Subject);
-				Assert.Equal(emailMessage.FromName, parsedMessage.From.First().Name);
-				Assert.Equal(emailMessage.FromEmail, ((MailboxAddress)parsedMessage.From.First()).Address);
-				Assert.Equal(emailMessage.ToName, parsedMessage.To.First().Name);
-				Assert.Equal(emailMessage.ToEmail, ((MailboxAddress)parsedMessage.To.First()).Address);
+
+				Assert.Equal(emailMessage.From.name ?? string.Empty, parsedMessage.From.First().Name);
+				Assert.Equal(emailMessage.From.address, ((MailboxAddress)parsedMessage.From.First()).Address);
+
+				Assert.Equal(emailMessage.To.name ?? string.Empty, parsedMessage.To.First().Name);
+				Assert.Equal(emailMessage.To.address, ((MailboxAddress)parsedMessage.To.First()).Address);
+				
+				if (!emailMessage.ReplyTo.HasValue) {
+					Assert.Empty(parsedMessage.ReplyTo);
+				} else {
+					Assert.Equal(emailMessage.ReplyTo.Value.name ?? string.Empty, parsedMessage.ReplyTo.First().Name);
+					Assert.Equal(emailMessage.ReplyTo.Value.address, ((MailboxAddress)parsedMessage.ReplyTo.First()).Address);
+				}	
+				
 				Assert.Equal(emailMessage.PlainText, parsedMessage.GetTextBody(TextFormat.Text));
 				Assert.Equal(emailMessage.HtmlText, parsedMessage.HtmlBody);
 			}
@@ -80,7 +90,7 @@ namespace MiaPlaza.MiddleMail.Tests.Delivery {
 		[Fact]
 		public void BuilInvalidEmailMessageThrows() {
 			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
-			emailMessage.FromEmail = "<>";
+			emailMessage.From = (null, "<>");
 
 			Assert.ThrowsAny<Exception>(() => builder.Create(emailMessage));
 		}
@@ -121,7 +131,7 @@ namespace MiaPlaza.MiddleMail.Tests.Delivery {
 		[Fact]
 		public void BuildFromEmailNullThrows() {
 			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
-			emailMessage.FromEmail = null;
+			emailMessage.From = (emailMessage.From.name, null);
 			
 			Assert.ThrowsAny<Exception>(() => builder.Create(emailMessage));
 		}
@@ -129,7 +139,7 @@ namespace MiaPlaza.MiddleMail.Tests.Delivery {
 		[Fact]
 		public void BuildToEmailNullThrows() {
 			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
-			emailMessage.ToEmail = null;
+			emailMessage.To = (emailMessage.To.name, null);
 			
 			Assert.ThrowsAny<Exception>(() => builder.Create(emailMessage));
 		}
@@ -148,6 +158,27 @@ namespace MiaPlaza.MiddleMail.Tests.Delivery {
 			var mimeMessage = builder.Create(emailMessage);
 
 			Assert.EndsWith(MessageIdDomainPart, mimeMessage.MessageId);
+		}
+
+		[Fact]
+		public async Task ReplyToNotSetIfNotSpecified() {
+			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
+			emailMessage.ReplyTo = null;
+			var mimeMessage = builder.Create(emailMessage);
+
+			await sendEmailAndAssertEquality(emailMessage, mimeMessage);
+		}
+
+		[Fact]
+		public async Task NamesCanBeNull() {
+			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
+			emailMessage.ReplyTo = (null, emailMessage.ReplyTo.Value.address);
+			emailMessage.To = (null, emailMessage.To.address);
+			emailMessage.From = (null, emailMessage.From.address);
+
+			var mimeMessage = builder.Create(emailMessage);
+
+			await sendEmailAndAssertEquality(emailMessage, mimeMessage);
 		}
 
 		public void Dispose() {

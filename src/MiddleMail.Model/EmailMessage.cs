@@ -10,10 +10,9 @@ namespace MiaPlaza.MiddleMail.Model {
 	public class EmailMessage {
 		
 		public Guid Id { get; set; }
-		public string FromEmail { get; set; }
-		public string FromName { get; set; }
-		public string ToEmail { get; set; }
-		public string ToName { get; set; }
+		public (string name, string address) From { get; set; }
+		public (string name, string address) To { get; set; }
+		public (string name, string address)? ReplyTo { get; set; }
 		public string Subject { get; set; }
 		public string PlainText { get; set; }
 		public string HtmlText { get; set; }
@@ -32,21 +31,20 @@ namespace MiaPlaza.MiddleMail.Model {
 
 		public EmailMessage() {}
 
-		public EmailMessage(Guid id, string fromEmail, string fromName, string toEmail, string toName, string subject, string plainText, string htmlText, List<string> tags, int retryCount = 0, bool store = true) {
-			if (String.IsNullOrEmpty(fromEmail)) {
-				throw new ArgumentException("Must specify a from email address.", nameof(fromEmail));
+		public EmailMessage(Guid id, (string name, string address) from, (string name, string address) to, (string name, string address)? replyTo, string subject, string plainText, string htmlText, List<string> tags, int retryCount = 0, bool store = true) {
+			if (String.IsNullOrEmpty(from.address)) {
+				throw new ArgumentException("Must specify a from email address.", nameof(from));
 			}
-			if (String.IsNullOrEmpty(toEmail)) {
-				throw new ArgumentException("Must specify a to email address.", nameof(toEmail));
+			if (String.IsNullOrEmpty(to.address)) {
+				throw new ArgumentException("Must specify a to email address.", nameof(to));
 			}
 			if (String.IsNullOrEmpty(subject)) {
 				throw new ArgumentException("Must specify a subject.", nameof(subject));
 			}
 			Id = id;
-			FromEmail = fromEmail;
-			FromName = fromName;
-			ToEmail = toEmail;
-			ToName = toName;
+			From = from;
+			To = to;
+			ReplyTo = replyTo;
 			Subject = subject;
 			PlainText = plainText;
 			HtmlText = htmlText;

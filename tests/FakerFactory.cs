@@ -12,10 +12,9 @@ namespace MiaPlaza.MiddleMail.Tests {
 		public static Faker<EmailMessage> EmailMessageFaker = new Faker<EmailMessage>()
 			.CustomInstantiator(f => new EmailMessage(
 				id: Guid.NewGuid(),
-				fromEmail: f.Internet.Email(),
-				fromName: f.Name.FullName(),
-				toEmail: f.Internet.Email(),
-				toName: f.Name.FullName(),
+				from: (f.Name.FullName(), f.Internet.Email()),
+				to: (f.Name.FullName(), f.Internet.Email()),
+				replyTo: (f.Name.FullName(), f.Internet.Email()),
 				subject: f.Lorem.Sentence(),
 				plainText: f.Lorem.Sentences(),
 				htmlText: f.Lorem.Sentences(),
