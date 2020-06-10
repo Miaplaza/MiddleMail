@@ -6,7 +6,7 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 
-namespace MiaPlaza.MiddleMail.Delivery.Smtp {
+namespace MiddleMail.Delivery.Smtp {
 
 	/// <summary>
 	/// Sends <see cref="MimeKit.MimeMessage" /> via SMTP.

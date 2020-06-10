@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using EasyNetQ;
 using EasyNetQ.Management.Client;
 using EasyNetQ.Scheduling;
-using MiaPlaza.MiddleMail.Exceptions;
-using MiaPlaza.MiddleMail.Model;
+using MiddleMail.Exceptions;
+using MiddleMail.Model;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
 
-namespace MiaPlaza.MiddleMail.Tests {
+namespace MiddleMail.Tests {
 
 	public class MiddleMailServiceTests : IDisposable {
 

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using MiaPlaza.MiddleMail.Model;
+using MiddleMail.Model;
 
-namespace MiaPlaza.MiddleMail {
+namespace MiddleMail {
 
 	/// <summary>
 	/// Delivers an email. This could happen through Smtp, Http or not at all. 

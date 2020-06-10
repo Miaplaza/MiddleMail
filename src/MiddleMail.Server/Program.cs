@@ -1,15 +1,15 @@
 ﻿using System;
 using EasyNetQ.Scheduling;
-using MiaPlaza.MiddleMail.Delivery;
-using MiaPlaza.MiddleMail.Delivery.Smtp;
-using MiaPlaza.MiddleMail.MessageSource.RabbitMQ;
-using MiaPlaza.MiddleMail.Storage.ElasticSearch;
+using MiddleMail.Delivery;
+using MiddleMail.Delivery.Smtp;
+using MiddleMail.MessageSource.RabbitMQ;
+using MiddleMail.Storage.ElasticSearch;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace MiaPlaza.MiddleMail.Server {
+namespace MiddleMail.Server {
 	class Program {
 		public static void Main(string[] args) {
 			CreateHostBuilder(args).Build().Run();

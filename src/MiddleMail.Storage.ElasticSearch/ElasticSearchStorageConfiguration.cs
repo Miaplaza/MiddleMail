@@ -1,7 +1,7 @@
-using MiaPlaza.MiddleMail.Exceptions;
+using MiddleMail.Exceptions;
 using Microsoft.Extensions.Configuration;
 
-namespace MiaPlaza.MiddleMail.Storage.ElasticSearch {
+namespace MiddleMail.Storage.ElasticSearch {
 
 	/// <summary>
 	/// Configuration for <see cref="ElasticSearchStorage" />

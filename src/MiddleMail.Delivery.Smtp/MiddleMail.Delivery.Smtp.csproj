@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNameSpace>MiaPlaza.MiddleMail.Delivery.Smtp</RootNameSpace>
+    <RootNameSpace>MiddleMail.Delivery.Smtp</RootNameSpace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 

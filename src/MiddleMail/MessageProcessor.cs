@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
-using MiaPlaza.MiddleMail.Exceptions;
-using MiaPlaza.MiddleMail.Model;
+using MiddleMail.Exceptions;
+using MiddleMail.Model;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 
-namespace MiaPlaza.MiddleMail {
+namespace MiddleMail {
 
 	/// <summary>
 	/// A message processor that is idempotent by detecting duplicates using an <see cref="IDistributedCache" />.

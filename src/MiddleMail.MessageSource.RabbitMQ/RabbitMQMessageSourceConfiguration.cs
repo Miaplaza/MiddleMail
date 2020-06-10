@@ -1,7 +1,7 @@
-using MiaPlaza.MiddleMail.Exceptions;
+using MiddleMail.Exceptions;
 using Microsoft.Extensions.Configuration;
 
-namespace MiaPlaza.MiddleMail.MessageSource.RabbitMQ {
+namespace MiddleMail.MessageSource.RabbitMQ {
 public class RabbitMQMessageSourceConfiguration {
 		public string ConnectionString { get; set; }
 		public string SubscriptionId { get; set; }

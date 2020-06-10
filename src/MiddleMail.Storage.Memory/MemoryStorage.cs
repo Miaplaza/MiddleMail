@@ -2,10 +2,10 @@ using System.Linq;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System;
-using MiaPlaza.MiddleMail.Exceptions;
-using MiaPlaza.MiddleMail.Model;
+using MiddleMail.Exceptions;
+using MiddleMail.Model;
 
-namespace MiaPlaza.MiddleMail.Storage.Memory {
+namespace MiddleMail.Storage.Memory {
 
 	/// <summary>
 	/// A reference implementation for <see cref="IMailStorage" /> backed by a dictionary in memory.

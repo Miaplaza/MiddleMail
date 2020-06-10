@@ -1,6 +1,6 @@
 using System;
 
-namespace MiaPlaza.MiddleMail {
+namespace MiddleMail {
 
 	/// <summary>
 	/// A strategy that calculates delay to retry a failed action solely based on the number of failed retries

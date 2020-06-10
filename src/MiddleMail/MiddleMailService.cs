@@ -1,12 +1,12 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MiaPlaza.MiddleMail.Exceptions;
-using MiaPlaza.MiddleMail.Model;
+using MiddleMail.Exceptions;
+using MiddleMail.Model;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace MiaPlaza.MiddleMail {
+namespace MiddleMail {
 
 	/// <summary>
 	/// A BackgroundService that consumes message from an <see cref="IMessageSource" /> and dispatches them to an

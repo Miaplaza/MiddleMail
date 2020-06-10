@@ -1,7 +1,7 @@
 using System;
-using MiaPlaza.MiddleMail.Model;
+using MiddleMail.Model;
 
-namespace MiaPlaza.MiddleMail.Exceptions {
+namespace MiddleMail.Exceptions {
 	public class EMailMessageAlreadySentStorageException : Exception {
 
 		public EMailMessageAlreadySentStorageException(EmailMessage emailMessage)

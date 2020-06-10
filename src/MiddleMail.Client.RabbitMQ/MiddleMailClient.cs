@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using EasyNetQ;
 using Microsoft.Extensions.Configuration;
-using MiaPlaza.MiddleMail.Model;
+using MiddleMail.Model;
 
-namespace MiaPlaza.MiddleMail.Client.RabbitMQ {
+namespace MiddleMail.Client.RabbitMQ {
 
 	/// <summary>
 	/// A client that connects to MiddleMail. It puts messages to be sent into a RabbitMQ queue that MiddleMail listens to.

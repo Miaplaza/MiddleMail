@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MimeKit;
 
-namespace MiaPlaza.MiddleMail.Delivery.Smtp {
+namespace MiddleMail.Delivery.Smtp {
 
 	/// <summary>
 	/// Send a <see cref="MimeKit.MimeMessage" />

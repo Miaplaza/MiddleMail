@@ -1,7 +1,7 @@
-using MiaPlaza.MiddleMail.Model;
+using MiddleMail.Model;
 using MimeKit;
 
-namespace MiaPlaza.MiddleMail.Delivery.Smtp {
+namespace MiddleMail.Delivery.Smtp {
 
 	/// <summary>
 	/// Creates a <see cref="MimeKit.MimeMessage" /> from an <see cref="EmailMessage" />

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using MiaPlaza.MiddleMail.Model;
+using MiddleMail.Model;
 
-namespace MiaPlaza.MiddleMail {
+namespace MiddleMail {
 	
 	/// <summary>
 	/// A storage to persist email activity. When calling any of the methods that set data, the order must be kept.

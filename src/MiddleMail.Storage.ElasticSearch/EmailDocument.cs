@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using MiaPlaza.MiddleMail.Model;
+using MiddleMail.Model;
 using Nest;
 
-namespace MiaPlaza.MiddleMail.Storage.ElasticSearch {
+namespace MiddleMail.Storage.ElasticSearch {
 
 	[ElasticsearchType]
 	/// <summary>

@@ -6,7 +6,7 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 
-namespace MiaPlaza.MiddleMail.Delivery.Smtp {
+namespace MiddleMail.Delivery.Smtp {
 
 	/// <summary>
 	/// A stub that does not actually send anything but acts as an always successful <see cref="IMimeMessageSender" />

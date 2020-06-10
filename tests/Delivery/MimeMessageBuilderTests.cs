@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 using System.Collections.Generic;
-using MiaPlaza.MiddleMail.Delivery;
+using MiddleMail.Delivery;
 using Microsoft.Extensions.Configuration;
 using Xunit;
 using System.Linq;
@@ -11,10 +11,10 @@ using Rnwood.SmtpServer;
 using System.Net.Sockets;
 using MailKit.Security;
 using MimeKit.Text;
-using MiaPlaza.MiddleMail.Model;
-using MiaPlaza.MiddleMail.Delivery.Smtp;
+using MiddleMail.Model;
+using MiddleMail.Delivery.Smtp;
 
-namespace MiaPlaza.MiddleMail.Tests.Delivery {
+namespace MiddleMail.Tests.Delivery {
 
 	public class MimeMessageBuilderTests : IDisposable {
 
