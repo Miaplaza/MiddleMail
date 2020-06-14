@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using EasyNetQ;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using MiddleMail.Model;
 
 namespace MiddleMail.Client.RabbitMQ {
@@ -15,8 +15,8 @@ namespace MiddleMail.Client.RabbitMQ {
 
 		private readonly IBus bus;
 
-		public MiddleMailClient(IConfiguration configuration) {
-			bus = EasyNetQ.RabbitHutch.CreateBus(configuration.GetValue<string>("RabbitMQConnectionString"));
+		public MiddleMailClient(IOptions<MiddleMailClientRabbitMQOptions> options) {
+			bus = EasyNetQ.RabbitHutch.CreateBus(options.Value.ConnectionString);
 		}
 
 		/// <summary>
