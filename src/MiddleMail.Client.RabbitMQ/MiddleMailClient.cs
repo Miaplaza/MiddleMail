@@ -15,7 +15,7 @@ namespace MiddleMail.Client.RabbitMQ {
 
 		private readonly IBus bus;
 
-		public MiddleMailClient(IOptions<MiddleMailClientRabbitMQOptions> options) {
+		public MiddleMailClient(IOptions<RabbitMQOptions> options) {
 			bus = EasyNetQ.RabbitHutch.CreateBus(options.Value.ConnectionString);
 		}
 

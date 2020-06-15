@@ -4,6 +4,7 @@ using EasyNetQ;
 using EasyNetQ.Scheduling;
 using MiddleMail.Model;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace MiddleMail.MessageSource.RabbitMQ {
 
@@ -21,17 +22,17 @@ namespace MiddleMail.MessageSource.RabbitMQ {
 		private readonly IBackoffStrategy backoffStrategy;
 		private readonly ILogger<RabbitMQMessageSource> logger;
 
-		private readonly RabbitMQMessageSourceConfiguration configuration;
+		private readonly RabbitMQMessageSourceOptions options;
 
-		public RabbitMQMessageSource(RabbitMQMessageSourceConfiguration configuration, IBackoffStrategy backoffStrategy, ILogger<RabbitMQMessageSource> logger) {
-			this.configuration = configuration;
-			this.bus = RabbitHutch.CreateBus(configuration.ConnectionString, x => x.Register<IScheduler, DelayedExchangeScheduler>());
+		public RabbitMQMessageSource(IOptions<RabbitMQMessageSourceOptions> options, IBackoffStrategy backoffStrategy, ILogger<RabbitMQMessageSource> logger) {
+			this.options = options.Value;
+			this.bus = RabbitHutch.CreateBus(this.options.ConnectionString, x => x.Register<IScheduler, DelayedExchangeScheduler>());
 			this.backoffStrategy = backoffStrategy;
 			this.logger = logger;
 		}
 
 		public void Start(Func<EmailMessage, Task> callback) {
-			subscriptionResult = bus.SubscribeAsync<EmailMessage>(configuration.SubscriptionId, callback);
+			subscriptionResult = bus.SubscribeAsync<EmailMessage>(options.SubscriptionId, callback);
 		}
 
 		public void Stop() {

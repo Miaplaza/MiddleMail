@@ -21,12 +21,27 @@ namespace MiddleMail.Server {
 					logging.ClearProviders();
 					logging.AddConsole();
 				})
+				
 				.ConfigureServices((hostContext, services) => {
-					services.AddSingleton<SmtpConfiguration>();
-					services.AddSingleton<MimeMessageConfiguration>();
-					services.AddSingleton<ElasticSearchStorageConfiguration>();
-					services.AddSingleton<ExponentialBackoffConfiguration>();
-					services.AddSingleton<RabbitMQMessageSourceConfiguration>();
+					services.AddOptions<SmtpOptions>()
+						.Bind(hostContext.Configuration.GetSection(SmtpOptions.SECTION))
+						.ValidateDataAnnotations();
+					
+					services.AddOptions<MimeMessageOptions>()
+						.Bind(hostContext.Configuration.GetSection(MimeMessageOptions.SECTION))
+						.ValidateDataAnnotations();
+
+					services.AddOptions<ElasticSearchStorageOptions>()
+						.Bind(hostContext.Configuration.GetSection(ElasticSearchStorageOptions.SECTION))
+						.ValidateDataAnnotations();
+
+					services.AddOptions<ExponentialBackoffOptions>()
+						.Bind(hostContext.Configuration.GetSection(ExponentialBackoffOptions.SECTION))
+						.ValidateDataAnnotations();
+					
+					services.AddOptions<RabbitMQMessageSourceOptions>()
+						.Bind(hostContext.Configuration.GetSection(RabbitMQMessageSourceOptions.SECTION))
+						.ValidateDataAnnotations();
 
 					services.AddSingleton<IMailDeliverer, SmtpDeliverer>();
 					services.AddSingleton<IMimeMessageBuilder, MimeMessageBuilder>();

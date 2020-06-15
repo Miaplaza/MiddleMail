@@ -3,6 +3,7 @@ using System.Linq;
 using MiddleMail.Model;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
+using Microsoft.Extensions.Options;
 
 namespace MiddleMail.Delivery.Smtp {
 	
@@ -11,9 +12,9 @@ namespace MiddleMail.Delivery.Smtp {
 	/// </summary>
 	public class MimeMessageBuilder : IMimeMessageBuilder {
 
-		private readonly MimeMessageConfiguration configuration;
-		public MimeMessageBuilder(MimeMessageConfiguration configuration) {
-			this.configuration = configuration;
+		private readonly MimeMessageOptions options;
+		public MimeMessageBuilder(IOptions<MimeMessageOptions> options) {
+			this.options = options.Value;
 		}
 
 		/// <summary>
@@ -40,7 +41,7 @@ namespace MiddleMail.Delivery.Smtp {
 				createBodyMultipart(emailMessage, mimeMessage);
 			}
 
-			mimeMessage.MessageId = $"{emailMessage.Id:N}@{configuration.MessageIdDomainPart}>";
+			mimeMessage.MessageId = $"{emailMessage.Id:N}@{options.MessageIdDomainPart}>";
 
 			setHeaders(emailMessage, mimeMessage);
 			return mimeMessage;

@@ -13,6 +13,7 @@ using MailKit.Security;
 using MimeKit.Text;
 using MiddleMail.Model;
 using MiddleMail.Delivery.Smtp;
+using Microsoft.Extensions.Options;
 
 namespace MiddleMail.Tests.Delivery {
 
@@ -29,16 +30,11 @@ namespace MiddleMail.Tests.Delivery {
 		private readonly string MessageIdDomainPart = "testdomain.test";
 
 		public MimeMessageBuilderTests() {
-			var config = new Dictionary<string, string>{
-				{"MimeMessage:MessageIdDomainPart", MessageIdDomainPart}
+			var options = new MimeMessageOptions {
+				MessageIdDomainPart = MessageIdDomainPart
 			};
 
-			var configuration = new ConfigurationBuilder()
-				.AddInMemoryCollection(config)
-				.Build();
-
-			var mimeMessageConfiguration = new MimeMessageConfiguration(configuration);
-			builder = new MimeMessageBuilder(mimeMessageConfiguration);
+			builder = new MimeMessageBuilder(Options.Create(options));
 			messages = new List<IMessage>();
 			smtpServer = new DefaultServer(false, SMTP_PORT);
 			smtpServer.MessageReceivedEventHandler += (o, ea) => {

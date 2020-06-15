@@ -5,6 +5,7 @@ using MiddleMail.Model;
 using MiddleMail.Storage.ElasticSearch;
 using Microsoft.Extensions.Configuration;
 using Moq;
+using Microsoft.Extensions.Options;
 
 namespace MiddleMail.Tests.Storage {
 	public class ElasticSearchStorageTests : IMailStorageTests {
@@ -15,19 +16,16 @@ namespace MiddleMail.Tests.Storage {
 		private string host = Environment.GetEnvironmentVariable("ElasticSearch__Host") ?? "localhost";
 
 		public ElasticSearchStorageTests() {
-			var config = new Dictionary<string, string>{
-				{"ElasticSearchStorage:Uri", $"http://{host}:9200"},
-				{"ElasticSearchStorage:Index", "middlemail-test"}
+			var options = new ElasticSearchStorageOptions {
+				Uri = $"http://{host}:9200",
+				Index = "middlemail-test",
 			};
 
-			var configuration = new ConfigurationBuilder()
-				.AddInMemoryCollection(config)
-				.Build();
+			this.elasticSearchStorage = new ElasticSearchStorage(Options.Create(options));
 
 			// after writes to elasticsearch it takes some time that they are reflected in search results
 			// we simply wait 1 second after each write operation and before each read.
 			// The IMailStorage implementation should however always be robust enough to not rely on the underlying storage to serve up-to-date data.
-			this.elasticSearchStorage = new ElasticSearchStorage(new ElasticSearchStorageConfiguration(configuration));
 			elasticSearchStorageWithDelay = new Mock<IMailStorage>();
 
 			elasticSearchStorageWithDelay

@@ -12,6 +12,7 @@ using Rnwood.SmtpServer;
 using System.Net.Sockets;
 using MailKit.Security;
 using MiddleMail.Delivery.Smtp;
+using Microsoft.Extensions.Options;
 
 namespace MiddleMail.Tests.Delivery {
 
@@ -19,7 +20,7 @@ namespace MiddleMail.Tests.Delivery {
 
 		private readonly SmtpMimeMessageSender smtpSender;
 
-		private readonly SmtpConfiguration smtpConfiguration;
+		private readonly SmtpOptions options;
 
 		private DefaultServer smtpServer;
 
@@ -28,26 +29,19 @@ namespace MiddleMail.Tests.Delivery {
 		List<IMessage> messages;
 
 		public SmtpMimeMessageSenderTests() {
-			var config = new Dictionary<string, string>{
-				{"SMTP:Server", "localhost"},
-				{"SMTP:Port", "50000"},
-				{"SMTP:Enabled", "true"},
-				{"SMTP:Username", "username"},
-				{"SMTP:Password", "pa$$word"},
+			options = new SmtpOptions {
+				Server = "localhost",
+				Port = 50000,
+				Username = "username",
+				Password = "pa$$word",
 			};
 
-			var configuration = new ConfigurationBuilder()
-				.AddInMemoryCollection(config)
-				.Build();
-
-			smtpConfiguration = new SmtpConfiguration(configuration);
-			smtpSender = new SmtpMimeMessageSender(smtpConfiguration);
-			
+			smtpSender = new SmtpMimeMessageSender(Options.Create(options));
 			startServer();
 		}
 
 		private void startServer() {
-			smtpServer = new DefaultServer(false, smtpConfiguration.Port);
+			smtpServer = new DefaultServer(false, options.Port);
 			messages = new List<IMessage>();
 			smtpServer.MessageReceivedEventHandler += (o, ea) => {
 				messages.Add(ea.Message);
@@ -78,7 +72,7 @@ namespace MiddleMail.Tests.Delivery {
 		[Fact]
 		public async void Send100Emails() {
 			for(int i = 1; i <= 100; i++) {
-				var mimeMessage = await sendRandomEmail();
+				await sendRandomEmail();
 				Assert.Equal(i, messages.Count);
 			}
 		}
