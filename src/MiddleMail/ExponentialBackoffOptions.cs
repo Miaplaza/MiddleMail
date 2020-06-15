@@ -5,8 +5,9 @@ using Microsoft.Extensions.Configuration;
 namespace MiddleMail {
 	public class ExponentialBackoffOptions {
 			
-		[Required]
 		public const string SECTION = "MiddleMail:ExponentialBackoff";
+
+		[Required]
 		public int Multiplicator { get; set; }
 	}
 }
