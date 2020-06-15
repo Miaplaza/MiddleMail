@@ -7,7 +7,7 @@ namespace MiddleMail.Delivery.Smtp {
 	/// </summary>
 	public class SmtpOptions {
 
-		public const string SECTION = "SMTP";
+		public const string SECTION = "MiddleMail:Delivery:Smtp";
 
 		[Required]
 		public string Server { get; set; }
