@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MailKit;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.Extensions.Options;
 using MimeKit;
 
 namespace MiddleMail.Delivery.Smtp {
@@ -13,26 +14,26 @@ namespace MiddleMail.Delivery.Smtp {
 	/// This class is thread safe. 
 	/// </summary>
 	public class SmtpMimeMessageSender : IMimeMessageSender, IDisposable {
-		private readonly SmtpConfiguration smtpConfig;
+		private readonly SmtpOptions options;
 		private readonly SmtpClient smtpClient;
 
 		/// Since <see cref="MailKit.Net.Smtp.SmtpClient" /> is not thread safe, we synchronize access to it by a semaphoreSlim.
 		private readonly SemaphoreSlim semaphoreSlim;
 
-		public SmtpMimeMessageSender(SmtpConfiguration smtpConfig) {
-			this.smtpConfig = smtpConfig;
+		public SmtpMimeMessageSender(IOptions<SmtpOptions> smtpConfig) {
+			this.options = smtpConfig.Value;
 			this.smtpClient = new SmtpClient();
 			this.semaphoreSlim = new SemaphoreSlim(initialCount: 1, maxCount: 1);
 		}
 
 		private async Task connectAsync() {
-			await this.smtpClient.ConnectAsync(smtpConfig.Server, smtpConfig.Port, SecureSocketOptions.None);
+			await this.smtpClient.ConnectAsync(options.Server, options.Port, SecureSocketOptions.None);
 
 			// Note: since we don't have an OAuth2 token, disable
 			// the XOAUTH2 authentication mechanism.
 			this.smtpClient.AuthenticationMechanisms.Remove("XOAUTH2");
 
-			await this.smtpClient.AuthenticateAsync(smtpConfig.Username, smtpConfig.Password);
+			await this.smtpClient.AuthenticateAsync(options.Username, options.Password);
 		}
 
 		public async Task SendAsync(MimeMessage message) {

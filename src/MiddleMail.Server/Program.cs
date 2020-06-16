@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace MiddleMail.Server {
 	class Program {
@@ -21,12 +22,14 @@ namespace MiddleMail.Server {
 					logging.ClearProviders();
 					logging.AddConsole();
 				})
+				
 				.ConfigureServices((hostContext, services) => {
-					services.AddSingleton<SmtpConfiguration>();
-					services.AddSingleton<MimeMessageConfiguration>();
-					services.AddSingleton<ElasticSearchStorageConfiguration>();
-					services.AddSingleton<ExponentialBackoffConfiguration>();
-					services.AddSingleton<RabbitMQMessageSourceConfiguration>();
+
+					addOptions<SmtpOptions>(hostContext, services, SmtpOptions.SECTION);
+					addOptions<MimeMessageOptions>(hostContext, services, MimeMessageOptions.SECTION);
+					addOptions<ElasticSearchStorageOptions>(hostContext, services, ElasticSearchStorageOptions.SECTION);
+					addOptions<ExponentialBackoffOptions>(hostContext, services, ExponentialBackoffOptions.SECTION);
+					addOptions<RabbitMQMessageSourceOptions>(hostContext, services, RabbitMQMessageSourceOptions.SECTION);
 
 					services.AddSingleton<IMailDeliverer, SmtpDeliverer>();
 					services.AddSingleton<IMimeMessageBuilder, MimeMessageBuilder>();
@@ -47,5 +50,11 @@ namespace MiddleMail.Server {
 					});
 					services.AddHostedService<MiddleMailService>();
 				});
+
+		private static void addOptions<TOptions>(HostBuilderContext hostContext, IServiceCollection services, string section) where TOptions : class {
+			services.AddOptions<TOptions>()
+				.Bind(hostContext.Configuration.GetSection(section))
+				.ValidateDataAnnotations();
+		}
 	}
 }

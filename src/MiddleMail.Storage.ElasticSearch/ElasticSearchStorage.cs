@@ -5,20 +5,21 @@ using MiddleMail.Model;
 using Nest;
 using MiddleMail.Exceptions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace MiddleMail.Storage.ElasticSearch {
 
 	/// <summary>
 	/// A mail activity storage backed by ElasticSearch.
-	/// Use <see cref="ElasticSearchStorageConfiguration" /> to configure the connection and index.
+	/// Use <see cref="ElasticSearchStorageOptions" /> to configure the connection and index.
 	/// </summary>
 	public class ElasticSearchStorage : IMailStorage {
 		
 		private readonly ElasticClient client;
-		private readonly ElasticSearchStorageConfiguration configuration;
-		public ElasticSearchStorage(ElasticSearchStorageConfiguration configuration) {
-			this.configuration = configuration;
-			var node = new Uri(configuration.Uri);
+		private readonly ElasticSearchStorageOptions options;
+		public ElasticSearchStorage(IOptions<ElasticSearchStorageOptions> options) {
+			this.options = options.Value;
+			var node = new Uri(this.options.Uri);
 			client = new ElasticClient(new ConnectionSettings(node));
 			client.Indices.Create(index, index => index
 				.Map<EmailDocument>(m => m
@@ -76,7 +77,7 @@ namespace MiddleMail.Storage.ElasticSearch {
 			return existingDocument?.Error;		
 		}
 
-		private string index => configuration.Index;
+		private string index => options.Index;
 		
 		private async Task<EmailDocument> searchDocument(Guid id) {
 			var response = await client.SearchAsync<EmailDocument>(s => s

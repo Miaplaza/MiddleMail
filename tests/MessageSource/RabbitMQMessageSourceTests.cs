@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
+using Microsoft.Extensions.Options;
 
 namespace MiddleMail.Tests.MessageSource {
 
@@ -27,17 +28,11 @@ namespace MiddleMail.Tests.MessageSource {
 			setupVhost();
 			bus = EasyNetQ.RabbitHutch.CreateBus($"host={rabbitMQHost};virtualHost={VHOST_NAME};prefetchcount=10", x => x.Register<IScheduler, DelayedExchangeScheduler>());
 
-			var config = new Dictionary<string, string>{
-				{"RabbitMQMessageSource:ConnectionString", $"host={rabbitMQHost};virtualHost={VHOST_NAME};prefetchcount=10"},
-				{"RabbitMQMessageSource:SubscriptionId", "middlemail.send"},
+			var options = new RabbitMQMessageSourceOptions {
+				ConnectionString = $"host={rabbitMQHost};virtualHost={VHOST_NAME};prefetchcount=10",
+				SubscriptionId = "middlemail.send",
 			};
-
-			var configuration = new ConfigurationBuilder()
-				.AddInMemoryCollection(config)
-				.Build();
-
-			var rabbitMqConfiguraiton = new RabbitMQMessageSourceConfiguration(configuration);
-
+			
 			var backoffMock = new Mock<IBackoffStrategy>();
 			backoffMock
 				.Setup(m => m.GetDelay(It.IsAny<int>()))
@@ -49,7 +44,7 @@ namespace MiddleMail.Tests.MessageSource {
 				.Setup(m => m.ProcessAsync(It.IsAny<EmailMessage>()));
 
 			var logger = new NullLogger<RabbitMQMessageSource>();
-			messageSource = new RabbitMQMessageSource(rabbitMqConfiguraiton, backoffMock.Object, logger);
+			messageSource = new RabbitMQMessageSource(Options.Create(options), backoffMock.Object, logger);
 
 			messageSource.Start(callbackMock.Object.ProcessAsync);
 		}
