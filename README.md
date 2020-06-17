@@ -60,7 +60,9 @@ Configuration for `MiddleMail.Storage.ElasticSearch`
 ### `MiddleMail.Server` configuration
 
 `REDIS_CONFIGURATION`: Configuration used to connect to Redis, as defined at https://stackexchange.github.io/StackExchange.Redis/Configuration
+
 `REDIS_INSTANCE_NAME`: The Redis instance name
+
 `DISABLE_SMTP`: Do not actually send anyting via SMTP.
 
 ## Tools
