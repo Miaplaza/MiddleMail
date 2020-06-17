@@ -1,0 +1,70 @@
+# MiddleMail Docker image
+# ref: https://hub.docker.com/r/miaplaza/middlemail/tags
+image:
+  repository: miaplaza/middlemail
+  # Defaults to 'Always' if image tag is 'latest', else to 'IfNotPresent'
+  # pullPolicy: Always
+
+replicaCount: 1
+
+rabbitmq:
+  # Whether this chart is going to deploy its own RabbitMQ instance and will
+  # expose it as a service. When set, any parameters here are passed on to
+  # Bitnami's RabbitMQ chart.
+  provided: true
+
+  # When not using the provided RabbitMQ, set these to connect to an
+  # external instance.
+  # host: localhost
+  # port: 5673
+
+  auth:
+    username: user
+    # existingPasswordSecret: a secret containing rabbitmq-password
+
+easynetq:
+  # Connection String parameters, see
+  # https://github.com/EasyNetQ/EasyNetQ/wiki/Connecting-to-RabbitMQ
+  prefetchCount: 10
+  product: MiddleMail
+  
+  # These can also be set to deviate from their defaults:
+  # virtualHost: /
+  # requestedHeartbeat: 10
+  # publisherConfirms: 10
+  # persistentMessages: true
+
+elasticsearch:
+  # Whether this chart is going to deploy its own Elasticsearch instance and
+  # will expose it as a service. When set, any parameters here are passed on to
+  # Bitnami's Elasticsearch chart.
+  provided: true
+  # Whether MiddleMail should connect to an Elasticsearch instance as an activity storage backend.
+  enabled: true
+
+  # The Elasticsearch index to write to
+  index: MiddleMail
+
+  # When not using the provided Elasticsearch, set this to connect to an
+  # external instance:
+  # uri: https://elasticsearch:9200
+
+# Any parameters set here will be passed on to the bundled redis instance.
+redis: {}
+
+smtp:
+  # Whether to actually send out mails through SMTP
+  enabled: false
+  # Name of a secret that holds SMTP credentials, i.e.,
+  # host, port, username, password
+  secret: ~
+
+mime:
+  # Domain part of the MIME multipart delimiters as in random-id@domain.
+  domain: localhost
+
+backoff:
+  # When processing fails, a message is retried with an exponential backoff,
+  # starting at multiplicator many seconds, then 2*multiplicator seconds, then
+  # 4*multiplicator seconds, ...
+  multiplicator: 60

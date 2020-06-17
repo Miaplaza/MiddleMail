@@ -1,0 +1,12 @@
+dependencies:
+- name: rabbitmq
+  repository: https://charts.bitnami.com/bitnami
+  version: 6.25.13
+- name: elasticsearch
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.3.5
+- name: redis
+  repository: https://charts.bitnami.com/bitnami
+  version: 10.7.2
+digest: sha256:b93d43edaa3eb274ec53f3a6f516da855c6561297b9a6226506bfc2427775e6f
+generated: "2020-06-18T14:05:11.318847093+02:00"
