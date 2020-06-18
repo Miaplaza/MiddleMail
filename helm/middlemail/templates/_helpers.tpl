@@ -73,21 +73,39 @@ Usage:
 The URI of the Elasticsearch instance
 */}}
 {{- define "middlemail.elasticsearch.uri" -}}
-{{- default (printf "https://%s" (include "call-nested" (list . "elasticsearch" "elasticsearch.master.fullname"))) .Values.elasticsearch.uri }}
+{{- if .Values.elasticsearch.uri }}
+{{- .Values.elasticsearch.uri }}
+{{- else if .Values.elasticsearch.provision }}
+{{- printf "https://%s" (include "call-nested" (list . "elasticsearch" "elasticsearch.master.fullname")) }}
+{{- else }}
+{{ fail "elasticsearch.uri must be set when elasticsearch.provision is false" }}
+{{- end }}
 {{- end }}
 
 {{/*
 RabbitMQ hostname to connect to
 */}}
 {{- define "middlemail.rabbitmq.host" }}
-{{- default (include "call-nested" (list . "rabbitmq" "rabbitmq.fullname")) .Values.rabbitmq.host }}
+{{- if .Values.rabbitmq.host }}
+{{- .Values.rabbitmq.host }}
+{{- else if .Values.rabbitmq.provision }}
+{{- include "call-nested" (list . "rabbitmq" "rabbitmq.fullname") }}
+{{- else }}
+{{- fail "rabbitmq.host must be set when rabbitmq.provision is false" }}
+{{- end }}
 {{- end }}
 
 {{/*
 Secret holding RabbitMQ password
 */}}
 {{- define "middlemail.easynetq.secret" }}
-{{- default (include "call-nested" (list . "rabbitmq" "rabbitmq.secretPasswordName")) .Values.rabbitmq.auth.existingPasswordSecret }}
+{{- if .Values.rabbitmq.auth.existingPasswordSecret }}
+{{- .Values.rabbitmq.auth.existingPasswordSecret }}
+{{- else if .Values.rabbitmq.provision }}
+{{- include "call-nested" (list . "rabbitmq" "rabbitmq.secretPasswordName") }}
+{{- else }}
+{{- fail "rabbitmq.auth.existingPasswordSecret must be set when rabbitmq.provision is false" }}
+{{- end }}
 {{- end }}
 
 {{/*

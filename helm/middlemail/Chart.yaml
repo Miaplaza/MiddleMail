@@ -11,11 +11,11 @@ dependencies:
   - name: rabbitmq
     version: "~7.0.0"
     repository: https://charts.bitnami.com/bitnami
-    condition: rabbitmq.provided
+    condition: rabbitmq.provision
   - name: elasticsearch
     version: "~12.3.5"
     repository: https://charts.bitnami.com/bitnami
-    condition: elasticsearch.provided
+    condition: elasticsearch.provision
   - name: redis
     version: "~10.7.2"
     repository: https://charts.bitnami.com/bitnami

@@ -8,13 +8,9 @@ image:
 replicaCount: 1
 
 rabbitmq:
-  # Whether this chart is going to deploy its own RabbitMQ instance and will
-  # expose it as a service. When set, any parameters here are passed on to
-  # Bitnami's RabbitMQ chart.
-  provided: true
-
-  # When not using the provided RabbitMQ, set these to connect to an
-  # external instance.
+  # When these are not set, this chart is going to deploy its own RabbitMQ instance and connect to it.
+  # It will then be accessible in your cluster as the service RELEASE-rabbitmq-0
+  # provision: false
   # host: localhost
   # port: 5673
 
@@ -56,19 +52,13 @@ easynetq:
   # persistentMessages: true
 
 elasticsearch:
-  # Whether this chart is going to deploy its own Elasticsearch instance and
-  # will expose it as a service. When set, any parameters here are passed on to
-  # Bitnami's Elasticsearch chart.
-  provided: true
-  # Whether MiddleMail should connect to an Elasticsearch instance as an activity storage backend.
-  enabled: true
+  # When this is not set, this chart is going to deploy its own Elasticsearch instance and connect to it.
+  # provision: false
+  # uri: https://elasticsearch:9200
 
   # The Elasticsearch index to write to
   index: MiddleMail
 
-  # When not using the provided Elasticsearch, set this to connect to an
-  # external instance:
-  # uri: https://elasticsearch:9200
 
 # Any parameters set here will be passed on to the bundled redis instance.
 redis: {}
