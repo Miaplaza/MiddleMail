@@ -8,6 +8,8 @@ image:
 replicaCount: 1
 
 rabbitmq:
+  provision: true
+
   # When these are not set, this chart is going to deploy its own RabbitMQ instance and connect to it.
   # It will then be accessible in your cluster as the service RELEASE-rabbitmq-0
   # provision: false
@@ -52,6 +54,8 @@ easynetq:
   # persistentMessages: true
 
 elasticsearch:
+  provision: true
+
   # When this is not set, this chart is going to deploy its own Elasticsearch instance and connect to it.
   # provision: false
   # uri: https://elasticsearch:9200
