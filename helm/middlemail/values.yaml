@@ -22,6 +22,27 @@ rabbitmq:
     username: user
     # existingPasswordSecret: a secret containing rabbitmq-password
 
+
+  # Install DelayedMessageExchange plugin into a provided rabbitmq
+
+  initContainers:
+    - name: download-delayed-message-exchange
+      image: bitnami/rabbitmq:3.8.5
+      command: ['sh', '-c', 'curl -L --output /plugins/rabbitmq_delayed_message_exchange-3.8.0.ez https://github.com/rabbitmq/rabbitmq-delayed-message-exchange/releases/download/v3.8.0/rabbitmq_delayed_message_exchange-3.8.0.ez && cp /opt/bitnami/rabbitmq/plugins/* /plugins']
+      volumeMounts:
+      - name: plugins
+        mountPath: /plugins
+  extraVolumes:
+    - name: plugins
+  extraVolumeMounts:
+    - name: plugins
+      mountPath: /opt/bitnami/rabbitmq/plugins
+
+  # We run a specific tag of RabbitMQ just to make sure that we copy the plugins from the correct version.
+  image.tag: 3.8.5
+
+  extraPlugins: rabbitmq_delayed_message_exchange
+
 easynetq:
   # Connection String parameters, see
   # https://github.com/EasyNetQ/EasyNetQ/wiki/Connecting-to-RabbitMQ
