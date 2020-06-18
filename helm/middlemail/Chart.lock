@@ -4,9 +4,9 @@ dependencies:
   version: 7.0.1
 - name: elasticsearch
   repository: https://charts.bitnami.com/bitnami
-  version: 12.3.5
+  version: 12.3.6
 - name: redis
   repository: https://charts.bitnami.com/bitnami
   version: 10.7.2
-digest: sha256:ab80496b02af2999e8d4ed7a168d765a7e0a7fb884fdbd8ce9fc6ce2223c05ef
-generated: "2020-06-18T17:19:40.938845884+02:00"
+digest: sha256:826acd47f491f7eeff87e73ffe86986e498dc23bdb8307f6abd6258e304dc8a2
+generated: "2020-06-18T21:01:44.369586439+02:00"
