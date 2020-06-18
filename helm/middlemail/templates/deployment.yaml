@@ -69,6 +69,8 @@ spec:
                 key: rabbitmq-password
           - name: MiddleMail__MessageSource__RabbitMQ__ConnectionString
             value: {{ template "middlemail.easynetq.connectionstring" . }}password=$(MiddleMail__MessageSource__RabbitMQ__EasyNetQ__Password)
+          - name: MiddleMail__MessageSource__RabbitMQ__SubscriptionId
+            value: {{ include "middlemail.fullname" . }}
           - name: REDIS_INSTANCE_NAME
             value: {{ template "middlemail.redis.hostname" . }}
           - name: REDIS_PASSWORD

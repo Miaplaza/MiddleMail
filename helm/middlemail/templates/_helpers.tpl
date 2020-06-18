@@ -76,7 +76,7 @@ The URI of the Elasticsearch instance
 {{- if .Values.elasticsearch.uri }}
 {{- .Values.elasticsearch.uri }}
 {{- else if .Values.elasticsearch.provision }}
-{{- printf "http://%s:%s" (include "call-nested" (list . "elasticsearch" "elasticsearch.master.fullname")) .Values.elasticsearch.master.service.port }}
+{{- printf "http://%s:%s" (include "call-nested" (list . "elasticsearch" "elasticsearch.master.fullname")) (toString .Values.elasticsearch.master.service.port) }}
 {{- else }}
 {{ fail "elasticsearch.uri must be set when elasticsearch.provision is false" }}
 {{- end }}
