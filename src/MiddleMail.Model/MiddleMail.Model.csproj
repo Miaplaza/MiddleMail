@@ -8,6 +8,8 @@
     <Authors>Miaplaza Inc.</Authors>
     <Company>MiaPlaza</Company>
     <Copyright>Copyright ©2020 Miaplaza Inc.</Copyright>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
 </Project>
