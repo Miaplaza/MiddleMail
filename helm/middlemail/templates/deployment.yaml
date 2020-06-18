@@ -58,10 +58,8 @@ spec:
             value: "{{ .Values.mime.domain }}"
           - name: MiddleMail__ExponentialBackoff__Multiplicator
             value: "{{ .Values.backoff.multiplicator }}"
-          {{- if .Values.elasticsearch.enabled }}
           - name: MiddleMail__Storage__ElasticSearch__Uri
             value: {{ template "middlemail.elasticsearch.uri" . }}
-          {{- end }}
           - name: MiddleMail__Storage__ElasticSearch__Index
             value: {{ .Values.elasticsearch.index }}
           - name: MiddleMail__MessageSource__RabbitMQ__EasyNetQ__Password
