@@ -63,7 +63,7 @@ Configuration for `MiddleMail.Storage.ElasticSearch`
 
 `REDIS_INSTANCE_NAME`: The Redis instance name
 
-`DISABLE_SMTP`: Do not actually send anyting via SMTP.
+`DISABLE_SMTP`: Do not actually send anything via SMTP.
 
 ## Tools
 
