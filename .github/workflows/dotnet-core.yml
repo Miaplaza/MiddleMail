@@ -30,3 +30,6 @@ jobs:
         stack-version: 7.6.0
     - name: Test
       run: dotnet test --no-restore --verbosity normal
+      env:
+        ElasticSearch__Host: "localhost"
+      
