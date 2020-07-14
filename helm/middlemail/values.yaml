@@ -18,6 +18,9 @@ rabbitmq:
 
   auth:
     username: user
+    # TODO: Assert that this is set if persistence.enabled :(
+    # existingPasswordSecret: RELEASE-rabbitmq
+    # existingErlangSecret: RELEASE-rabbitmq
     # existingPasswordSecret: a secret containing rabbitmq-password
 
 
@@ -61,11 +64,13 @@ elasticsearch:
   # uri: https://elasticsearch:9200
 
   # The Elasticsearch index to write to
-  index: MiddleMail
+  index: middlemail
 
 
 # Any parameters set here will be passed on to the bundled redis instance.
 redis: {}
+  # TODO: Assert that this is set when persistence.enabled :(
+  # existingSecret:
 
 smtp:
   # Whether to actually send out mails through SMTP
