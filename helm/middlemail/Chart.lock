@@ -1,12 +1,12 @@
 dependencies:
 - name: rabbitmq
   repository: https://charts.bitnami.com/bitnami
-  version: 7.0.1
+  version: ~7.0.0
 - name: elasticsearch
   repository: https://charts.bitnami.com/bitnami
-  version: 12.3.6
+  version: ~12.3.5
 - name: redis
   repository: https://charts.bitnami.com/bitnami
-  version: 10.7.3
-digest: sha256:ee4ac54358e8eede3f177f6a39274c26882f3584e501bf74ead480ecb95a3749
-generated: "2020-06-19T01:19:32.063984246+02:00"
+  version: ~10.7.2
+digest: sha256:b6209b1844ea270228d486b3656ba7fb4f650c6c687f3cb276f49274e6973603
+generated: "2020-07-15T00:24:11.806436+02:00"
