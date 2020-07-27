@@ -7,12 +7,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: engineerd/setup-kind@v0.4.0
-    - name: Create secrets
+    - name: Create rabbitmq secret
       run: |
         kubectl create secret generic middlemail-rabbitmq \
           --from-literal=rabbitmq-erlang-cookie=cookie \
           --from-literal=rabbitmq-password=password
-    - name: Setup MiddleMail dependencies in k8s
+    - name: Setup dependencies from chart
       run: |
         cd helm/middlemail
         helm dependency update
@@ -34,12 +34,14 @@ jobs:
         kubectl port-forward svc/middlemail-rabbitmq 5672:5672 2>&1 &
         kubectl port-forward svc/middlemail-rabbitmq 15672:15672 2>&1 &
         kubectl port-forward svc/middlemail-redis-master 6379:6379 2>&1 &
-    - name: Install dependencies
+    - name: 'dotnet: Install dependencies'
       run: dotnet restore
-    - name: Build
+    - name: 'dotnet: build'
       run: dotnet build --configuration Release --no-restore
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal
+    - name: 'dotnet: test'
+      run: dotnet test --no-build --verbosity normal
       env:
         ElasticSearch__Host: "localhost"
-        RabbitMQ__Host: "localhost;username=user;password=password"
+        RabbitMQ__Host: "localhost"
+        RabbitMQ__Username: "user"
+        RabbitMQ__Password: "password"

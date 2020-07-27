@@ -23,10 +23,12 @@ namespace MiddleMail.Tests.MessageSource {
 		private readonly RabbitMQMessageSource messageSource;
 
 		private string rabbitMQHost = Environment.GetEnvironmentVariable("RabbitMQ__Host") ?? "localhost";
-		
+		private string rabbitMQUsername = Environment.GetEnvironmentVariable("RabbitMQ__Username") ?? "guest";
+		private string rabbitMQPassword = Environment.GetEnvironmentVariable("RabbitMQ__Password") ?? "guest";
+
 		public RabbitMQMessageSourceTests() {
 			setupVhost();
-			bus = EasyNetQ.RabbitHutch.CreateBus($"host={rabbitMQHost};virtualHost={VHOST_NAME};prefetchcount=10", x => x.Register<IScheduler, DelayedExchangeScheduler>());
+			bus = EasyNetQ.RabbitHutch.CreateBus($"host={rabbitMQHost};username={rabbitMQUsername};password={rabbitMQPassword};virtualHost={VHOST_NAME};prefetchcount=10", x => x.Register<IScheduler, DelayedExchangeScheduler>());
 
 			var options = new RabbitMQMessageSourceOptions {
 				ConnectionString = $"host={rabbitMQHost};virtualHost={VHOST_NAME};prefetchcount=10",
@@ -54,7 +56,7 @@ namespace MiddleMail.Tests.MessageSource {
 		/// If the virtualhost is present, we delete it and recreate it before running any test
 		/// </summary>
 		private void setupVhost() {
-			var managementClient = new ManagementClient($"http://{rabbitMQHost}", "guest", "guest", 15672);
+			var managementClient = new ManagementClient($"http://{rabbitMQHost}", rabbitMQUsername, rabbitMQPassword, 15672);
 			
 			var vhost = managementClient.GetVhosts().Where(v => v.Name == VHOST_NAME).FirstOrDefault();
 			if (vhost != null) {
