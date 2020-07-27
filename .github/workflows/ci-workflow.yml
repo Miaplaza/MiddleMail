@@ -23,4 +23,5 @@ jobs:
           --set elasticsearch.data.replicas=1 \
           --timeout 600 \
           --wait
+        kubectl cluster-info
         kubectl get pods -o wide
