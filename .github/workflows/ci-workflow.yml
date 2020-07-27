@@ -39,7 +39,7 @@ jobs:
     - name: 'dotnet: build'
       run: dotnet build --configuration Release --no-restore
     - name: 'dotnet: test'
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal --configuration Release
       env:
         ElasticSearch__Host: "localhost"
         RabbitMQ__Host: "localhost"
