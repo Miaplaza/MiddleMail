@@ -23,3 +23,18 @@ jobs:
           --wait
         kubectl cluster-info
         kubectl get pods -o wide
+    - name: Forward k8s services
+      run: |
+        kubectl port-forward svc/middlemail-elasticsearch-master 9200:9200 2>&1 &
+        kubectl port-forward svc/middlemail-rabbitmq 5672:5672 2>&1 &
+        kubectl port-forward svc/middlemail-rabbitmq 15672:15672 2>&1 &
+        kubectl port-forward svc/middlemail-redis-master 6379:6379 2>&1 &
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+      env:
+        ElasticSearch__Host: "localhost"
+        RabbitMQ__Host: "localhost"
