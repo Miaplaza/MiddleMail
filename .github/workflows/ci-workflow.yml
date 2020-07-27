@@ -5,11 +5,17 @@ jobs:
   kind:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
     - uses: engineerd/setup-kind@v0.4.0
-    - name: Testing
+    - name: Setup MiddleMail dependencies in k8s
       run: |
-        kubectl cluster-info
-        kubectl get pods -n kube-system
-        echo "current-context:" $(kubectl config current-context)
-        echo "environment-kubeconfig:" ${KUBECONFIG}
+        cd helm/middlemail
+        helm install middlemail . \
+          --set rabbitmq.auth.existingErlangSecret=middlemail-rabbitmq \
+          --set rabbitmq.auth.existingPasswordSecret=middlemail-rabbitmq \
+          --set redis.cluster.enabled=false \
+          --set redis.existingSecret=middlemail-redis \
+          --set image.repository=busybox \
+          --set image.tag=latest
+          --wait
+        kubectl get pods -o wide
