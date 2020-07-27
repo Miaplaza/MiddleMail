@@ -34,7 +34,7 @@ jobs:
     - name: 'dotnet: build'
       run: dotnet build --configuration Release --no-restore
     - name: 'dotnet: test'
-      run: RabbitMQ_Password=$(kubectl get secret middlemail-rabbitmq -o yaml | grep rabbitmq-password | awk 'NF>1{print $NF}' | base64 -D) dotnet test --no-build --verbosity normal --configuration Release
+      run: RabbitMQ__Password=$(kubectl get secret middlemail-rabbitmq -o yaml | grep rabbitmq-password | awk 'NF>1{print $NF}' | base64 -D) dotnet test --no-build --verbosity normal --configuration Release
       env:
         ElasticSearch__Host: "localhost"
         RabbitMQ__Host: "localhost"
