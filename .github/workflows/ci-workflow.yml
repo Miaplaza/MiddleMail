@@ -10,6 +10,7 @@ jobs:
     - name: Setup MiddleMail dependencies in k8s
       run: |
         cd helm/middlemail
+        helm dependency update
         helm install middlemail . \
           --set rabbitmq.auth.existingErlangSecret=middlemail-rabbitmq \
           --set rabbitmq.auth.existingPasswordSecret=middlemail-rabbitmq \
