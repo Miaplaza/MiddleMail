@@ -17,6 +17,6 @@ jobs:
           --set redis.cluster.enabled=false \
           --set redis.existingSecret=middlemail-redis \
           --set image.repository=busybox \
-          --set image.tag=latest
+          --set image.tag=latest \
           --wait
         kubectl get pods -o wide
