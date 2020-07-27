@@ -1,4 +1,4 @@
-name: "Create cluster using KinD"
+name: "CI with dependencies from helm chart"
 on: [pull_request, push]
 
 jobs:
@@ -7,6 +7,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: engineerd/setup-kind@v0.4.0
+    - name: Create secrets
+      run: |
+        kubectl create secret generic middlemail-rabbitmq \
+          --from-literal=rabbitmq-erlang-cookie=cookie \
+          --from-literal=rabbitmq-password=password
     - name: Setup MiddleMail dependencies in k8s
       run: |
         cd helm/middlemail
@@ -37,4 +42,4 @@ jobs:
       run: dotnet test --no-restore --verbosity normal
       env:
         ElasticSearch__Host: "localhost"
-        RabbitMQ__Host: "localhost"
+        RabbitMQ__Host: "localhost;username=user;password=password"
