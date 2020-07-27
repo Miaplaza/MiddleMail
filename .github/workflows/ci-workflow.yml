@@ -16,12 +16,10 @@ jobs:
           --set rabbitmq.auth.existingPasswordSecret=middlemail-rabbitmq \
           --set redis.cluster.enabled=false \
           --set redis.existingSecret=middlemail-redis \
-          --set image.repository=busybox \
-          --set image.tag=latest \
+          --set replicaCount=0 \
           --set elasticsearch.master.replicas=1 \
           --set elasticsearch.coordinating.replicas=1 \
           --set elasticsearch.data.replicas=1 \
-          --timeout 10m \
           --wait
         kubectl cluster-info
         kubectl get pods -o wide
