@@ -28,7 +28,6 @@ jobs:
         kubectl port-forward svc/middlemail-elasticsearch-master 9200:9200 2>&1 &
         kubectl port-forward svc/middlemail-rabbitmq 5672:5672 2>&1 &
         kubectl port-forward svc/middlemail-rabbitmq 15672:15672 2>&1 &
-        kubectl port-forward svc/middlemail-redis-master 6379:6379 2>&1 &
     - name: 'dotnet: Install dependencies'
       run: dotnet restore
     - name: 'dotnet: build'

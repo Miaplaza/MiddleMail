@@ -4,12 +4,12 @@ apiVersion: v2
 description: Transactional Email
 type: application
 
-version: 1.0.0
+version: 1.1.0
 appVersion: 0.3.0
 
 dependencies:
   - name: rabbitmq
-    version: "~7.0.0"
+    version: "~7.5.0"
     repository: https://charts.bitnami.com/bitnami
     condition: rabbitmq.provision
   - name: elasticsearch

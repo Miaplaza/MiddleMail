@@ -26,12 +26,13 @@ namespace MiddleMail.Tests.MessageSource {
 		private string rabbitMQUsername = Environment.GetEnvironmentVariable("RabbitMQ__Username") ?? "guest";
 		private string rabbitMQPassword = Environment.GetEnvironmentVariable("RabbitMQ__Password") ?? "guest";
 
-		public RabbitMQMessageSourceTests() {
+		public RabbitMQMessageSourceTests() {			
 			setupVhost();
-			bus = EasyNetQ.RabbitHutch.CreateBus($"host={rabbitMQHost};username={rabbitMQUsername};password={rabbitMQPassword};virtualHost={VHOST_NAME};prefetchcount=10", x => x.Register<IScheduler, DelayedExchangeScheduler>());
+			var connectionString = $"host={rabbitMQHost};username={rabbitMQUsername};password={rabbitMQPassword};virtualHost={VHOST_NAME};prefetchcount=10";
+			bus = EasyNetQ.RabbitHutch.CreateBus(connectionString, x => x.Register<IScheduler, DelayedExchangeScheduler>());
 
 			var options = new RabbitMQMessageSourceOptions {
-				ConnectionString = $"host={rabbitMQHost};virtualHost={VHOST_NAME};prefetchcount=10",
+				ConnectionString = connectionString,
 				SubscriptionId = "middlemail.send",
 			};
 			
