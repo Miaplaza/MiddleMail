@@ -2,7 +2,7 @@ name: "CI with dependencies from helm chart"
 on: [pull_request, push]
 
 jobs:
-  kind:
+  tests:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -32,10 +32,6 @@ jobs:
       run: dotnet restore
     - name: 'dotnet: build'
       run: dotnet build --configuration Release --no-restore
-    - name: debug
-      run: |
-        export RabbitMQ__Password=$(kubectl get secret middlemail-rabbitmq -o yaml | grep rabbitmq-password | awk 'NF>1{print $NF}' | base64 -d)
-        echo $RabbitMQ__Password
     - name: 'dotnet: test'
       run: |
         export RabbitMQ__Password=$(kubectl get secret middlemail-rabbitmq -o yaml | grep rabbitmq-password | awk 'NF>1{print $NF}' | base64 -d)
