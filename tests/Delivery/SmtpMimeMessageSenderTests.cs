@@ -150,7 +150,7 @@ namespace MiddleMail.Tests.Delivery {
 		private async Task sendEmail(MimeMessage message) {
 			await smtpSender.SendAsync(message);
 			// delay here, allowing the server some time to handle the message
-			await Task.Delay(10);
+			await Task.Delay(20);
 		}
 	}
 }
