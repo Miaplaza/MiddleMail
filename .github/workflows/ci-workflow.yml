@@ -1,0 +1,42 @@
+name: "CI with dependencies from helm chart"
+on: [pull_request, push]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: engineerd/setup-kind@v0.4.0
+    - name: Setup dependencies from chart
+      run: |
+        cd helm/middlemail
+        helm dependency update
+        helm install middlemail . \
+          --set rabbitmq.auth.existingErlangSecret=middlemail-rabbitmq \
+          --set rabbitmq.auth.existingPasswordSecret=middlemail-rabbitmq \
+          --set redis.cluster.enabled=false \
+          --set redis.existingSecret=middlemail-redis \
+          --set replicaCount=0 \
+          --set elasticsearch.master.replicas=1 \
+          --set elasticsearch.coordinating.replicas=1 \
+          --set elasticsearch.data.replicas=1 \
+          --wait
+        kubectl cluster-info
+        kubectl get pods -o wide
+    - name: Forward k8s services
+      run: |
+        kubectl port-forward svc/middlemail-elasticsearch-master 9200:9200 2>&1 &
+        kubectl port-forward svc/middlemail-rabbitmq 5672:5672 2>&1 &
+        kubectl port-forward svc/middlemail-rabbitmq 15672:15672 2>&1 &
+    - name: 'dotnet: Install dependencies'
+      run: dotnet restore
+    - name: 'dotnet: build'
+      run: dotnet build --configuration Release --no-restore
+    - name: 'dotnet: test'
+      run: |
+        export RabbitMQ__Password=$(kubectl get secret middlemail-rabbitmq -o yaml | grep rabbitmq-password | awk 'NF>1{print $NF}' | base64 -d)
+        dotnet test --no-build --verbosity normal --configuration Release
+      env:
+        ElasticSearch__Host: "localhost"
+        RabbitMQ__Host: "localhost"
+        RabbitMQ__Username: "user"
