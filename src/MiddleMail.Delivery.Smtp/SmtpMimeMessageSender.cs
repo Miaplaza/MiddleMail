@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using MailKit;
@@ -32,8 +33,13 @@ namespace MiddleMail.Delivery.Smtp {
 			// Note: since we don't have an OAuth2 token, disable
 			// the XOAUTH2 authentication mechanism.
 			this.smtpClient.AuthenticationMechanisms.Remove("XOAUTH2");
-
-			await this.smtpClient.AuthenticateAsync(options.Username, options.Password);
+			try {
+				await this.smtpClient.AuthenticateAsync(options.Username, options.Password);
+			} catch(AuthenticationException e) {
+				// if authentication fails we close the connection and try again next time
+				await this.smtpClient.DisconnectAsync(quit: true);
+				throw e;
+			}
 		}
 
 		public async Task SendAsync(MimeMessage message) {
