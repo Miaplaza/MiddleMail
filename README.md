@@ -1,4 +1,4 @@
-# MiddleMail
+# MiddleMail ![Build](https://img.shields.io/github/workflow/status/Miaplaza/MiddleMail/CI%20with%20dependencies%20from%20helm%20chart?style=flat-square)
 
 MiddleMail is an email sending middleware: It offers an API for transaction email delivery and activity logging and acts as a middleware for other delivery services.
 Because all parts of MiddleMail are pluggable it can be used in different configurations for both production and staging applications: E.g. you can turn off actual delivery for a staging deployment but leave activity logging enabled to view recent email activity.
