@@ -16,6 +16,17 @@ Because all parts of MiddleMail are pluggable it can be used in different config
 | `MiddleMail.Storage.Memory`           | -         | Activity storage in-memory                                    |
 | `MiddleMail.Storage.ElasticSearch`    | -         | Activity storage in ElasticSearch                             |
 
+## Concepts
+
+The three most important concepts in MiddleMail are **MessageSource**, **Storage** and **Delivery**. 
+
+A `MiddleMail.IMessageSource` defines how MiddleMail consumes emails. Those emails then enter the processing pipeline. 
+
+To persist information about email activity MiddleMail uses a `MiddleMail.IStorage`. 
+Depending on the implementation this makes email activity easily searchable and debuggable. 
+
+For actual delivery an `MiddleMail.IMailDeliverer` is used: `MiddleMail.Delivery.Smtp` implements such a deliverer for SMTP but it is easy to plugin your prefered Email Delivery SaaS or disable delivery for debugging and testing.
+
 ## Configuration
 
 Replace `:` with `__` on bash, etc.
