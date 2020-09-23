@@ -5,9 +5,8 @@ An API for transactional email: TODO
 ## Projects
 
 | Project                               | NuGet     | Description |
-|  -----------------------------------  |  --------  |  -----------------------------------------------------------  |
-| `MiddleMail`                          | [![NuGet](https://img.shields.io/nuget/v/MiddleMail?style=flat-square)](https://www.nuget.org/packages/MiddleMail/) |
- | Core library and abstractions |
+|  -----------------------------------  |  -------- |  -----------------------------------------------------------  |
+| `MiddleMail`                          | [![NuGet](https://img.shields.io/nuget/v/MiddleMail?style=flat-square)](https://www.nuget.org/packages/MiddleMail/) |  Core library and abstractions     |
 | `MiddleMail.Model`                    | [![NuGet](https://img.shields.io/nuget/v/MiddleMail.Model?style=flat-square)](https://www.nuget.org/packages/MiddleMail.Model/) | Message model shared by most other projects                   |
 | `MiddleMail.Server`                   | -         | Ready to use server application                               |
 | `MiddleMail.Client.RabbitMQ`          | [![NuGet](https://img.shields.io/nuget/v/MiddleMail.Client.RabbitMQ?style=flat-square)](https://www.nuget.org/packages/MiddleMail.Client.RabbitMQ/) | Client library that uses RabbitMQ as a backend                |
