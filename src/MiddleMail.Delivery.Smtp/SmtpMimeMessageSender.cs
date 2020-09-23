@@ -53,7 +53,7 @@ namespace MiddleMail.Delivery.Smtp {
 				// reconnect if we are not connected anymore
 				try {
 					await smtpClient.NoOpAsync();
-				} catch (ProtocolException) {
+				} catch (Exception e) when (e is SmtpProtocolException | e is IOException | e is SmtpCommandException) {
 					await this.connectAsync();
 				}
 				await smtpClient.SendAsync(message);
