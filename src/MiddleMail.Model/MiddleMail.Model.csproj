@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>MiddleMail.Model</RootNamespace>
     <PackageId>MiddleMail.Model</PackageId>
-    <Version>0.3.0</Version>
+    <Version>0.4.0</Version>
     <Authors>Miaplaza Inc.</Authors>
     <Company>MiaPlaza</Company>
     <Copyright>Copyright ©2020 Miaplaza Inc.</Copyright>
