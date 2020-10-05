@@ -1,15 +1,16 @@
-# MiddleMail ![Build](https://img.shields.io/github/workflow/status/Miaplaza/MiddleMail/CI%20with%20dependencies%20from%20helm%20chart?style=flat-square)
+# MiddleMail  [![Build](https://img.shields.io/github/workflow/status/Miaplaza/MiddleMail/CI%20with%20dependencies%20from%20helm%20chart?style=flat-square)](https://github.com/Miaplaza/MiddleMail/actions)
+
 
 MiddleMail is an email sending middleware: It offers an API for transaction email delivery and activity logging and acts as a middleware for other delivery services.
 Because all parts of MiddleMail are pluggable it can be used in different configurations for both production and staging applications: E.g. you can turn off actual delivery for a staging deployment but leave activity logging enabled to view recent email activity.
 
 ## Projects
 
-| Project                               | NuGet     | Description |
+| Project                               | Package     | Description |
 |  -----------------------------------  |  -------- |  -----------------------------------------------------------  |
 | `MiddleMail`                          | [![NuGet](https://img.shields.io/nuget/v/MiddleMail?style=flat-square)](https://www.nuget.org/packages/MiddleMail/) |  Core library and abstractions     |
 | `MiddleMail.Model`                    | [![NuGet](https://img.shields.io/nuget/v/MiddleMail.Model?style=flat-square)](https://www.nuget.org/packages/MiddleMail.Model/) | Message model shared by most other projects                   |
-| `MiddleMail.Server`                   | -         | Ready to use server application                               |
+| `MiddleMail.Server`                   | [![Docker](https://img.shields.io/docker/v/miaplaza/middlemail?color=blue&label=docker&sort=semver&style=flat-square)](https://hub.docker.com/r/miaplaza/middlemail) | Ready to use server application                               |
 | `MiddleMail.Client.RabbitMQ`          | [![NuGet](https://img.shields.io/nuget/v/MiddleMail.Client.RabbitMQ?style=flat-square)](https://www.nuget.org/packages/MiddleMail.Client.RabbitMQ/) | Client library that uses RabbitMQ as a backend                |
 | `MiddleMail.MessageSource.RabbitMQ`   | -         | MessageSource implementation that uses RabbitMQ as a backend  |
 | `MiddleMail.Delivery.Smtp`            | -         | Delivery implementation via SMTP                              |
