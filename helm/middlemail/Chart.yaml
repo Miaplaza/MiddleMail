@@ -5,7 +5,7 @@ description: Transactional Email
 type: application
 
 version: 1.1.0
-appVersion: 0.4.0
+appVersion: 0.4.1
 
 dependencies:
   - name: rabbitmq
