@@ -28,8 +28,6 @@ namespace MiddleMail.Delivery.Smtp {
 			}
 			try {
 				await sender.SendAsync(mimeMessage);
-			} catch (InvalidOperationException e) {
-				throw new MimeMessageSenderException(emailMessage, mimeMessage, e);
 			} catch (Exception e) {
 				throw new GeneralProcessingException(emailMessage, e);
 			}
