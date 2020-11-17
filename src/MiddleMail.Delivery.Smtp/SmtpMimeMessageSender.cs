@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MailKit;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
@@ -21,10 +22,13 @@ namespace MiddleMail.Delivery.Smtp {
 		/// Since <see cref="MailKit.Net.Smtp.SmtpClient" /> is not thread safe, we synchronize access to it by a semaphoreSlim.
 		private readonly SemaphoreSlim semaphoreSlim;
 
-		public SmtpMimeMessageSender(IOptions<SmtpOptions> smtpConfig) {
+		private readonly ILogger<SmtpMimeMessageSender> logger;
+
+		public SmtpMimeMessageSender(IOptions<SmtpOptions> smtpConfig, ILogger<SmtpMimeMessageSender> logger) {
 			this.options = smtpConfig.Value;
 			this.smtpClient = new SmtpClient();
 			this.semaphoreSlim = new SemaphoreSlim(initialCount: 1, maxCount: 1);
+			this.logger = logger;
 		}
 
 		private async Task connectAsync() {
@@ -54,6 +58,7 @@ namespace MiddleMail.Delivery.Smtp {
 				try {
 					await smtpClient.NoOpAsync();
 				} catch (Exception e) when (e is SmtpProtocolException | e is IOException | e is SmtpCommandException) {
+					logger.LogError(e, "Exception when sending SMTP NOOP command");
 					await this.connectAsync();
 				}
 				await smtpClient.SendAsync(message);

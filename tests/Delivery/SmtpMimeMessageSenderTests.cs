@@ -13,6 +13,7 @@ using System.Net.Sockets;
 using MailKit.Security;
 using MiddleMail.Delivery.Smtp;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace MiddleMail.Tests.Delivery {
 
@@ -36,7 +37,8 @@ namespace MiddleMail.Tests.Delivery {
 				Password = "pa$$word",
 			};
 
-			smtpSender = new SmtpMimeMessageSender(Options.Create(options));
+			var logger = new NullLogger<SmtpMimeMessageSender>();
+			smtpSender = new SmtpMimeMessageSender(Options.Create(options), logger);
 			startServer();
 		}
 
