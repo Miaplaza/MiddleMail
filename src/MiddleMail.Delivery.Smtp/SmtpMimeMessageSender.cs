@@ -48,20 +48,17 @@ namespace MiddleMail.Delivery.Smtp {
 
 		public async Task SendAsync(MimeMessage message) {
 			await semaphoreSlim.WaitAsync();
-			try {
-				// initial connection
-				if(!smtpClient.IsConnected) {
-					await this.connectAsync();
-				}
-				
-				// reconnect if we are not connected anymore
+			try {				
 				try {
-					await smtpClient.NoOpAsync();
-				} catch (Exception e) when (e is SmtpProtocolException | e is IOException | e is SmtpCommandException) {
-					logger.LogError(e, "Exception when sending SMTP NOOP command");
+					await smtpClient.SendAsync(message);
+				} catch(Exception e) when (e is SmtpProtocolException | e is IOException | e is ServiceNotConnectedException |  e is SmtpCommandException) {
+					// reconnect and try again
+					// there are a multitude of reasons why this can fail even if the smtp connection was fine before:
+					// e.g. limits exim4 the number of messages per connection smtp_accept_max_per_connection
+					await smtpClient.DisconnectAsync(quit: true);
 					await this.connectAsync();
+					await smtpClient.SendAsync(message);
 				}
-				await smtpClient.SendAsync(message);
 			} finally {
 				semaphoreSlim.Release();
 			}
