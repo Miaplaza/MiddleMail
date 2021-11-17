@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging.Abstractions;
 using MiddleMail.Client.RabbitMQ;
 
 namespace MiaPlaza.EmailMessageGenerator {
@@ -13,14 +14,14 @@ namespace MiaPlaza.EmailMessageGenerator {
 				ConnectionString = $"host={host}",
 			};
 
-			using var client = new MiddleMailClient(Options.Create(options));
+			using var client = new MiddleMailClient(Options.Create(options), new NullLogger<MiddleMailClient>());
 			for(int i = 0; i < count; i++) {
 				var emailMessage = MiddleMail.Tests.FakerFactory.EmailMessageFaker.Generate();
 				if(invalid) {
 					emailMessage.Subject = null;
 				}
 
-				client.SendEmail(emailMessage);
+				client.SendEmailAsync(emailMessage).GetAwaiter().GetResult();
 			}
 		}
 	}
