@@ -25,16 +25,15 @@ namespace MiddleMail.Tests.Client {
 		}
 
 		[Fact]
-		public async Task SendEmailAsync_ShouldNotThrowButLogException_WhenRabbitMQBusThrowsException() {
+		public async Task SendEmailAsync_ShouldThrowAndLogException_WhenRabbitMQBusThrowsException() {
 			// Arrange
 			var middleMailClient = createMiddleMailClient(UNREACHABLE_CONNECTIONSTRING);
 			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
 
-			// Act
-			await middleMailClient.SendEmailAsync(emailMessage);
-
-			// Assert
+			// Act / Assert
+			await Assert.ThrowsAnyAsync<Exception>(() => middleMailClient.SendEmailAsync(emailMessage));
 			loggerMock.VerifyLog(m => m.LogError(It.IsAny<string>(), It.IsAny<Exception>()), Times.Once);
+
 		}
 
 		[Fact]
