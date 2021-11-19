@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6</TargetFramework>
+    <WarningAsErrors>true</WarningAsErrors>
     <PackageId>MiddleMail</PackageId>
     <Version>0.4.0</Version>
     <Authors>Miaplaza Inc.</Authors>

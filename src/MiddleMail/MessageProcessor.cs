@@ -53,7 +53,7 @@ namespace MiddleMail {
 				if(emailMessage.Store) {
 					await tryStoreOrLogAsync(() => storage.SetErrorAsync(emailMessage, e.ToString()));
 				}
-				throw e;
+				throw;
 			}
 			
 			// if the cache throws an exception we do not rethrow a GeneralProcessingException here because the message has already been delivered

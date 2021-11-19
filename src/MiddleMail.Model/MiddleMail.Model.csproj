@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6</TargetFramework>
+    <WarningAsErrors>true</WarningAsErrors>
     <RootNamespace>MiddleMail.Model</RootNamespace>
     <PackageId>MiddleMail.Model</PackageId>
     <Version>0.4.0</Version>

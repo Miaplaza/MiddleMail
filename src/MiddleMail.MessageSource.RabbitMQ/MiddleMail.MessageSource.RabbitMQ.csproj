@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6</TargetFramework>
+    <WarningAsErrors>true</WarningAsErrors>
     <RootNamespace>MiddleMail.MessageSource.RabbitMQ</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
