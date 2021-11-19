@@ -16,7 +16,7 @@ RUN dotnet restore MiddleMail.Server/MiddleMail.Server.csproj
 
 RUN dotnet publish MiddleMail.Server/MiddleMail.Server.csproj -c Release -o out
 
-FROM mcr.microsoft.com/dotnet/runtime:6. AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:6. AS runtime
 WORKDIR /app
 COPY --from=build /app/src/out ./
 ENTRYPOINT ["dotnet", "MiddleMail.Server.dll"]
