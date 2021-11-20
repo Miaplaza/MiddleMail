@@ -16,19 +16,15 @@ using Microsoft.Extensions.Options;
 
 namespace MiddleMail.Tests.MessageSource {
 
+	[Collection("RabbitMQ Test Collection")]
 	public class RabbitMQMessageSourceTests {
-		private const string VHOST_NAME = "test";
 		private readonly IBus bus;
 		private readonly Mock<IMessageProcessor> callbackMock;
 		private readonly RabbitMQMessageSource messageSource;
 
-		private string rabbitMQHost = Environment.GetEnvironmentVariable("RabbitMQ__Host") ?? "localhost";
-		private string rabbitMQUsername = Environment.GetEnvironmentVariable("RabbitMQ__Username") ?? "guest";
-		private string rabbitMQPassword = Environment.GetEnvironmentVariable("RabbitMQ__Password") ?? "guest";
-
 		public RabbitMQMessageSourceTests() {			
 			setupVhost();
-			var connectionString = $"host={rabbitMQHost};username={rabbitMQUsername};password={rabbitMQPassword};virtualHost={VHOST_NAME};prefetchcount=10";
+			var connectionString = $"host={RabbitMQTestHelpers.Host};username={RabbitMQTestHelpers.Username};password={RabbitMQTestHelpers.Password};virtualHost={RabbitMQTestHelpers.VHOST_NAME};prefetchcount=10";
 			bus = EasyNetQ.RabbitHutch.CreateBus(connectionString, x => x.Register<IScheduler, DelayedExchangeScheduler>());
 
 			var options = new RabbitMQMessageSourceOptions {
@@ -57,13 +53,13 @@ namespace MiddleMail.Tests.MessageSource {
 		/// If the virtualhost is present, we delete it and recreate it before running any test
 		/// </summary>
 		private void setupVhost() {
-			var managementClient = new ManagementClient($"http://{rabbitMQHost}", rabbitMQUsername, rabbitMQPassword, 15672);
+			var managementClient = new ManagementClient($"http://{RabbitMQTestHelpers.Host}", RabbitMQTestHelpers.Username, RabbitMQTestHelpers.Password, 15672);
 			
-			var vhost = managementClient.GetVhosts().Where(v => v.Name == VHOST_NAME).FirstOrDefault();
+			var vhost = managementClient.GetVhosts().Where(v => v.Name == RabbitMQTestHelpers.VHOST_NAME).FirstOrDefault();
 			if (vhost != null) {
 				managementClient.DeleteVhost(vhost);
 			}
-			managementClient.CreateVhost(VHOST_NAME);
+			managementClient.CreateVhost(RabbitMQTestHelpers.VHOST_NAME);
 		}
 
 		[Fact]
