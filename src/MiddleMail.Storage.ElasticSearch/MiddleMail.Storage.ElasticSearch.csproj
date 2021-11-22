@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net6</TargetFramework>
+    <WarningAsErrors>true</WarningAsErrors>
     <RootNamespace>MiddleMail.Storage.ElasticSearch</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>

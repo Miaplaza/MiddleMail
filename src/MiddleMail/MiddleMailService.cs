@@ -51,13 +51,13 @@ namespace MiddleMail {
 				logger.LogDebug($"Successfully processed email message {emailMessage.Id}");
 			} catch(SingleProcessingException e) {
 				logger.LogError(e, $"Delivery error for message {emailMessage.Id}");
-				throw e;
+				throw;
 			} catch(GeneralProcessingException e) {
 				logger.LogError(e, $"General delivery problem for message {emailMessage.Id}");
 				await messageSource.RetryAsync(emailMessage);
 			} catch(Exception e) {
 				logger.LogError(e, $"Unexpected Exception while processing message {emailMessage.Id}");
-				throw e;
+				throw;
 			} finally {
 				Interlocked.Decrement(ref consumerTasksPending);
 			}

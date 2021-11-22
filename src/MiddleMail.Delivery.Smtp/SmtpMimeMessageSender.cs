@@ -39,10 +39,10 @@ namespace MiddleMail.Delivery.Smtp {
 			this.smtpClient.AuthenticationMechanisms.Remove("XOAUTH2");
 			try {
 				await this.smtpClient.AuthenticateAsync(options.Username, options.Password);
-			} catch(AuthenticationException e) {
+			} catch(AuthenticationException) {
 				// if authentication fails we close the connection and try again next time
 				await this.smtpClient.DisconnectAsync(quit: true);
-				throw e;
+				throw;
 			}
 		}
 
