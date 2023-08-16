@@ -9,7 +9,7 @@ appVersion: 0.5.0
 
 dependencies:
   - name: rabbitmq
-    version: "~7.5.6"
+    version: "7.5.6"
     repository: https://raw.githubusercontent.com/bitnami/charts/pre-2022/bitnami
     condition: rabbitmq.provision
   - name: elasticsearch
