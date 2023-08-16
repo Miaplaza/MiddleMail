@@ -10,12 +10,12 @@ appVersion: 0.5.0
 dependencies:
   - name: rabbitmq
     version: "~7.5.0"
-    repository: https://charts.bitnami.com/bitnami
+    repository: https://raw.githubusercontent.com/bitnami/charts/pre-2022/bitnami
     condition: rabbitmq.provision
   - name: elasticsearch
     version: "~12.3.5"
-    repository: https://charts.bitnami.com/bitnami
+    repository: https://raw.githubusercontent.com/bitnami/charts/pre-2022/bitnami
     condition: elasticsearch.provision
   - name: redis
     version: "~10.7.2"
-    repository: https://charts.bitnami.com/bitnami
+    repository: https://raw.githubusercontent.com/bitnami/charts/pre-2022/bitnami
