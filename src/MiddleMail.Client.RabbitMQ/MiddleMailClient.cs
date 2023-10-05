@@ -27,12 +27,13 @@ namespace MiddleMail.Client.RabbitMQ {
 		/// it is processed by a MiddleMail instance running a RabbitMQ Message Source.
 		/// Might throw if there was an exception during publishing.
 		/// </summary>
-		public async Task SendEmailAsync(EmailMessage emailMessage) {
+		public async Task<bool> SendEmailAsync(EmailMessage emailMessage) {
 			try {
 				await bus.PublishAsync(emailMessage);
+				return true;
 			} catch(Exception e) {
 				logger.LogError("Exception during publishing to rabbitmq queue.", e);
-				throw;
+				return false;
 			}
 		}
 		
