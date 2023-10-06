@@ -30,10 +30,12 @@ namespace MiddleMail.Tests.Client {
 			var middleMailClient = createMiddleMailClient(UNREACHABLE_CONNECTIONSTRING);
 			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
 
-			//Assert / Act
-			Assert.False(await middleMailClient.SendEmailAsync(emailMessage));
-			loggerMock.VerifyLog(m => m.LogError(It.IsAny<string>(), It.IsAny<Exception>()), Times.Once);
+			// Act
+			var response = await middleMailClient.SendEmailAsync(emailMessage);
 
+			// Assert
+			Assert.False(response);
+			loggerMock.VerifyLog(m => m.LogError(It.IsAny<string>(), It.IsAny<Exception>()), Times.Once);
 		}
 
 		[Fact]
@@ -42,8 +44,11 @@ namespace MiddleMail.Tests.Client {
 			var middleMailClient = createMiddleMailClient(RabbitMQTestHelpers.ConnectionString);
 			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
 
-			// Assert / Act
-			Assert.True(await middleMailClient.SendEmailAsync(emailMessage));
+			// Act
+			var response = await middleMailClient.SendEmailAsync(emailMessage);
+
+			// Assert
+			Assert.True(response);
 			loggerMock.VerifyLog(m => m.LogError(It.IsAny<string>(), It.IsAny<Exception>()), Times.Never);
 		}
 	}

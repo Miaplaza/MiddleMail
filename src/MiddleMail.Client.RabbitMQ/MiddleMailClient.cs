@@ -25,14 +25,14 @@ namespace MiddleMail.Client.RabbitMQ {
 		/// <summary>
 		/// Sends an email by publishing it to RabbitMQ. A published email will wait in a queue on RabbitMQ until 
 		/// it is processed by a MiddleMail instance running a RabbitMQ Message Source.
-		/// Might throw if there was an exception during publishing.
+		/// Returns true if the email is published to RabbitMQ successfully, false otherwise.
 		/// </summary>
 		public async Task<bool> SendEmailAsync(EmailMessage emailMessage) {
 			try {
 				await bus.PublishAsync(emailMessage);
 				return true;
 			} catch(Exception e) {
-				logger.LogError("Exception during publishing to rabbitmq queue.", e);
+				logger.LogError("Failed to publish to rabbitmq queue.", e);
 				return false;
 			}
 		}
