@@ -25,27 +25,30 @@ namespace MiddleMail.Tests.Client {
 		}
 
 		[Fact]
-		public async Task SendEmailAsync_ShouldThrowAndLogException_WhenRabbitMQBusThrowsException() {
+		public async Task SendEmailAsync_ShouldReturnFalse_WhenRabbitMQBusThrowsException() {
 			// Arrange
 			var middleMailClient = createMiddleMailClient(UNREACHABLE_CONNECTIONSTRING);
 			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
 
-			// Act / Assert
-			await Assert.ThrowsAnyAsync<Exception>(() => middleMailClient.SendEmailAsync(emailMessage));
-			loggerMock.VerifyLog(m => m.LogError(It.IsAny<string>(), It.IsAny<Exception>()), Times.Once);
+			// Act
+			var response = await middleMailClient.SendEmailAsync(emailMessage);
 
+			// Assert
+			Assert.False(response);
+			loggerMock.VerifyLog(m => m.LogError(It.IsAny<string>(), It.IsAny<Exception>()), Times.Once);
 		}
 
 		[Fact]
-		public async Task SendEmailAsync_ShouldNotThrowNotLogException_WhenMessageSuccessfullyPublished() {
+		public async Task SendEmailAsync_ShouldReturnTrue_WhenMessageSuccessfullyPublished() {
 			// Arrange
 			var middleMailClient = createMiddleMailClient(RabbitMQTestHelpers.ConnectionString);
 			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
 
 			// Act
-			await middleMailClient.SendEmailAsync(emailMessage);
+			var response = await middleMailClient.SendEmailAsync(emailMessage);
 
 			// Assert
+			Assert.True(response);
 			loggerMock.VerifyLog(m => m.LogError(It.IsAny<string>(), It.IsAny<Exception>()), Times.Never);
 		}
 	}
