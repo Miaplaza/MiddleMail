@@ -1,6 +1,7 @@
 using MiddleMail.Exceptions;
 using Microsoft.Extensions.Configuration;
 using System.ComponentModel.DataAnnotations;
+using MiddleMail.Model;
 
 namespace MiddleMail.MessageSource.RabbitMQ {
 	public class RabbitMQMessageSourceOptions {
@@ -12,5 +13,8 @@ namespace MiddleMail.MessageSource.RabbitMQ {
 
 		[Required]
 		public string SubscriptionId { get; set; }
+
+		[Required]
+		public MailUrgency Urgency { get; set; }
 	}
 }

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using MiddleMail.Model;
 
 namespace MiddleMail.Client.RabbitMQ {
 	public class RabbitMQOptions {
@@ -6,5 +7,8 @@ namespace MiddleMail.Client.RabbitMQ {
 
 		[Required]
 		public string ConnectionString { get; set; }
+
+		[Required]
+		public MailUrgency Urgency { get; set; }
 	}
 }

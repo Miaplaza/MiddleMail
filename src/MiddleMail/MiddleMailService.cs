@@ -1,10 +1,14 @@
+#nullable enable
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.RateLimiting;
 using MiddleMail.Exceptions;
 using MiddleMail.Model;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace MiddleMail {
 
@@ -19,12 +23,25 @@ namespace MiddleMail {
 		private readonly ILogger<MiddleMailService> logger;
 		private readonly IMessageSource messageSource;
 		private int consumerTasksPending;
+		private readonly MiddleMailOptions options;
 
-		public MiddleMailService(IMessageProcessor processor, ILogger<MiddleMailService> logger, IMessageSource messageSource) {
+		private readonly RateLimiter? rateLimiter;
+
+		public MiddleMailService(IOptions<MiddleMailOptions> options, IMessageProcessor processor, ILogger<MiddleMailService> logger, IMessageSource messageSource) {
 			this.processor = processor;
 			this.logger = logger;
 			this.consumerTasksPending = 0;
 			this.messageSource = messageSource;
+			this.options = options.Value;
+
+			if (this.options.RateLimited) {
+				rateLimiter = new FixedWindowRateLimiter(
+					new FixedWindowRateLimiterOptions() {
+						PermitLimit = this.options.LimitPerHour,
+						Window = new TimeSpan(hours: 1, minutes: 0, seconds: 0),
+					}
+				);
+			}
 		}
 
 		protected async override Task ExecuteAsync(CancellationToken cancellationToken) {
@@ -38,12 +55,14 @@ namespace MiddleMail {
 				// this is important: a consumer task is only idempotent if does not get canceled
 				while(consumerTasksPending != 0) {
 					logger.LogInformation($"Waiting for {consumerTasksPending} Tasks to finish.");
-					await Task.Delay(25);
+					await Task.Delay(25, cancellationToken);
 				}
 			}
 		}
 
 		private async Task processAsync(EmailMessage emailMessage ) {
+			if (rateLimiter != default) await rateLimiter.AcquireAsync();
+
 			logger.LogDebug($"Start processing email message {emailMessage.Id}");
 			Interlocked.Increment(ref consumerTasksPending);
 			try {
