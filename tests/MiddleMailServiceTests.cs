@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
+using Microsoft.Extensions.Options;
 
 namespace MiddleMail.Tests {
 
@@ -54,8 +55,10 @@ namespace MiddleMail.Tests {
 				.Setup(m => m.Stop());
 
 			var logger = new NullLogger<MiddleMailService>();
+			
+			var options = Options.Create(new MiddleMailOptions { RateLimited = false });
 
-			mailService = new MiddleMailService(processorMock.Object, logger, messageSourceMock.Object);
+			mailService = new MiddleMailService(options, processorMock.Object, logger, messageSourceMock.Object);
 			mailService.StartAsync(CancellationToken.None).Wait();
 		}		
 

@@ -30,6 +30,7 @@ namespace MiddleMail.Server {
 					addOptions<ElasticSearchStorageOptions>(hostContext, services, ElasticSearchStorageOptions.SECTION);
 					addOptions<ExponentialBackoffOptions>(hostContext, services, ExponentialBackoffOptions.SECTION);
 					addOptions<RabbitMQMessageSourceOptions>(hostContext, services, RabbitMQMessageSourceOptions.SECTION);
+					addOptions<MiddleMailOptions>(hostContext, services, MiddleMailOptions.SECTION);
 
 					services.AddSingleton<IMailDeliverer, SmtpDeliverer>();
 					services.AddSingleton<IMimeMessageBuilder, MimeMessageBuilder>();

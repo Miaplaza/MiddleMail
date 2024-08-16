@@ -60,8 +60,20 @@ namespace MiddleMail {
 			}
 		}
 
+		private async Task<RateLimitLease?> acquireLease()
+		{
+			if (rateLimiter == default) return null;
+
+			while (true) {
+				RateLimitLease lease = await rateLimiter.AcquireAsync();
+				if (lease.IsAcquired) return lease;
+
+				await Task.Delay(new TimeSpan(hours: 0, minutes: 1, seconds: 0));
+			}
+		}
+
 		private async Task processAsync(EmailMessage emailMessage ) {
-			if (rateLimiter != default) await rateLimiter.AcquireAsync();
+			using RateLimitLease? lease = await acquireLease();
 
 			logger.LogDebug($"Start processing email message {emailMessage.Id}");
 			Interlocked.Increment(ref consumerTasksPending);

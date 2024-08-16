@@ -20,7 +20,7 @@ namespace MiddleMail.Tests.Client {
 		}
 
 		private MiddleMailClient createMiddleMailClient(string connectionString) {
-			var options = Options.Create(new RabbitMQOptions { ConnectionString = connectionString });
+			var options = Options.Create(new RabbitMQOptions { ConnectionString = connectionString, Urgency = Model.MailUrgency.Transactional });
 			return new MiddleMailClient(options, loggerMock.Object);
 		}
 
