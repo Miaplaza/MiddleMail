@@ -55,7 +55,7 @@ namespace MiddleMail {
 				// this is important: a consumer task is only idempotent if does not get canceled
 				while(consumerTasksPending != 0) {
 					logger.LogInformation($"Waiting for {consumerTasksPending} Tasks to finish.");
-					await Task.Delay(25, cancellationToken);
+					await Task.Delay(25);
 				}
 			}
 		}
