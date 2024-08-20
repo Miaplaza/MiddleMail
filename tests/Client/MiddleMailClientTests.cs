@@ -14,13 +14,14 @@ namespace MiddleMail.Tests.Client {
 		private readonly Mock<ILogger<MiddleMailClient>> loggerMock;
 
 		private const string UNREACHABLE_CONNECTIONSTRING = "host=unreachable";
+		private const string ARBITRARY_TOPIC = "Transactional";
 
 		public MiddleMailClientTests() {
 			loggerMock = new Mock<ILogger<MiddleMailClient>>();
 		}
 
 		private MiddleMailClient createMiddleMailClient(string connectionString) {
-			var options = Options.Create(new RabbitMQOptions { ConnectionString = connectionString, Urgency = Model.MailUrgency.Transactional });
+			var options = Options.Create(new RabbitMQOptions { ConnectionString = connectionString, Topic = ARBITRARY_TOPIC });
 			return new MiddleMailClient(options, loggerMock.Object);
 		}
 

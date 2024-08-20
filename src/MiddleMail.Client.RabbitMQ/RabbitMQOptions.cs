@@ -9,6 +9,6 @@ namespace MiddleMail.Client.RabbitMQ {
 		public string ConnectionString { get; set; }
 
 		[Required]
-		public MailUrgency Urgency { get; set; }
+		public string Topic { get; set; }
 	}
 }

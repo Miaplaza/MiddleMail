@@ -37,8 +37,8 @@ namespace MiddleMail {
 			if (this.options.RateLimited) {
 				rateLimiter = new FixedWindowRateLimiter(
 					new FixedWindowRateLimiterOptions() {
-						PermitLimit = this.options.LimitPerHour,
-						Window = new TimeSpan(hours: 1, minutes: 0, seconds: 0),
+						PermitLimit = this.options.LimitPerMinute,
+						Window = new TimeSpan(hours: 0, minutes: 1, seconds: 0),
 					}
 				);
 			}

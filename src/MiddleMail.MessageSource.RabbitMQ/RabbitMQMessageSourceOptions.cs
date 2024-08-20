@@ -15,6 +15,6 @@ namespace MiddleMail.MessageSource.RabbitMQ {
 		public string SubscriptionId { get; set; }
 
 		[Required]
-		public MailUrgency Urgency { get; set; }
+		public string Topic { get; set; }
 	}
 }

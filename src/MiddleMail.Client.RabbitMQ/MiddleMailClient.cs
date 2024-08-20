@@ -20,7 +20,7 @@ namespace MiddleMail.Client.RabbitMQ {
 
 		public MiddleMailClient(IOptions<RabbitMQOptions> options, ILogger<MiddleMailClient> logger) {
 			bus = EasyNetQ.RabbitHutch.CreateBus(options.Value.ConnectionString);
-			topic = options.Value.Urgency.Topic();
+			topic = options.Value.Topic;
 
 			this.logger = logger;
 		}

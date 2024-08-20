@@ -7,6 +7,6 @@ namespace MiddleMail {
 		[Required]
 		public bool RateLimited { get; set; }
 
-		public int LimitPerHour { get; set; }
+		public int LimitPerMinute { get; set; }
 	}
 }
