@@ -18,6 +18,8 @@ namespace MiddleMail {
 	/// Implements a graceful shutdown by waiting for all processing tasks to finish work if cancellation is requested.
 	/// </summary>
 	public class MiddleMailService : BackgroundService {
+		public static readonly TimeSpan RateLimitWindow = TimeSpan.FromMinutes(1);
+		public static readonly TimeSpan RateLimitDelay = TimeSpan.FromMinutes(1);
 		
 		private IMessageProcessor processor;
 		private readonly ILogger<MiddleMailService> logger;
@@ -38,7 +40,7 @@ namespace MiddleMail {
 				rateLimiter = new FixedWindowRateLimiter(
 					new FixedWindowRateLimiterOptions() {
 						PermitLimit = this.options.LimitPerMinute,
-						Window = new TimeSpan(hours: 0, minutes: 1, seconds: 0),
+						Window = RateLimitWindow,
 					}
 				);
 			}
@@ -68,7 +70,7 @@ namespace MiddleMail {
 				RateLimitLease lease = await rateLimiter.AcquireAsync();
 				if (lease.IsAcquired) return lease;
 
-				await Task.Delay(new TimeSpan(hours: 0, minutes: 1, seconds: 0));
+				await Task.Delay(RateLimitDelay);
 			}
 		}
 
