@@ -22,6 +22,9 @@ namespace MiddleMail.Tests {
 		private const string GENERAL_PROCESSING_EXCEPTION = "GENERAL_PROCESSING_EXCEPTION";
 		private const string EVERYTHING_FINE = "EVERYTHING_FINE";
 		private const int RATE_LIMIT_PER_MINUTE = 3;
+
+		private static readonly TimeSpan delayBeforeCheckingIfEmailSent = TimeSpan.FromSeconds(5);
+
 		private readonly Mock<IMessageProcessor> processorMock;
 		private readonly Mock<IMessageSource> messageSourceMock;
 		private readonly MiddleMailService mailService;
@@ -143,19 +146,26 @@ namespace MiddleMail.Tests {
 
 		[Fact]
 		public async Task RateLimitAllowsCorrectNumberThrough() {
+			// The rate limit is 3 messages.
+			// Start by sending the 3 messages, and verify that they arrive
 			for (int i = 0; i < 3; i++) {
 				var emailMessage = FakerFactory.EmailMessageFaker.Generate();
 				await rateLimitedCallback(emailMessage);
 				rateLimitedProcessorMock.Verify(m => m.ProcessAsync(It.IsAny<EmailMessage>()), Times.Exactly(i + 1));
 			}
 
+			// Then, attempt to send a 4th message,
+			// And verify that it doesn't send.
 			// If you want to test that it takes the correct amount of time to delay,
-			// uncomment each commented line,
+			// uncomment each commented line of code,
 			// and change the number of verified sent emails to 4.
 			// DateTime before = DateTime.Now;
 			var notSentMessage = FakerFactory.EmailMessageFaker.Generate();
-			await Task.WhenAny(rateLimitedCallback(notSentMessage), Task.Delay(TimeSpan.FromSeconds(5)));
-			Assert.True(TimeSpan.FromSeconds(5) < MiddleMailService.RateLimitWindow);
+			await Task.WhenAny(rateLimitedCallback(notSentMessage), Task.Delay(delayBeforeCheckingIfEmailSent));
+
+			// NOTE: if this assertion fails, it's because you changed the rate limit window.
+			// If you do, change the delayBeforeCheckingIfEmailSent accordingly.
+			Assert.True(delayBeforeCheckingIfEmailSent < MiddleMailService.RateLimitWindow);
 			// await rateLimitedCallback(notSentMessage);
 			// DateTime after = DateTime.Now;
 			// Assert.True(after - before > MiddleMailService.RateLimitWindow);

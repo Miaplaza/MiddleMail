@@ -14,6 +14,11 @@ namespace MiddleMail.MessageSource.RabbitMQ {
 		[Required]
 		public string SubscriptionId { get; set; }
 
+		/// <summary>
+		/// The topic string used by RabbitMQ to route messages to different MiddleMail instances.
+		/// For example, you might want one instance to handle "Bulk" and one to handle "Transactional" emails.
+		/// This should match the topic you pass to the MiddleMailClient in the RabbitMQOptions.
+		/// </summary>
 		[Required]
 		public string Topic { get; set; }
 	}
