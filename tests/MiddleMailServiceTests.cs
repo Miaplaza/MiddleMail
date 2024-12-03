@@ -156,20 +156,34 @@ namespace MiddleMail.Tests {
 
 			// Then, attempt to send a 4th message,
 			// And verify that it doesn't send.
-			// If you want to test that it takes the correct amount of time to delay,
-			// uncomment each commented line of code,
-			// and change the number of verified sent emails to 4.
-			// DateTime before = DateTime.Now;
 			var notSentMessage = FakerFactory.EmailMessageFaker.Generate();
 			await Task.WhenAny(rateLimitedCallback(notSentMessage), Task.Delay(delayBeforeCheckingIfEmailSent));
 
 			// NOTE: if this assertion fails, it's because you changed the rate limit window.
 			// If you do, change the delayBeforeCheckingIfEmailSent accordingly.
 			Assert.True(delayBeforeCheckingIfEmailSent < MiddleMailService.RateLimitWindow);
-			// await rateLimitedCallback(notSentMessage);
-			// DateTime after = DateTime.Now;
-			// Assert.True(after - before > MiddleMailService.RateLimitWindow);
 			rateLimitedProcessorMock.Verify(m => m.ProcessAsync(It.IsAny<EmailMessage>()), Times.Exactly(3)); //Not sent
+		}
+
+		[Fact]
+		public async Task RateLimitAllowsCorrectNumberThroughAfterCorrectDelay() {
+			// The rate limit is 3 messages.
+			// Start by sending the 3 messages, and verify that they arrive
+			for (int i = 0; i < 3; i++) {
+				var emailMessage = FakerFactory.EmailMessageFaker.Generate();
+				await rateLimitedCallback(emailMessage);
+				rateLimitedProcessorMock.Verify(m => m.ProcessAsync(It.IsAny<EmailMessage>()), Times.Exactly(i + 1));
+			}
+
+			// Then, attempt to send a 4th message
+			DateTime before = DateTime.Now;
+			var lastMessage = FakerFactory.EmailMessageFaker.Generate();
+			await rateLimitedCallback(lastMessage);
+
+			//Now that the await has completed, verify that it took the right amount of time, but was then sent.
+			DateTime after = DateTime.Now;
+			Assert.True(after - before > MiddleMailService.RateLimitWindow);
+			rateLimitedProcessorMock.Verify(m => m.ProcessAsync(It.IsAny<EmailMessage>()), Times.Exactly(4));
 		}
 
 		public void Dispose() {
