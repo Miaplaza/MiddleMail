@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <WarningAsErrors>true</WarningAsErrors>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -11,7 +11,7 @@
     <PackageReference Include="EasyNetQ.Management.Client" Version="1.3.0" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="ILogger.Moq" Version="1.1.10" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="Moq" Version="4.13.1" />
     <PackageReference Include="Rnwood.SmtpServer" Version="3.1.0-ci0648" />
