@@ -17,7 +17,7 @@ namespace MiddleMail {
 	/// <see cref="IMessageProcess" />.
 	/// Implements a graceful shutdown by waiting for all processing tasks to finish work if cancellation is requested.
 	/// </summary>
-	public class MiddleMailService : BackgroundService {
+	public sealed class MiddleMailService : BackgroundService {
 		public static readonly TimeSpan RateLimitWindow = TimeSpan.FromMinutes(1);
 		public static readonly TimeSpan RateLimitDelay = TimeSpan.FromMinutes(1);
 		
@@ -44,6 +44,11 @@ namespace MiddleMail {
 					}
 				);
 			}
+		}
+
+		public override void Dispose() {
+			base.Dispose();
+			rateLimiter?.Dispose();
 		}
 
 		protected async override Task ExecuteAsync(CancellationToken cancellationToken) {

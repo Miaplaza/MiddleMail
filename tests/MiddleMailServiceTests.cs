@@ -1,14 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EasyNetQ;
-using EasyNetQ.Management.Client;
-using EasyNetQ.Scheduling;
 using MiddleMail.Exceptions;
 using MiddleMail.Model;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
@@ -16,7 +11,7 @@ using Microsoft.Extensions.Options;
 
 namespace MiddleMail.Tests {
 
-	public class MiddleMailServiceTests : IDisposable {
+	public sealed class MiddleMailServiceTests : IDisposable {
 
 		private const string SINGLE_PROCESSING_EXCEPTION = "SINGLE_PROCESSING_EXCEPTION";
 		private const string GENERAL_PROCESSING_EXCEPTION = "GENERAL_PROCESSING_EXCEPTION";
@@ -162,6 +157,8 @@ namespace MiddleMail.Tests {
 			// NOTE: if this assertion fails, it's because you changed the rate limit window.
 			// If you do, change the delayBeforeCheckingIfEmailSent accordingly.
 			Assert.True(delayBeforeCheckingIfEmailSent < MiddleMailService.RateLimitWindow);
+
+			//The actual verify: Verify the last email is not sent
 			rateLimitedProcessorMock.Verify(m => m.ProcessAsync(It.IsAny<EmailMessage>()), Times.Exactly(3)); //Not sent
 		}
 
