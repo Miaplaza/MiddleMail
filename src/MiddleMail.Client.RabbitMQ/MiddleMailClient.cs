@@ -32,7 +32,12 @@ namespace MiddleMail.Client.RabbitMQ {
 		/// </summary>
 		public async Task<bool> SendEmailAsync(EmailMessage emailMessage) {
 			try {
-				await bus.PublishAsync(emailMessage, topic: topic);
+				if (topic != null) {
+					await bus.PublishAsync(emailMessage, topic: topic);
+				}
+				else {
+					await bus.PublishAsync(emailMessage);
+				}
 				return true;
 			} catch(Exception e) {
 				logger.LogError(message: "Failed to publish to rabbitmq queue.", exception: e);

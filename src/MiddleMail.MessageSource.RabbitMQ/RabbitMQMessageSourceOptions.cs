@@ -19,7 +19,6 @@ namespace MiddleMail.MessageSource.RabbitMQ {
 		/// For example, you might want one instance to handle "Bulk" and one to handle "Transactional" emails.
 		/// This should match the topic you pass to the MiddleMailClient in the RabbitMQOptions.
 		/// </summary>
-		[Required]
 		public string Topic { get; set; }
 	}
 }

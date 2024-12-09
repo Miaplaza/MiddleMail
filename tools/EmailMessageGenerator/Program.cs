@@ -8,7 +8,7 @@ using MiddleMail.Model;
 
 namespace MiaPlaza.EmailMessageGenerator {
 	class Program {
-		static void Main(int count = 10, bool invalid = false, string host = "localhost", string topic = "Bulk") {
+		static void Main(int count = 10, bool invalid = false, string host = "localhost", string topic = null) {
 			Console.WriteLine($"Generating {count} {topic} {(invalid ? "invalid " : string.Empty)}emails and sending the via rabbitmq");
 
 			var options = new RabbitMQOptions {
