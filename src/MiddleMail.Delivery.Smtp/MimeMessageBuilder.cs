@@ -30,6 +30,8 @@ namespace MiddleMail.Delivery.Smtp {
 			mimeMessage.From.Add(new MailboxAddress(emailMessage.From.name, emailMessage.From.address));
 			mimeMessage.To.Add(new MailboxAddress(emailMessage.To.name, emailMessage.To.address));
 
+			emailMessage.Cc.ForEach(cc => mimeMessage.Cc.Add(new MailboxAddress(cc.name, cc.address)));
+
 			if(emailMessage.ReplyTo.HasValue) {
 				mimeMessage.ReplyTo.Add(new MailboxAddress(emailMessage.ReplyTo.Value.name, emailMessage.ReplyTo.Value.address));
 			}
