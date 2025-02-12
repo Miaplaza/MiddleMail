@@ -15,7 +15,7 @@ namespace MiddleMail {
 	/// Many distributed system do not guarantee exactly-once delivery (such as RabbitMQ). We therefore only require 
 	/// at-least-once delivery for an <see cref="IMessageSource" />. That means that a duplicate message could end up here.
 	/// As it is rather critical that emails are delivered exactly-once we must detect duplicates. This is done by caching 
-	/// successfully sent emais by their id and checking the cache before we even start processing. This requires that pro-
+	/// successfully sent emails by their id and checking the cache before we even start processing. This requires that pro-
 	/// cessing tasks always run until completion and are not interrupted.
 	/// </remarks>
 	public class MessageProcessor : IMessageProcessor {

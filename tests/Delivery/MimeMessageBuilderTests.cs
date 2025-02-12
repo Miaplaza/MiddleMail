@@ -82,7 +82,7 @@ namespace MiddleMail.Tests.Delivery {
 		}
 
 		[Fact]
-		public async void BuilValidEmailMessage() {
+		public async void BuildValidEmailMessage() {
 			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
 			var mimeMessage = builder.Create(emailMessage);
 
@@ -90,7 +90,7 @@ namespace MiddleMail.Tests.Delivery {
 		}
 
 		[Fact]
-		public void BuilInvalidEmailMessageThrows() {
+		public void BuildInvalidEmailMessageThrows() {
 			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
 			emailMessage.From = (null, "<>");
 
