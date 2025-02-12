@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Bogus;
 using MiddleMail;
@@ -14,6 +15,7 @@ namespace MiddleMail.Tests {
 				id: Guid.NewGuid(),
 				from: (f.Name.FullName(), f.Internet.Email()),
 				to: (f.Name.FullName(), f.Internet.Email()),
+				cc: new List<(string name, string address)> { (f.Name.FullName(), f.Internet.Email()) },
 				replyTo: (f.Name.FullName(), f.Internet.Email()),
 				subject: f.Lorem.Sentence(),
 				plainText: f.Lorem.Sentences(),
