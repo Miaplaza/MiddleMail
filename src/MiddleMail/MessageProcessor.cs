@@ -35,30 +35,30 @@ namespace MiddleMail {
 			string cached = null;
 			try {
 				cached = await cache.GetStringAsync(emailMessage.Id.ToString());
-			} catch(Exception e) {
+			} catch (Exception e) {
 				throw new GeneralProcessingException(emailMessage, e);
 			}
 
-			if(cached != null) {
+			if (cached != null) {
 				logger.LogInformation($"Caught duplicate email {emailMessage.Id}");
 				return;
 			}
 
-			if(emailMessage.Store) {
+			if (emailMessage.Store) {
 				await tryStoreOrLogAsync(() => storage.SetProcessedAsync(emailMessage));
 			}
 			try {
 				await deliverer.DeliverAsync(emailMessage);
-			} catch (Exception e){
-				if(emailMessage.Store) {
+			} catch (Exception e) {
+				if (emailMessage.Store) {
 					await tryStoreOrLogAsync(() => storage.SetErrorAsync(emailMessage, e.ToString()));
 				}
 				throw;
 			}
-			
+
 			// if the cache throws an exception we do not rethrow a GeneralProcessingException here because the message has already been delivered
 			await cache.SetStringAsync(emailMessage.Id.ToString(), "t");
-			if(emailMessage.Store) {
+			if (emailMessage.Store) {
 				await tryStoreOrLogAsync(() => storage.SetSentAsync(emailMessage));
 			}
 		}
@@ -66,7 +66,7 @@ namespace MiddleMail {
 		private async Task tryStoreOrLogAsync(Func<Task> storeFunc) {
 			try {
 				await storeFunc();
-			} catch(Exception e) {
+			} catch (Exception e) {
 				logger.LogError(e, "Exception while storing EmailMessage.");
 			}
 		}

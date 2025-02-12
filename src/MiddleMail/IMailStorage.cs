@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using MiddleMail.Model;
 
 namespace MiddleMail {
-	
+
 	/// <summary>
 	/// A storage to persist email activity. When calling any of the methods that set data, the order must be kept.
 	/// Writing data does not need to be instantly and might not be reflected when reading it directly back.
@@ -14,7 +14,7 @@ namespace MiddleMail {
 		/// This can happen multiple times.
 		/// </summary>
 		Task SetProcessedAsync(EmailMessage emailMessage);
-		
+
 		/// <summary>
 		/// Store that an <see cref="EmailMessage" /> was successfully sent.
 		/// </summary>

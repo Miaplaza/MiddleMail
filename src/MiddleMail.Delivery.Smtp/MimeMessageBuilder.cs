@@ -6,7 +6,7 @@ using MimeKit;
 using Microsoft.Extensions.Options;
 
 namespace MiddleMail.Delivery.Smtp {
-	
+
 	/// <summary>
 	/// Builds MIME messages from an <see cref="EMailMessage" />.
 	/// </summary>
@@ -22,22 +22,22 @@ namespace MiddleMail.Delivery.Smtp {
 		/// Note that <paramref name="emailMessage" /> must specify at least a plaintext version.
 		/// </summary>
 		public MimeMessage Create(EmailMessage emailMessage) {
-			if(emailMessage.PlainText == null) {
+			if (emailMessage.PlainText == null) {
 				throw new ArgumentException($"EmailMessage should always contains a Plaintext, but it is null.", nameof(emailMessage));
 			}
-			
+
 			var mimeMessage = new MimeMessage();
 			mimeMessage.From.Add(new MailboxAddress(emailMessage.From.name, emailMessage.From.address));
 			mimeMessage.To.Add(new MailboxAddress(emailMessage.To.name, emailMessage.To.address));
 
 			emailMessage.Cc?.ForEach(cc => mimeMessage.Cc.Add(new MailboxAddress(cc.name, cc.address)));
 
-			if(emailMessage.ReplyTo.HasValue) {
+			if (emailMessage.ReplyTo.HasValue) {
 				mimeMessage.ReplyTo.Add(new MailboxAddress(emailMessage.ReplyTo.Value.name, emailMessage.ReplyTo.Value.address));
 			}
 			mimeMessage.Subject = emailMessage.Subject;
 
-			if(emailMessage.HtmlText == null) {
+			if (emailMessage.HtmlText == null) {
 				createBodyPlainText(emailMessage, mimeMessage);
 			} else {
 				createBodyMultipart(emailMessage, mimeMessage);
@@ -58,7 +58,7 @@ namespace MiddleMail.Delivery.Smtp {
 		private void createBodyMultipart(EmailMessage emailMessage, MimeMessage message) {
 			var bodyBuilder = new BodyBuilder();
 			bodyBuilder.HtmlBody = emailMessage.HtmlText;
-			bodyBuilder.TextBody =  emailMessage.PlainText;
+			bodyBuilder.TextBody = emailMessage.PlainText;
 
 			message.Body = bodyBuilder.ToMessageBody();
 		}
@@ -66,7 +66,7 @@ namespace MiddleMail.Delivery.Smtp {
 		private void setHeaders(EmailMessage emailMessage, MimeMessage message) {
 			foreach (var item in emailMessage.Headers) {
 				// do not override any headers
-				var header = message.Headers.FirstOrDefault(h => h.Field == item.Key);	
+				var header = message.Headers.FirstOrDefault(h => h.Field == item.Key);
 				if (header == null) {
 					message.Headers.Add(item.Key, item.Value);
 				}

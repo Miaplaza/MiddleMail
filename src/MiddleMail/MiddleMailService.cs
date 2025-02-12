@@ -14,7 +14,7 @@ namespace MiddleMail {
 	/// Implements a graceful shutdown by waiting for all processing tasks to finish work if cancellation is requested.
 	/// </summary>
 	public class MiddleMailService : BackgroundService {
-		
+
 		private IMessageProcessor processor;
 		private readonly ILogger<MiddleMailService> logger;
 		private readonly IMessageSource messageSource;
@@ -36,26 +36,26 @@ namespace MiddleMail {
 
 				// wait for all consumer tasks to finish
 				// this is important: a consumer task is only idempotent if does not get canceled
-				while(consumerTasksPending != 0) {
+				while (consumerTasksPending != 0) {
 					logger.LogInformation($"Waiting for {consumerTasksPending} Tasks to finish.");
 					await Task.Delay(25);
 				}
 			}
 		}
 
-		private async Task processAsync(EmailMessage emailMessage ) {
+		private async Task processAsync(EmailMessage emailMessage) {
 			logger.LogDebug($"Start processing email message {emailMessage.Id}");
 			Interlocked.Increment(ref consumerTasksPending);
 			try {
 				await processor.ProcessAsync(emailMessage);
 				logger.LogDebug($"Successfully processed email message {emailMessage.Id}");
-			} catch(SingleProcessingException e) {
+			} catch (SingleProcessingException e) {
 				logger.LogError(e, $"Delivery error for message {emailMessage.Id}");
 				throw;
-			} catch(GeneralProcessingException e) {
+			} catch (GeneralProcessingException e) {
 				logger.LogError(e, $"General delivery problem for message {emailMessage.Id}");
 				await messageSource.RetryAsync(emailMessage);
-			} catch(Exception e) {
+			} catch (Exception e) {
 				logger.LogError(e, $"Unexpected Exception while processing message {emailMessage.Id}");
 				throw;
 			} finally {

@@ -23,7 +23,7 @@ namespace MiddleMail.Delivery.Smtp {
 			MimeMessage mimeMessage;
 			try {
 				mimeMessage = builder.Create(emailMessage);
-			} catch(Exception e) {
+			} catch (Exception e) {
 				throw new MimeMessageBuilderException(emailMessage, e);
 			}
 			try {

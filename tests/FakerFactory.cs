@@ -21,7 +21,8 @@ namespace MiddleMail.Tests {
 				plainText: f.Lorem.Sentences(),
 				htmlText: f.Lorem.Sentences(),
 				headers: null,
-				tags: f.Lorem.Words().ToList()));
+				tags: f.Lorem.Words().ToList()
+			));
 
 		private static List<(string name, string address)> GenerateRandomCcList(Faker f) {
 			var count = f.Random.Int(0, 4);
@@ -32,9 +33,10 @@ namespace MiddleMail.Tests {
 
 		public static Faker<MimeMessage> MimeMessageFaker = new Faker<MimeMessage>()
 			.CustomInstantiator(f => new MimeMessage(
-				from: new MailboxAddress[] { new MailboxAddress(f.Name.FullName(), f.Internet.Email())},
-				to: new MailboxAddress[] { new MailboxAddress(f.Name.FullName(), f.Internet.Email())},
+				from: new MailboxAddress[] { new MailboxAddress(f.Name.FullName(), f.Internet.Email()) },
+				to: new MailboxAddress[] { new MailboxAddress(f.Name.FullName(), f.Internet.Email()) },
 				subject: f.Lorem.Sentence(),
-				body: new TextPart("plain") { Text = f.Lorem.Sentences(10)}));
+				body: new TextPart("plain") { Text = f.Lorem.Sentences(10) }
+			));
 	}
 }

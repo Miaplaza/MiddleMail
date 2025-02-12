@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Threading.Tasks;
 using EasyNetQ;
 using Microsoft.Extensions.Options;
@@ -31,12 +31,12 @@ namespace MiddleMail.Client.RabbitMQ {
 			try {
 				await bus.PublishAsync(emailMessage);
 				return true;
-			} catch(Exception e) {
+			} catch (Exception e) {
 				logger.LogError("Failed to publish to rabbitmq queue.", e);
 				return false;
 			}
 		}
-		
+
 		public void Dispose() {
 			bus?.Dispose();
 		}
