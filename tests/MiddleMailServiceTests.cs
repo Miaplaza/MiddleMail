@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
 using Microsoft.Extensions.Options;
+using System.Threading.RateLimiting;
 
 namespace MiddleMail.Tests {
 
@@ -85,7 +86,15 @@ namespace MiddleMail.Tests {
 			rateLimitedMessageSourceMock
 				.Setup(m => m.Stop());
 
-			var rateLimitedOptions = Options.Create(new MiddleMailOptions { RateLimited = true, LimitPerMinute = RATE_LIMIT_PER_MINUTE });
+			var rateLimitedOptions = Options.Create(new MiddleMailOptions {
+				RateLimited = true,
+				LimitPerMinute = RATE_LIMIT_PER_MINUTE,
+				RateLimiter = new FixedWindowRateLimiter(
+					new FixedWindowRateLimiterOptions() {
+						PermitLimit = RATE_LIMIT_PER_MINUTE,
+						Window = MiddleMailService.RateLimitWindow
+					}
+				)});
 			rateLimitedService = new MiddleMailService(rateLimitedOptions, rateLimitedProcessorMock.Object, logger, rateLimitedMessageSourceMock.Object);
 
 			Task.WhenAll(mailService.StartAsync(CancellationToken.None), rateLimitedService.StartAsync(CancellationToken.None)).Wait();
@@ -166,6 +175,7 @@ namespace MiddleMail.Tests {
 		public async Task RateLimitAllowsCorrectNumberThroughAfterCorrectDelay() {
 			// The rate limit is 3 messages.
 			// Start by sending the 3 messages, and verify that they arrive
+			DateTime before = DateTime.Now;
 			for (int i = 0; i < 3; i++) {
 				var emailMessage = FakerFactory.EmailMessageFaker.Generate();
 				await rateLimitedCallback(emailMessage);
@@ -173,13 +183,12 @@ namespace MiddleMail.Tests {
 			}
 
 			// Then, attempt to send a 4th message
-			DateTime before = DateTime.Now;
 			var lastMessage = FakerFactory.EmailMessageFaker.Generate();
 			await rateLimitedCallback(lastMessage);
 
 			//Now that the await has completed, verify that it took the right amount of time, but was then sent.
 			DateTime after = DateTime.Now;
-			Assert.True(after - before > MiddleMailService.RateLimitWindow);
+			Assert.True(after - before > MiddleMailService.RateLimitWindow, $"{after} - {before} was {after - before}");
 			rateLimitedProcessorMock.Verify(m => m.ProcessAsync(It.IsAny<EmailMessage>()), Times.Exactly(4));
 		}
 

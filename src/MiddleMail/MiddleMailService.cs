@@ -19,7 +19,6 @@ namespace MiddleMail {
 	/// </summary>
 	public sealed class MiddleMailService : BackgroundService {
 		public static readonly TimeSpan RateLimitWindow = TimeSpan.FromMinutes(1);
-		public static readonly TimeSpan RateLimitDelay = TimeSpan.FromMinutes(1);
 		
 		private IMessageProcessor processor;
 		private readonly ILogger<MiddleMailService> logger;
@@ -36,14 +35,7 @@ namespace MiddleMail {
 			this.messageSource = messageSource;
 			this.options = options.Value;
 
-			if (this.options.RateLimited) {
-				rateLimiter = new FixedWindowRateLimiter(
-					new FixedWindowRateLimiterOptions() {
-						PermitLimit = this.options.LimitPerMinute,
-						Window = RateLimitWindow,
-					}
-				);
-			}
+			rateLimiter = this.options.RateLimiter;
 		}
 
 		public override void Dispose() {
@@ -81,10 +73,10 @@ namespace MiddleMail {
 			if (rateLimiter == default) { return null; }
 
 			while (true) {
-				RateLimitLease lease = await rateLimiter.AcquireAsync();
+				var lease = rateLimiter.AttemptAcquire(1);
 				if (lease.IsAcquired) { return lease; }
 
-				await Task.Delay(RateLimitDelay);
+				using var _ = await rateLimiter.AcquireAsync(0);
 			}
 		}
 
