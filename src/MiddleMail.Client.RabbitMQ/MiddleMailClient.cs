@@ -34,8 +34,7 @@ namespace MiddleMail.Client.RabbitMQ {
 			try {
 				if (topic != null) {
 					await bus.PublishAsync(emailMessage, topic: topic);
-				}
-				else {
+				} else {
 					await bus.PublishAsync(emailMessage);
 				}
 				return true;
