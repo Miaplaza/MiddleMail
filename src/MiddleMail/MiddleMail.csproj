@@ -10,6 +10,7 @@
     <Copyright>Copyright ©2020 Miaplaza Inc.</Copyright>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	<Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

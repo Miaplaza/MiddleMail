@@ -66,8 +66,9 @@ namespace MiddleMail.Tests {
 
 			var logger = new NullLogger<MiddleMailService>();
 
-			var options = Options.Create(new MiddleMailOptions { RateLimited = false });
-			mailService = new MiddleMailService(options, processorMock.Object, logger, messageSourceMock.Object);
+			var noRateLimitOptions = Options.Create(new RateLimiterOptions { LimitPerMinute = null });
+			var noRateLimitAccessor = new RateLimiterAccessor(noRateLimitOptions);
+			mailService = new MiddleMailService(noRateLimitAccessor, processorMock.Object, logger, messageSourceMock.Object);
 
 			rateLimitedProcessorMock = new Mock<IMessageProcessor>();
 			rateLimitedProcessorMock
@@ -90,13 +91,11 @@ namespace MiddleMail.Tests {
 				.Setup(m => m.Stop());
 
 			rateLimiterMock = new Mock<RateLimiter>();
-
-			var rateLimitedOptions = Options.Create(new MiddleMailOptions {
-				RateLimited = true,
-				LimitPerMinute = RATE_LIMIT_PER_MINUTE,
-				RateLimiter = rateLimiterMock.Object
-			});
-			rateLimitedService = new MiddleMailService(rateLimitedOptions, rateLimitedProcessorMock.Object, logger, rateLimitedMessageSourceMock.Object);
+			var rateLimiterAccessorMock = new Mock<IRateLimiterAccessor>();
+			rateLimiterAccessorMock
+				.SetupGet(rlam => rlam.RateLimiter)
+				.Returns(rateLimiterMock.Object);
+			rateLimitedService = new MiddleMailService(rateLimiterAccessorMock.Object, rateLimitedProcessorMock.Object, logger, rateLimitedMessageSourceMock.Object);
 
 			Task.WhenAll(mailService.StartAsync(CancellationToken.None), rateLimitedService.StartAsync(CancellationToken.None)).Wait();
 		}		
@@ -176,7 +175,7 @@ namespace MiddleMail.Tests {
 				.Returns(lease.Object);
 
 			async ValueTask<RateLimitLease> simulateAwaitingLease() {
-				await Task.Delay(10000);
+				await Task.Delay(2 * delayBeforeCheckingIfEmailSent);
 				return lease.Object;
 			}
 			rateLimiterMock.Protected()

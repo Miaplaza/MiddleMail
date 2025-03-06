@@ -31,16 +31,7 @@ namespace MiddleMail.Server {
 					addOptions<ElasticSearchStorageOptions>(hostContext, services, ElasticSearchStorageOptions.SECTION);
 					addOptions<ExponentialBackoffOptions>(hostContext, services, ExponentialBackoffOptions.SECTION);
 					addOptions<RabbitMQMessageSourceOptions>(hostContext, services, RabbitMQMessageSourceOptions.SECTION);
-					services.AddOptions<MiddleMailOptions>()
-						.Bind(hostContext.Configuration.GetSection(MiddleMailOptions.SECTION))
-						.ValidateDataAnnotations()
-						.Configure(options =>
-							options.RateLimiter = new FixedWindowRateLimiter(
-							new FixedWindowRateLimiterOptions() {
-								PermitLimit = options.LimitPerMinute,
-								Window = MiddleMailService.RateLimitWindow,
-							}
-						));
+					addOptions<RateLimiterOptions>(hostContext, services, RateLimiterOptions.SECTION);
 
 					services.AddSingleton<IMailDeliverer, SmtpDeliverer>();
 					services.AddSingleton<IMimeMessageBuilder, MimeMessageBuilder>();
@@ -59,6 +50,7 @@ namespace MiddleMail.Server {
 						options.InstanceName = Environment.GetEnvironmentVariable("REDIS_INSTANCE_NAME");
 
 					});
+					services.AddSingleton<IRateLimiterAccessor, RateLimiterAccessor>();
 					services.AddHostedService<MiddleMailService>();
 				});
 

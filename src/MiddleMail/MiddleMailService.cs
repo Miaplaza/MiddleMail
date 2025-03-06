@@ -1,5 +1,3 @@
-#nullable enable
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,29 +16,20 @@ namespace MiddleMail {
 	/// Implements a graceful shutdown by waiting for all processing tasks to finish work if cancellation is requested.
 	/// </summary>
 	public sealed class MiddleMailService : BackgroundService {
-		public static readonly TimeSpan RateLimitWindow = TimeSpan.FromMinutes(1);
-		
 		private IMessageProcessor processor;
 		private readonly ILogger<MiddleMailService> logger;
 		private readonly IMessageSource messageSource;
 		private int consumerTasksPending;
-		private readonly MiddleMailOptions options;
 
-		private readonly RateLimiter? rateLimiter;
+		private readonly IRateLimiterAccessor rateLimiterAccessor;
 
-		public MiddleMailService(IOptions<MiddleMailOptions> options, IMessageProcessor processor, ILogger<MiddleMailService> logger, IMessageSource messageSource) {
+		public MiddleMailService(IRateLimiterAccessor rateLimiterAccessor, IMessageProcessor processor, ILogger<MiddleMailService> logger, IMessageSource messageSource) {
 			this.processor = processor;
 			this.logger = logger;
 			this.consumerTasksPending = 0;
 			this.messageSource = messageSource;
-			this.options = options.Value;
 
-			rateLimiter = this.options.RateLimiter;
-		}
-
-		public override void Dispose() {
-			base.Dispose();
-			rateLimiter?.Dispose();
+			this.rateLimiterAccessor = rateLimiterAccessor;
 		}
 
 		protected async override Task ExecuteAsync(CancellationToken cancellationToken) {
@@ -70,13 +59,13 @@ namespace MiddleMail {
 		/// </summary>
 		/// <returns></returns>
 		private async Task<RateLimitLease?> acquireLease() {
-			if (rateLimiter == default) { return null; }
+			if (rateLimiterAccessor.RateLimiter == default) { return null; }
 
 			while (true) {
-				var lease = rateLimiter.AttemptAcquire(1);
+				var lease = rateLimiterAccessor.RateLimiter.AttemptAcquire(1);
 				if (lease.IsAcquired) { return lease; }
 
-				using var _ = await rateLimiter.AcquireAsync(0);
+				using var _ = await rateLimiterAccessor.RateLimiter.AcquireAsync(0);
 			}
 		}
 

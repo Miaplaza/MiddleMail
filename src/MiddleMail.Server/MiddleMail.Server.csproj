@@ -6,6 +6,7 @@
     <WarningAsErrors>true</WarningAsErrors>
     <RootNamespace>MiddleMail.Server</RootNamespace>
     <IsPackable>false</IsPackable>
+	<Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="EasyNetQ.DI.Microsoft" Version="5.2.0" />
