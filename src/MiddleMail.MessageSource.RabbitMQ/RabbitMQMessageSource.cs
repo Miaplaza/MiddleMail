@@ -32,7 +32,9 @@ namespace MiddleMail.MessageSource.RabbitMQ {
 		}
 
 		public void Start(Func<EmailMessage, Task> callback) {
-			subscriptionResult = bus.SubscribeAsync<EmailMessage>(options.SubscriptionId, callback);
+			subscriptionResult = options.Topic != null
+				? bus.SubscribeAsync<EmailMessage>(options.SubscriptionId, callback, emailMessage => emailMessage.WithTopic(options.Topic))
+				: bus.SubscribeAsync<EmailMessage>(options.SubscriptionId, callback);
 		}
 
 		public void Stop() {

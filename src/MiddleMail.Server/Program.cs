@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Threading.RateLimiting;
 
 namespace MiddleMail.Server {
 	class Program {
@@ -30,6 +31,7 @@ namespace MiddleMail.Server {
 					addOptions<ElasticSearchStorageOptions>(hostContext, services, ElasticSearchStorageOptions.SECTION);
 					addOptions<ExponentialBackoffOptions>(hostContext, services, ExponentialBackoffOptions.SECTION);
 					addOptions<RabbitMQMessageSourceOptions>(hostContext, services, RabbitMQMessageSourceOptions.SECTION);
+					addOptions<RateLimiterOptions>(hostContext, services, RateLimiterOptions.SECTION);
 
 					services.AddSingleton<IMailDeliverer, SmtpDeliverer>();
 					services.AddSingleton<IMimeMessageBuilder, MimeMessageBuilder>();
@@ -48,6 +50,7 @@ namespace MiddleMail.Server {
 						options.InstanceName = Environment.GetEnvironmentVariable("REDIS_INSTANCE_NAME");
 
 					});
+					services.AddSingleton<IRateLimiterAccessor, RateLimiterAccessor>();
 					services.AddHostedService<MiddleMailService>();
 				});
 

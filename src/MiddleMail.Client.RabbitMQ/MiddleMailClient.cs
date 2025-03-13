@@ -16,9 +16,12 @@ namespace MiddleMail.Client.RabbitMQ {
 
 		private readonly IBus bus;
 		private readonly ILogger<MiddleMailClient> logger;
+		private readonly string topic;
 
 		public MiddleMailClient(IOptions<RabbitMQOptions> options, ILogger<MiddleMailClient> logger) {
 			bus = EasyNetQ.RabbitHutch.CreateBus(options.Value.ConnectionString);
+			topic = options.Value.Topic;
+
 			this.logger = logger;
 		}
 
@@ -29,10 +32,14 @@ namespace MiddleMail.Client.RabbitMQ {
 		/// </summary>
 		public async Task<bool> SendEmailAsync(EmailMessage emailMessage) {
 			try {
-				await bus.PublishAsync(emailMessage);
+				if (topic != null) {
+					await bus.PublishAsync(emailMessage, topic: topic);
+				} else {
+					await bus.PublishAsync(emailMessage);
+				}
 				return true;
 			} catch(Exception e) {
-				logger.LogError("Failed to publish to rabbitmq queue.", e);
+				logger.LogError(message: "Failed to publish to rabbitmq queue.", exception: e);
 				return false;
 			}
 		}
