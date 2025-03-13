@@ -88,3 +88,13 @@ backoff:
   # starting at multiplicator many seconds, then 2*multiplicator seconds, then
   # 4*multiplicator seconds, ...
   multiplicator: 60
+
+ratelimiter:
+  # If non-null, limits this number of emails to be processed each minute
+  limitperminute: ~
+
+messagesource:
+  rabbitmq:
+    # If non-null, defines a topic that any client needs to match
+    # for this MiddleMail instance to process that mail
+    topic: ~
