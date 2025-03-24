@@ -54,7 +54,7 @@ namespace MiddleMail.Model {
 			Id = id;
 			From = from;
 			To = to;
-			Cc = cc;
+			Cc = cc ?? new List<(string name, string address)>();
 			ReplyTo = replyTo;
 			Subject = subject;
 			PlainText = plainText;
