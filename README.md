@@ -48,6 +48,24 @@ The following table lists the configurable parameters for MiddleMail. To pass th
 | `REDIS_INSTANCE_NAME` | The Redis instance name |
 | `DISABLE_SMTP` | Do not actually send anything via SMTP. |
 
+## Basic Local Setup
+This setup assumes the use of Visual Studio Code as an editor. If not using 
+VSCode, configure environment variables in whatever way is appropriate for your 
+preferred launch mechanism. This setup also runs the dependencies in Docker.
+You don't have to do this, but it sure is convenient.
+
+1. Clone this repository.
+1. Create a `launch.json` in which you configure the environment variables described above in the Configuration section. This `launch.json` should target the build of the `MiddleMail.Server` project, since that's the standalone process. You probably also need to create a `tasks.json` to run it, with a build task, but that's no different from the standard `launch.json` setup.
+1. Run the `docker-compose.dev.yml` file to spin up dependency services. It mainly includes:
+  - A RabbitMQ container as an email message queue.
+  - An Elasticsearch container as a storage solution.
+    - _Note that if you're not using Elasticsearch, you can edit the services found in `MiddleMail/Server/Program.cs` to replace `ElasticSearchStorage` in `services.AddSingleton<IStorage, ElasticSearchStorage>();` with `MemoryStorage`, an in-memory storage solution. You will also need to edit the dependencies in `MiddleMail.Server.csproj` to depend on `MiddleMail.Storage.Memory` instead of `MiddleMail.Storage.Elastic`._
+  - A Redis container as a caching solution.
+  - An smtp4dev container as an SMTP server for development and testing.
+1. Run the MiddleMailServer process (with your `launch.json`).
+1. Optional: Test your new MiddleMail instance using the `tools/EmailMessageGenerator` project to send test emails.
+
+
 ## Tools
 
 | Project               | Description                    |

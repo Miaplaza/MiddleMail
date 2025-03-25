@@ -15,7 +15,7 @@ namespace MiddleMail {
 	/// Many distributed system do not guarantee exactly-once delivery (such as RabbitMQ). We therefore only require 
 	/// at-least-once delivery for an <see cref="IMessageSource" />. That means that a duplicate message could end up here.
 	/// As it is rather critical that emails are delivered exactly-once we must detect duplicates. This is done by caching 
-	/// successfully sent emais by their id and checking the cache before we even start processing. This requires that pro-
+	/// successfully sent emails by their id and checking the cache before we even start processing. This requires that pro-
 	/// cessing tasks always run until completion and are not interrupted.
 	/// </remarks>
 	public class MessageProcessor : IMessageProcessor {
@@ -35,30 +35,30 @@ namespace MiddleMail {
 			string cached = null;
 			try {
 				cached = await cache.GetStringAsync(emailMessage.Id.ToString());
-			} catch(Exception e) {
+			} catch (Exception e) {
 				throw new GeneralProcessingException(emailMessage, e);
 			}
 
-			if(cached != null) {
+			if (cached != null) {
 				logger.LogInformation($"Caught duplicate email {emailMessage.Id}");
 				return;
 			}
 
-			if(emailMessage.Store) {
+			if (emailMessage.Store) {
 				await tryStoreOrLogAsync(() => storage.SetProcessedAsync(emailMessage));
 			}
 			try {
 				await deliverer.DeliverAsync(emailMessage);
-			} catch (Exception e){
-				if(emailMessage.Store) {
+			} catch (Exception e) {
+				if (emailMessage.Store) {
 					await tryStoreOrLogAsync(() => storage.SetErrorAsync(emailMessage, e.ToString()));
 				}
 				throw;
 			}
-			
+
 			// if the cache throws an exception we do not rethrow a GeneralProcessingException here because the message has already been delivered
 			await cache.SetStringAsync(emailMessage.Id.ToString(), "t");
-			if(emailMessage.Store) {
+			if (emailMessage.Store) {
 				await tryStoreOrLogAsync(() => storage.SetSentAsync(emailMessage));
 			}
 		}
@@ -66,7 +66,7 @@ namespace MiddleMail {
 		private async Task tryStoreOrLogAsync(Func<Task> storeFunc) {
 			try {
 				await storeFunc();
-			} catch(Exception e) {
+			} catch (Exception e) {
 				logger.LogError(e, "Exception while storing EmailMessage.");
 			}
 		}

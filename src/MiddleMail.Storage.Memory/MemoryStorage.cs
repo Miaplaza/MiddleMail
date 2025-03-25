@@ -11,7 +11,7 @@ namespace MiddleMail.Storage.Memory {
 	/// A reference implementation for <see cref="IMailStorage" /> backed by a dictionary in memory.
 	/// </summary>
 	public class MemoryStorage : IMailStorage {
-			
+
 		private readonly ConcurrentDictionary<EmailMessage, (bool sent, string error)> storage;
 
 		public MemoryStorage() {
@@ -19,8 +19,8 @@ namespace MiddleMail.Storage.Memory {
 		}
 
 		public Task SetProcessedAsync(EmailMessage emailMessage) {
-			storage.AddOrUpdate(emailMessage, 
-				addValue: (false, null), 
+			storage.AddOrUpdate(emailMessage,
+				addValue: (false, null),
 				updateValueFactory: (EmailMessage key, (bool sent, string error) value) => {
 					if (value.sent) {
 						throw new EMailMessageAlreadySentStorageException(emailMessage);
@@ -32,8 +32,8 @@ namespace MiddleMail.Storage.Memory {
 		}
 
 		public Task SetSentAsync(EmailMessage emailMessage) {
-			storage.AddOrUpdate(emailMessage, 
-				addValue: (true, null), 
+			storage.AddOrUpdate(emailMessage,
+				addValue: (true, null),
 				updateValueFactory: (EmailMessage key, (bool sent, string error) value) => {
 					if (value.sent) {
 						throw new EMailMessageAlreadySentStorageException(emailMessage);
@@ -45,7 +45,7 @@ namespace MiddleMail.Storage.Memory {
 		}
 
 		public Task SetErrorAsync(EmailMessage emailMessage, string errorMessage) {
-			storage.AddOrUpdate(emailMessage, 
+			storage.AddOrUpdate(emailMessage,
 				addValue: (false, errorMessage),
 				updateValueFactory: (EmailMessage key, (bool sent, string error) value) => {
 					if (value.sent) {
@@ -56,7 +56,7 @@ namespace MiddleMail.Storage.Memory {
 			);
 			return Task.CompletedTask;
 		}
-		
+
 		public Task<bool?> GetSentAsync(EmailMessage emailMessage) {
 			var found = storage.TryGetValue(emailMessage, out var value);
 			if (found) {

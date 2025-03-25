@@ -20,6 +20,8 @@ namespace MiddleMail.Storage.ElasticSearch {
 		public string FromAddress { get; set; }
 		public string ToName { get; set; }
 		public string ToAddress { get; set; }
+		public List<string> CcNames { get; set; }
+		public List<string> CcAddresses { get; set; }
 		public string ReplyToName { get; set; }
 		public string ReplyToAddress { get; set; }
 		public string Subject { get; set; }
@@ -36,6 +38,8 @@ namespace MiddleMail.Storage.ElasticSearch {
 			FromAddress = emailMessage.From.address;
 			ToName = emailMessage.To.name;
 			ToAddress = emailMessage.To.address;
+			CcNames = emailMessage.Cc.ConvertAll(x => x.name);
+			CcAddresses = emailMessage.Cc.ConvertAll(x => x.address);
 			ReplyToName = emailMessage.ReplyTo?.name;
 			ReplyToAddress = emailMessage.ReplyTo?.address;
 

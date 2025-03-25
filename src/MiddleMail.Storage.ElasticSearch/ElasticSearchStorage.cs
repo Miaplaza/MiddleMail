@@ -14,7 +14,7 @@ namespace MiddleMail.Storage.ElasticSearch {
 	/// Use <see cref="ElasticSearchStorageOptions" /> to configure the connection and index.
 	/// </summary>
 	public class ElasticSearchStorage : IMailStorage {
-		
+
 		private readonly ElasticClient client;
 		private readonly ElasticSearchStorageOptions options;
 		public ElasticSearchStorage(IOptions<ElasticSearchStorageOptions> options) {
@@ -28,13 +28,13 @@ namespace MiddleMail.Storage.ElasticSearch {
 		}
 
 		public async Task SetProcessedAsync(EmailMessage emailMessage) {
-			await updateOrCreateAsync(emailMessage, 
+			await updateOrCreateAsync(emailMessage,
 				update: (EmailDocument emailDocument) => { },
 				create: () => new EmailDocument(emailMessage));
 		}
 
 		public async Task SetSentAsync(EmailMessage emailMessage) {
-			await updateOrCreateAsync(emailMessage, 
+			await updateOrCreateAsync(emailMessage,
 				update: (EmailDocument emailDocument) => {
 					emailDocument.Sent = DateTime.UtcNow;
 				},
@@ -42,7 +42,7 @@ namespace MiddleMail.Storage.ElasticSearch {
 		}
 
 		public async Task SetErrorAsync(EmailMessage emailMessage, string errorMessage) {
-			await updateOrCreateAsync(emailMessage, 
+			await updateOrCreateAsync(emailMessage,
 				update: (EmailDocument emailDocument) => {
 					emailDocument.Error = errorMessage;
 				},
@@ -51,7 +51,7 @@ namespace MiddleMail.Storage.ElasticSearch {
 
 		private async Task updateOrCreateAsync(EmailMessage emailMessage, Action<EmailDocument> update, Func<EmailDocument> create) {
 			var emailDocument = await searchDocument(emailMessage.Id);
-			if(emailDocument != null) {
+			if (emailDocument != null) {
 				if (emailDocument.Sent != null) {
 					throw new EMailMessageAlreadySentStorageException(emailMessage);
 				}
@@ -71,14 +71,14 @@ namespace MiddleMail.Storage.ElasticSearch {
 			var existingDocument = await searchDocument(emailMessage.Id);
 			return existingDocument?.Sent != null;
 		}
-		
+
 		public async Task<string> GetErrorAsync(EmailMessage emailMessage) {
 			var existingDocument = await searchDocument(emailMessage.Id);
-			return existingDocument?.Error;		
+			return existingDocument?.Error;
 		}
 
 		private string index => options.Index;
-		
+
 		private async Task<EmailDocument> searchDocument(Guid id) {
 			var response = await client.SearchAsync<EmailDocument>(s => s
 				.Index(index)
@@ -86,7 +86,7 @@ namespace MiddleMail.Storage.ElasticSearch {
 				.Term(c => c
 					.Field(p => p.Id)
 					.Value(id))));
-								
+
 			return response.Documents.SingleOrDefault();
 		}
 	}

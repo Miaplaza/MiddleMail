@@ -12,6 +12,7 @@ namespace MiddleMail.Model {
 		public Guid Id { get; set; }
 		public (string name, string address) From { get; set; }
 		public (string name, string address) To { get; set; }
+		public List<(string name, string address)> Cc { get; set; }
 		public (string name, string address)? ReplyTo { get; set; }
 		public string Subject { get; set; }
 		public string PlainText { get; set; }
@@ -36,9 +37,10 @@ namespace MiddleMail.Model {
 
 		public EmailMessage() {}
 
-		public EmailMessage(Guid id, (string name, string address) from, (string name, string address) to, 
-			(string name, string address)? replyTo, string subject, string plainText, string htmlText, 
-			List<string> tags, Dictionary<string, string> headers, int retryCount = 0, bool store = true) {
+		public EmailMessage(Guid id, (string name, string address) from, (string name, string address) to,
+			List<(string name, string address)> cc, (string name, string address)? replyTo, string subject,
+			string plainText, string htmlText, List<string> tags, Dictionary<string, string> headers,
+			int retryCount = 0, bool store = true) {
 
 			if (String.IsNullOrEmpty(from.address)) {
 				throw new ArgumentException("Must specify a from email address.", nameof(from));
@@ -52,6 +54,7 @@ namespace MiddleMail.Model {
 			Id = id;
 			From = from;
 			To = to;
+			Cc = cc ?? new List<(string name, string address)>();
 			ReplyTo = replyTo;
 			Subject = subject;
 			PlainText = plainText;

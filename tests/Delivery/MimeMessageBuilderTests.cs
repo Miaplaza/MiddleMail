@@ -62,7 +62,13 @@ namespace MiddleMail.Tests.Delivery {
 
 				Assert.Equal(emailMessage.To.name ?? string.Empty, parsedMessage.To.First().Name);
 				Assert.Equal(emailMessage.To.address, ((MailboxAddress)parsedMessage.To.First()).Address);
-				
+
+				Assert.Equal(emailMessage.Cc.Count, parsedMessage.Cc.Count);
+				for(int i = 0; i < emailMessage.Cc.Count; i++) {
+					Assert.Equal(emailMessage.Cc[i].name ?? string.Empty, parsedMessage.Cc[i].Name);
+					Assert.Equal(emailMessage.Cc[i].address, ((MailboxAddress)parsedMessage.Cc[i]).Address);
+				}
+
 				if (!emailMessage.ReplyTo.HasValue) {
 					Assert.Empty(parsedMessage.ReplyTo);
 				} else {
@@ -76,7 +82,7 @@ namespace MiddleMail.Tests.Delivery {
 		}
 
 		[Fact]
-		public async void BuilValidEmailMessage() {
+		public async void BuildValidEmailMessage() {
 			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
 			var mimeMessage = builder.Create(emailMessage);
 
@@ -84,7 +90,7 @@ namespace MiddleMail.Tests.Delivery {
 		}
 
 		[Fact]
-		public void BuilInvalidEmailMessageThrows() {
+		public void BuildInvalidEmailMessageThrows() {
 			var emailMessage = FakerFactory.EmailMessageFaker.Generate();
 			emailMessage.From = (null, "<>");
 
