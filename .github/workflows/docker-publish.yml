@@ -1,8 +1,7 @@
 name: "Docker Publish"
 on:
-  push:
-    branches:
-      - master
+  release:
+    types: [published]
 
 jobs:
   build-and-publish:
@@ -23,4 +22,4 @@ jobs:
           push: true
           tags: |
             miaplaza/middlemail:latest
-            miaplaza/middlemail:${{ github.sha }}
+            miaplaza/middlemail:${{ github.ref_name }}
