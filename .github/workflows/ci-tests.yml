@@ -1,4 +1,4 @@
-name: "CI with dependencies from helm chart"
+name: "CI Tests with dependencies from helm chart"
 on: [pull_request, push]
 
 jobs:
