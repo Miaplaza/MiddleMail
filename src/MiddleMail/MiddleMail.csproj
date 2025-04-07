@@ -4,7 +4,7 @@
     <TargetFramework>net6</TargetFramework>
     <WarningAsErrors>true</WarningAsErrors>
     <PackageId>MiddleMail</PackageId>
-    <Version>0.6.0</Version>
+    <Version>0.6.2</Version>
     <Authors>Miaplaza Inc.</Authors>
     <Company>MiaPlaza</Company>
     <Copyright>Copyright ©2020 Miaplaza Inc.</Copyright>
