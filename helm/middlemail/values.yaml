@@ -88,3 +88,12 @@ backoff:
   # starting at multiplicator many seconds, then 2*multiplicator seconds, then
   # 4*multiplicator seconds, ...
   multiplicator: 60
+
+secretAnnotations:
+  # Annotations to add to the secrets created by this chart.
+  # Helm hooks annotations and reflector annotations are added.
+  # Reflector annotation here is used to allow the secret to be reflected by the EmberStack reflector in the target namespace.
+  # See https://github.com/emberstack/kubernetes-reflector?tab=readme-ov-file#1-annotate-the-source-secret-or-configmap
+  "helm.sh/hook": pre-install
+  "helm.sh/hook-delete-policy": before-hook-creation
+  reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
