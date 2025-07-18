@@ -10,10 +10,7 @@ replicaCount: 1
 rabbitmq:
   provision: true
   secret:
-    annotations:
-      # This annotation is used by the EmberStack reflector to allow the secret to be reflected in the target namespace
-      # See https://github.com/emberstack/kubernetes-reflector?tab=readme-ov-file#1-annotate-the-source-secret-or-configmap
-      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+    annotations: {}
 
   # When these are not set, this chart is going to deploy its own RabbitMQ instance and connect to it.
   # It will then be accessible in your cluster as the service RELEASE-rabbitmq-0
