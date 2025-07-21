@@ -21,6 +21,7 @@ jobs:
           --set elasticsearch.master.replicas=1 \
           --set elasticsearch.coordinating.replicas=1 \
           --set elasticsearch.data.replicas=1 \
+          --set elasticsearch.sysctlImage.tag=bookworm \
           --wait
         kubectl cluster-info
         kubectl get pods -o wide
