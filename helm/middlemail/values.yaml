@@ -9,6 +9,8 @@ replicaCount: 1
 
 rabbitmq:
   provision: true
+  secret:
+    annotations: {}
 
   # When these are not set, this chart is going to deploy its own RabbitMQ instance and connect to it.
   # It will then be accessible in your cluster as the service RELEASE-rabbitmq-0
