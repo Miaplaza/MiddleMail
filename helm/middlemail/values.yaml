@@ -9,6 +9,9 @@ replicaCount: 1
 
 rabbitmq:
   provision: true
+  image:
+    repository: bitnamilegacy/rabbitmq
+    tag: 3.8.5
   secret:
     annotations: {}
 
@@ -30,7 +33,7 @@ rabbitmq:
 
   initContainers:
     - name: download-delayed-message-exchange
-      image: bitnami/rabbitmq:3.8.5
+      image: bitnamilegacy/rabbitmq:3.8.5
       command: ['sh', '-c', 'curl -L --output /plugins/rabbitmq_delayed_message_exchange-3.8.0.ez https://github.com/rabbitmq/rabbitmq-delayed-message-exchange/releases/download/v3.8.0/rabbitmq_delayed_message_exchange-3.8.0.ez && cp /opt/bitnami/rabbitmq/plugins/* /plugins']
       volumeMounts:
       - name: plugins
@@ -60,6 +63,9 @@ easynetq:
 
 elasticsearch:
   provision: true
+  image:
+    repository: bitnamilegacy/elasticsearch
+    tag: 7.7.1
 
   # When this is not set, this chart is going to deploy its own Elasticsearch instance and connect to it.
   # provision: false
@@ -70,7 +76,10 @@ elasticsearch:
 
 
 # Any parameters set here will be passed on to the bundled redis instance.
-redis: {}
+redis:
+  image:
+    repository: bitnamilegacy/redis
+    tag: 6.0.6
   # TODO: Assert that this is set when persistence.enabled :(
   # existingSecret:
 
